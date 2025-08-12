@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"; // Replace with your button component
+import { Button } from "@/components/ui/button";
 import { signIn, useSession } from "@/lib/auth/authClient";
 import { routes } from "@/lib/routes/routes";
 import { useRouter } from "next/navigation";

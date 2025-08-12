@@ -4,9 +4,14 @@ export const apiRoutes = {
   auth: {
     signIn: {
       email: "/api/auth/sign-in/email",
+      social: "/api/auth/sign-in/social",
     },
     signUp: {
       email: "/api/auth/sign-up/email",
+      social: "/api/auth/sign-up/social",
+    },
+    callback: {
+      google: "/api/auth/callback/google",
     },
     getSession: "/api/auth/get-session",
     updateUser: {

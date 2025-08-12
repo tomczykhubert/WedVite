@@ -9,7 +9,10 @@ const GUEST_PAGES_ROUTES = [
 
 const GUEST_API_ROUTES = [
   apiRoutes.auth.signIn.email,
+  apiRoutes.auth.signIn.social,
   apiRoutes.auth.signUp.email,
+  apiRoutes.auth.signUp.social,
+  apiRoutes.auth.callback.google
 ];
 
 const GUEST_ROUTES = [...GUEST_PAGES_ROUTES, ...GUEST_API_ROUTES];

@@ -1,0 +1,1 @@
+export type PathEntry = string | ((...args: string[]) => string);  

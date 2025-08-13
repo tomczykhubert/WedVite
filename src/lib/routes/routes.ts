@@ -3,9 +3,11 @@ import ID from "@/types/id";
 export const routes = {
   home: "/",
   auth: {
-    signIn: "/auth/signIn",
-    signUp: "/auth/signUp",
+    signIn: "/signIn",
+    signUp: "/signUp",
+    profile: "/profile",
   },
-  public: "/public",
-  protected: "/protected",
+  dashboard: {
+    index: "/dashboard"
+  }
 };

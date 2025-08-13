@@ -1,0 +1,18 @@
+
+{
+  "base": {
+    "title": "Witaj świecie!",
+    "about": "To jest przykładowa aplikacja, która demonstruje internacjonalizację w Next.js."
+  },
+  "user": {
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "signOut": "Wyloguj się",
+    "email": "Email",
+    "password": "Hasło",
+    "continueWithGoogle": "Kontynuuj z Google",
+    "profile": "Profil",
+    "anonymous": "Anonimowy",
+    "avatar": "Awatar"
+  }
+}

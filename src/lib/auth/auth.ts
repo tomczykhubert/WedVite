@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "../prisma/prismaSingleton";
+import prisma from "../prisma/prisma";
 import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
@@ -20,6 +20,10 @@ export const auth = betterAuth({
         type: "string",
         required: true,
         defaultValue: "credentials",
+      },
+      activeEventId: {
+        type: "string",
+        required: false,
       },
     },
   },

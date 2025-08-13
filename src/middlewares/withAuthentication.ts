@@ -6,7 +6,8 @@ import PUBLIC_ROUTES from "@/lib/routes/publicRoutes";
 import GUEST_ROUTES from "@/lib/routes/guestRoutes";
 import { PathEntry } from "@/lib/routes/PathEntry";
 import { routes } from "@/lib/routes/routes";
-import { i18n } from "@/lib/i18n/config";
+import { routing } from "@/i18n/routing";
+import { apiRoutes } from "@/lib/routes/apiRoutes";
 
 type AuthMiddlewareParams = {
   request: NextRequest;
@@ -20,7 +21,6 @@ export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
     let pathname = request.nextUrl.pathname;
     pathname = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
     pathname = removeLocalePrefix(pathname);
-
     const isPublic = checkPaths(PUBLIC_ROUTES, pathname);
 
     if (isPublic) {
@@ -30,7 +30,7 @@ export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
     const isGuest = checkPaths(GUEST_ROUTES, pathname);
 
     const { data: session } = await betterFetch<Session>(
-      "/api/auth/get-session",
+      apiRoutes.auth.getSession,
       {
         baseURL: request.nextUrl.origin,
         headers: {
@@ -38,7 +38,6 @@ export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
         },
       }
     );
-
     const middlewareParams = {
       request,
       next,
@@ -49,7 +48,6 @@ export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
     if (isGuest) {
       return handleGuest(middlewareParams);
     }
-
     return handleProtected(middlewareParams);
   }
 }
@@ -85,11 +83,11 @@ function handleAuthenticationRedirect(params: AuthMiddlewareParams, redirectUrl:
 }
 
 function removeLocalePrefix(path: string): string {
-  if (i18n.locales.some((loc) => path === `/${loc}` || path === `/${loc}/`)) {
+  if (routing.locales.some((loc) => path === `/${loc}` || path === `/${loc}/`)) {
     return "/";
   }
 
-  const locale = i18n.locales.find((loc) => path.startsWith(`/${loc}/`));
+  const locale = routing.locales.find((loc) => path.startsWith(`/${loc}/`));
 
   return locale ? path.replace(`/${locale}/`, "/") : path;
 }

@@ -2,7 +2,7 @@ import { stackMiddlewares } from "./middlewares/stackMiddleware";
 import { withAuthentication } from "./middlewares/withAuthentication";
 import { withLocale } from "./middlewares/withLocale";
 
-const middlewares = [withLocale, withAuthentication];
+const middlewares = [withAuthentication, withLocale];
 export default stackMiddlewares(middlewares);
 
 export const config = {

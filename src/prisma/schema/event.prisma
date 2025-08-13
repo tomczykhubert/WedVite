@@ -1,0 +1,54 @@
+model Event {
+  id              String          @id @default(cuid())
+  name            String
+  eventPlanItems  EventPlanItem[]
+  eventContacts   EventContact[]
+  respondDeadline DateTime
+  startAt         DateTime
+  createdAt       DateTime
+  updatedAt       DateTime
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("event")
+}
+
+model EventPlanItem {
+  id           String    @id @default(cuid())
+  name         String
+  description  String?
+  startAt      DateTime
+  endAt        DateTime?
+  details      String?
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  postalCode   String
+  region       String?
+  country      String?
+  order        Int
+  eventId      String
+  event        Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_plan_item")
+}
+
+model EventContact {
+  id          String           @id @default(cuid())
+  firstName   String
+  lastName    String
+  phoneNumber String
+  email       String
+  type        EventContactType?
+  eventId     String
+  event       Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_contact")
+}
+
+enum EventContactType {
+  BRIDE
+  GROOM
+  MAID_OF_HONOR
+  BEST_MAN
+}

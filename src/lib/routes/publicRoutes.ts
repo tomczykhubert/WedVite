@@ -2,7 +2,6 @@ import { apiRoutes } from "./apiRoutes";
 import { routes } from "./routes";
 
 const PUBLIC_PAGES_ROUTES = [
-    routes.public,
     routes.home,
 ];
 

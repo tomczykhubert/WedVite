@@ -2,7 +2,6 @@ import { apiRoutes } from "./apiRoutes";
 import { routes } from "./routes";
 
 const GUEST_PAGES_ROUTES = [
-  routes.public,
   routes.auth.signIn,
   routes.auth.signUp,
 ];

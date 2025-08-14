@@ -10,9 +10,17 @@
     "signOut": "Wyloguj się",
     "email": "Email",
     "password": "Hasło",
+    "confirmPassword": "Powtórz hasło",
     "continueWithGoogle": "Kontynuuj z Google",
     "profile": "Profil",
     "anonymous": "Anonimowy",
     "avatar": "Awatar"
+  },
+  "formValidation": {
+    "required": "To pole jest wymagane.",
+    "email": "Proszę podać prawidłowy adres email.",
+    "minLength": "Minimalna długość to {min} znaków.",
+    "maxLength": "Maksymalna długość to {max} znaków.",
+    "passwordMismatch": "Hasła muszą się zgadzać."
   }
 }

@@ -15,6 +15,8 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { useTranslations } from "next-intl"
+import { deserializeTranslationCall, isSerializedTranslationCall } from "@/i18n/utils"
 
 const Form = FormProvider
 
@@ -135,9 +137,21 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
-  const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message ?? "") : props.children
+function FormMessage({ className, children, ...props }: React.ComponentProps<"p">) {
+  const t = useTranslations("formValidation");
+  const { error, formMessageId } = useFormField();
+
+  let translatedMessage;
+  try {
+    const message = error?.message || "";
+    const isSerialized = isSerializedTranslationCall(message);
+    if (isSerialized) {
+      translatedMessage = deserializeTranslationCall(message, t);
+    }
+  } catch (e) {
+    translatedMessage = error?.message || children;
+  }
+  const body = translatedMessage;
 
   if (!body) {
     return null

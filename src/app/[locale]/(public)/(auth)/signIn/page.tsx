@@ -13,11 +13,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { signIn, useSession } from "@/lib/auth/authClient";
+import { signIn } from "@/lib/auth/authClient";
 import { routes } from "@/lib/routes/routes";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { FcGoogle } from "react-icons/fc";
+import { LuLogIn, LuUserPlus } from "react-icons/lu";
+import ActionButton from "@/components/ButtonLink";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -108,19 +110,19 @@ export default function SignInForm() {
             )}
           />
           <Button type="submit" className="w-full">
-            {t('signIn')}
+            <LuLogIn className="mr-1" />{t('signIn')}
           </Button>
         </form>
       </Form>
 
-      <Button type="button" className="w-full my-2" variant={"outline"} onClick={handleGoogleSignIn}>
+      <Button type="button" className="w-full my-4" variant={"outline"} onClick={handleGoogleSignIn}>
         <FcGoogle className="mr-1" />
         {t('continueWithGoogle')}
       </Button>
 
-      <Button type="button" className="w-full my-2" variant={"outline"}>
-        {t('signUp')}
-      </Button>
+      <ActionButton href={routes.auth.signUp} className="w-full" variant={"outline"}>
+        <LuUserPlus className="mr-1" />{t('signUp')}
+      </ActionButton>
     </div>
   );
 }

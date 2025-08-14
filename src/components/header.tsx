@@ -30,6 +30,7 @@ import { routes } from "@/lib/routes/routes";
 import { UserActions } from "./user-actions";
 import { ThemeSwitcher } from "./theme-switcher";
 import Image from "next/image";
+import { LangSwitcher } from "./lang-switcher";
 
 interface MenuItem {
   title: string;
@@ -104,10 +105,10 @@ const Header = ({
   const logoSize = 56
 
   return (
-    <section className="p-4 bg-">
+    <header className="p-4">
         {/* Desktop Menu */}
         <nav className="hidden justify-between lg:flex">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 grow">
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
               <Image
@@ -121,7 +122,7 @@ const Header = ({
                 {logo.title}
               </span>
             </a>
-            <div className="flex items-center">
+            <div className="flex items-center grow">
               <NavigationMenu>
                 <NavigationMenuList>
                   {menu.map((item) => renderMenuItem(item))}
@@ -132,6 +133,7 @@ const Header = ({
           <div className="flex items-center gap-2">
             <UserActions />
             <ThemeSwitcher />
+            <LangSwitcher/>
           </div>
         </nav>
 
@@ -153,7 +155,7 @@ const Header = ({
             </a>
             <div className="flex items-center gap-2">
               <Sheet>
-                <SheetTrigger asChild>
+                <SheetTrigger asChild className="h-9">
                   <Button variant="outline" size="icon">
                     <Menu className="size-4" />
                   </Button>
@@ -191,11 +193,12 @@ const Header = ({
                   </div>
                 </SheetContent>
               </Sheet>
-              <ThemeSwitcher />             
+              <ThemeSwitcher />   
+              <LangSwitcher/>          
             </div>
           </div>
         </div>
-    </section>
+    </header>
   );
 };
 

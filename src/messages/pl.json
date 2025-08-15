@@ -1,10 +1,10 @@
-
 {
   "base": {
     "title": "Witaj świecie!",
     "about": "To jest przykładowa aplikacja, która demonstruje internacjonalizację w Next.js."
   },
   "user": {
+    "name": "Nazwa",
     "signIn": "Zaloguj się",
     "signUp": "Zarejestruj się",
     "signOut": "Wyloguj się",
@@ -14,7 +14,9 @@
     "continueWithGoogle": "Kontynuuj z Google",
     "profile": "Profil",
     "anonymous": "Anonimowy",
-    "avatar": "Awatar"
+    "avatar": "Awatar",
+    "alreadySignedUp": "Masz już konto?",
+    "notYetSignedUp": "Nie masz jeszcze konta?"
   },
   "formValidation": {
     "required": "To pole jest wymagane.",
@@ -22,5 +24,16 @@
     "minLength": "Minimalna długość to {min} znaków.",
     "maxLength": "Maksymalna długość to {max} znaków.",
     "passwordMismatch": "Hasła muszą się zgadzać."
+  },
+  "emails": {
+    "verification": {
+      "subject": "Weryfikacja konta",
+      "title": "Weryfikacja konta",
+      "thanksForSigningUp": "Cześć! Dziękujemy za rejestrację. Aby dokończyć proces i zabezpieczyć swoje konto, potwierdź swój adres e-mail, klikając poniższy przycisk.",
+      "buttonText": "Zweryfikuj adres e-mail",
+      "buttonDoesntWork": "Jeśli przycisk nie działa, możesz skopiować i wkleić ten link do swojej przeglądarki:",
+      "urlWillExpire": "Ten link weryfikacyjny wygaśnie po 24 godzinach ze względów bezpieczeństwa.",
+      "ignoreEmail": "Jeśli nie zakładałeś konta, możesz zignorować tę wiadomość."
+    }
   }
 }

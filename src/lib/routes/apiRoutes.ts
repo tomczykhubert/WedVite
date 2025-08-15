@@ -10,6 +10,7 @@ export const apiRoutes = {
       email: "/api/auth/sign-up/email",
       social: "/api/auth/sign-up/social",
     },
+    verifyEmail: "/api/auth/verify-email",
     callback: {
       google: "/api/auth/callback/google",
     },
@@ -21,4 +22,7 @@ export const apiRoutes = {
   users: {
     getUser: (userId: ID) => `/api/users/${userId}`,
   },
+  emails: {
+    test: "/api/emails/test"
+  }
 };

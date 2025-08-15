@@ -41,6 +41,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
 }
 
 @layer base {
@@ -84,13 +85,13 @@
     --secondary: oklch(0.22 0.04 30);
     --secondary-foreground: oklch(0.98 0.01 95);
     --muted: oklch(0.22 0.04 30);
-    --muted-foreground: oklch(0.65 0.07 80);
+    --muted-foreground: oklch(71.953% 0.00113 13.205);
     --accent: oklch(0.22 0.04 30);
     --accent-foreground: oklch(0.98 0.01 95);
-    --destructive: oklch(0.58 0.21 29);
+    --destructive: oklch(47.59% 0.17518 29.036);
     --destructive-foreground: oklch(0.98 0.01 95);
-    --border: oklch(0.22 0.04 30);
-    --input: oklch(0.22 0.04 30);
+    --border: oklch(29.276% 0.00175 106.803);
+    --input: oklch(29.276% 0.00175 106.803);
     --ring: oklch(0.72 0.19 70);
     --chart-1: oklch(0.62 0.21 265);
     --chart-2: oklch(0.55 0.13 195);
@@ -99,6 +100,7 @@
     --chart-5: oklch(0.68 0.19 340);
   }
 }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -108,22 +110,22 @@
   }
 
   h1 {
-    @apply text-4xl font-bold tracking-tight;
+    @apply text-4xl font-bold tracking-tight mb-5;
   }
   h2 {
-    @apply text-3xl font-bold tracking-tight;
+    @apply text-3xl font-bold tracking-tight mb-4;
   }
   h3 {
-    @apply text-2xl font-bold tracking-tight;
+    @apply text-2xl font-bold tracking-tight mb-3;
   }
   h4 {
-    @apply text-xl font-semibold tracking-tight;
+    @apply text-xl font-semibold tracking-tight mb-2;
   }
   h5 {
-    @apply text-lg font-semibold tracking-tight;
+    @apply text-lg font-semibold tracking-tight mb-1;
   }
   h6 {
-    @apply text-base font-semibold tracking-tight;
+    @apply text-base font-semibold tracking-tight mb-1;
   }
 }
 

@@ -4,6 +4,7 @@ import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
 import {
+  Control,
   Controller,
   FormProvider,
   useFormContext,
@@ -17,6 +18,8 @@ import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { useTranslations } from "next-intl"
 import { deserializeTranslationCall, isSerializedTranslationCall } from "@/i18n/utils"
+import { Input } from "./input"
+import { FormFieldConfig } from "@/lib/forms/schemaTranslator"
 
 const Form = FormProvider
 
@@ -91,8 +94,10 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 
 function FormLabel({
   className,
+  children,
+  required,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
+}: React.ComponentProps<typeof LabelPrimitive.Root> & {required?: boolean}) {
   const { error, formItemId } = useFormField()
 
   return (
@@ -102,7 +107,10 @@ function FormLabel({
       className={cn("data-[error=true]:text-destructive", className)}
       htmlFor={formItemId}
       {...props}
-    />
+    >
+      {children} 
+      { required && <span className="text-destructive">*</span>}
+    </Label>
   )
 }
 
@@ -169,6 +177,42 @@ function FormMessage({ className, children, ...props }: React.ComponentProps<"p"
   )
 }
 
+function AutoFormField({control, fieldConfig}: {control: Control, fieldConfig: FormFieldConfig}) {
+  const t = useTranslations()
+  let translatedLabel: string;
+  try {
+    const label = fieldConfig.label || "";
+    const isSerialized = isSerializedTranslationCall(label);
+    if (isSerialized) {
+      translatedLabel = deserializeTranslationCall(label, t);
+    } else {
+      translatedLabel = fieldConfig.label;
+    }
+  } catch (e) {
+    translatedLabel = fieldConfig.label;
+  }
+
+  return <FormField
+    control={control}
+    name={fieldConfig.name}
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel required={fieldConfig.required}>
+          {translatedLabel}
+        </FormLabel>
+        <FormControl>
+          <Input
+            type={fieldConfig.type}
+            placeholder={translatedLabel}
+            {...field}
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+}
+
 export {
   useFormField,
   Form,
@@ -178,4 +222,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  AutoFormField
 }

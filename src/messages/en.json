@@ -1,10 +1,10 @@
-
 {
   "HomePage": {
     "title": "Hello world!",
     "about": "This is a sample application to demonstrate internationalization in Next.js."
   },
   "user": {
+    "name": "Name",
     "signIn": "Sign in",
     "signUp": "Sign up",
     "signOut": "Sign out",
@@ -14,13 +14,26 @@
     "continueWithGoogle": "Continue with Google",
     "profile": "Profile",
     "anonymous": "Anonymous",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "alreadySignedUp": "Already signed up?",
+    "notYetSignedUp": "Not yet signed up?"
   },
-    "formValidation": {
-      "required": "This field is required.",
-      "email": "Please enter a valid email address.",
-      "minLength": "Minimum length is {min} characters.",
-      "maxLength": "Maximum length is {max} characters.",
-      "passwordMismatch": "Passwords must match."
+  "formValidation": {
+    "required": "This field is required.",
+    "email": "Please enter a valid email address.",
+    "minLength": "Minimum length is {min} characters.",
+    "maxLength": "Maximum length is {max} characters.",
+    "passwordMismatch": "Passwords must match."
+  },
+  "emails": {
+    "verification": {
+      "subject": "Account verification",
+      "title": "Account verification",
+      "thanksForSigningUp": "Hi there! Thanks for signing up. To complete your registration and secure your account, please verify your email address by clicking the button below.",
+      "buttonText": "Verify Email Address",
+      "buttonDoesntWork": "If the button doesn't work, you can copy and paste this link into your browser:",
+      "urlWillExpire": "This verification link will expire in 24 hours for security reasons.",
+      "ignoreEmail": "If you didn't create an account, you can safely ignore this email."
     }
+  }
 }

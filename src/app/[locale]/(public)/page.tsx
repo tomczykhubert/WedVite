@@ -1,11 +1,11 @@
+"use client";
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { routes } from '@/lib/routes/routes';
-import { ThemeSwitcher } from '@/components/theme-switcher';
+import { Button } from '@/components/ui/button';
  
 export default function HomePage() {
   const t = useTranslations();
-
   return (
     <div>
       <div>

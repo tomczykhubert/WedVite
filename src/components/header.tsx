@@ -1,6 +1,6 @@
 "use client";
 
-import { Book, Menu, Sunset, Trees, User, Zap } from "lucide-react";
+import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 
 import {
   Accordion,
@@ -31,6 +31,7 @@ import { UserActions } from "./user-actions";
 import { ThemeSwitcher } from "./theme-switcher";
 import Image from "next/image";
 import { LangSwitcher } from "./lang-switcher";
+import { Link } from "@/i18n/navigation";
 
 interface MenuItem {
   title: string;
@@ -105,12 +106,12 @@ const Header = ({
   const logoSize = 56
 
   return (
-    <header className="p-4">
+    <header className="p-4 border-b-1 shadow-sm">
         {/* Desktop Menu */}
         <nav className="hidden justify-between lg:flex">
           <div className="flex items-center gap-6 grow">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <Link href={logo.url} className="flex items-center gap-2">
               <Image
                 src={logo.src}
                 className="h-14"
@@ -121,7 +122,7 @@ const Header = ({
               <span className="text-lg font-semibold tracking-tighter">
                 {logo.title}
               </span>
-            </a>
+            </Link>
             <div className="flex items-center grow">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -141,7 +142,7 @@ const Header = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <Link href={logo.url} className="flex items-center gap-2">
               <Image
                 src={logo.src}
                 className="h-14"
@@ -152,7 +153,7 @@ const Header = ({
               <span className="text-lg font-semibold tracking-tighter">
                 {logo.title}
               </span>
-            </a>
+            </Link>
             <div className="flex items-center gap-2">
               <Sheet>
                 <SheetTrigger asChild className="h-9">
@@ -164,7 +165,7 @@ const Header = ({
                   <SheetHeader>
                     <SheetTitle>
                       <div className="flex items-center gap-2">
-                        <a href={logo.url} className="flex items-center gap-2">
+                        <Link href={logo.url} className="flex items-center gap-2">
                           <Image
                           
                           src={logo.src}
@@ -173,7 +174,7 @@ const Header = ({
                           width={logoSize}
                           height={logoSize}
                           />
-                        </a>
+                        </Link>
                         <span className="text-lg font-semibold tracking-tighter">
                           {logo.title}
                         </span>
@@ -247,15 +248,15 @@ const renderMobileMenuItem = (item: MenuItem) => {
   }
 
   return (
-    <a key={item.title} href={item.url} className="text-md font-semibold">
+    <Link key={item.title} href={item.url} className="text-md font-semibold">
       {item.title}
-    </a>
+    </Link>
   );
 };
 
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
-    <a
+    <Link
       className="hover:bg-muted hover:text-accent-foreground flex select-none flex-row gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors"
       href={item.url}
     >
@@ -268,7 +269,7 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
           </p>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 

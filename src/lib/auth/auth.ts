@@ -2,6 +2,13 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../prisma/prisma";
 import { nextCookies } from "better-auth/next-js";
+import { Resend } from "resend";
+import EmailVerification from "@/components/emails/email-verification";
+import { hasLocale } from "next-intl";
+import resend from "../resend/resend";
+import { cookies } from "next/headers";
+import { Locale, routing } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
 
 export const auth = betterAuth({
   appName: "WedVite",
@@ -13,6 +20,25 @@ export const auth = betterAuth({
     autoSignIn: true,
     minPasswordLength: 8,
     maxPasswordLength: 20,
+    requireEmailVerification: true
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const cookieStore = await cookies();
+      let locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale
+      if (!hasLocale(routing.locales, locale)) {
+        locale = routing.defaultLocale
+      }
+      const t = await getTranslations({locale: locale, namespace: "emails"})
+      await resend.emails.send({
+        from: process.env.RESEND_FROM as string,
+        to: user.email,
+        subject: t("verification.subject"),
+        react: EmailVerification(url, user.email, locale as Locale),
+      });
+    }
   },
   user: {
     additionalFields: {

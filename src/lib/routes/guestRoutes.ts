@@ -11,7 +11,8 @@ const GUEST_API_ROUTES = [
   apiRoutes.auth.signIn.social,
   apiRoutes.auth.signUp.email,
   apiRoutes.auth.signUp.social,
-  apiRoutes.auth.callback.google
+  apiRoutes.auth.callback.google,
+  apiRoutes.auth.verifyEmail
 ];
 
 const GUEST_ROUTES = [...GUEST_PAGES_ROUTES, ...GUEST_API_ROUTES];

@@ -5,6 +5,7 @@
     "signIn": "Zaloguj się",
     "signUp": "Zarejestruj się",
     "signOut": "Wyloguj się",
+    "dashboard": "Twoje wydarzenia",
     "email": "Email",
     "password": "Hasło",
     "confirmPassword": "Powtórz hasło",
@@ -38,5 +39,9 @@
       "urlWillExpire": "Ten link weryfikacyjny wygaśnie po 24 godzinach ze względów bezpieczeństwa.",
       "ignoreEmail": "Jeśli nie zakładałeś konta, możesz zignorować tę wiadomość."
     }
+  }, 
+  "dashboard": {
+    "home": "Strona główna",
+    "events": "Wydarzenia"
   }
 }

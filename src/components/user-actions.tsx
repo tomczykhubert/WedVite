@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Link, useRouter } from "@/i18n/navigation";
-import { LuCircleUser, LuLogOut } from "react-icons/lu";
+import { LuCircleUser, LuLayoutDashboard, LuLogOut } from "react-icons/lu";
 import { Skeleton } from "./ui/skeleton";
 
 export function UserActions({
@@ -35,6 +35,11 @@ export function UserActions({
       href: routes.auth.profile,
       title: t("profile"),
       icon: LuCircleUser,
+    },
+    {
+      href: routes.dashboard.index,
+      title: t("dashboard"),
+      icon: LuLayoutDashboard,
     },
   ];
 

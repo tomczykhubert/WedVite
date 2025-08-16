@@ -18,8 +18,8 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
-    minPasswordLength: 8,
-    maxPasswordLength: 20,
+    minPasswordLength: 6,
+    maxPasswordLength: 30,
     requireEmailVerification: true,
   },
   emailVerification: {
@@ -49,10 +49,11 @@ export const auth = betterAuth({
         required: true,
         defaultValue: "credentials",
       },
-      activeEventId: {
+      preferredLocale: {
         type: "string",
-        required: false,
-      },
+        required: true,
+        defaultValue: routing.defaultLocale
+      }
     },
   },
   socialProviders: {

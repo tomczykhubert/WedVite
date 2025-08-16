@@ -1,16 +1,16 @@
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  registerType  String
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  activeEventId String?
-  events        Event[]
+  id              String    @id @default(cuid())
+  name            String
+  email           String
+  emailVerified   Boolean
+  image           String?
+  registerType    String
+  createdAt       DateTime
+  updatedAt       DateTime
+  sessions        Session[]
+  accounts        Account[]
+  preferredLocale String    @default("pl")
+  events          Event[]
 
   @@unique([email])
   @@map("user")

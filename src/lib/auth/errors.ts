@@ -1,4 +1,3 @@
-import { routes } from "../routes/routes";
 import { authClient } from "./authClient";
 
 type ErrorTypeConfig = {

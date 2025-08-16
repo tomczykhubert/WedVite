@@ -6,7 +6,7 @@ import { z } from "zod";
 import { AutoFormField, Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { signUp } from "@/lib/auth/authClient";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { LuLogIn, LuUserPlus } from "react-icons/lu";
 import { stc } from "@/i18n/utils";
@@ -80,18 +80,17 @@ export default function RegisterForm() {
   const t = useTranslations("user");
   const [isPending, setPending] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState("");
-
+  const locale = useLocale();
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Hubert",
-      email: "tomczyk.hubert22@gmail.com",
-      password: "zaq1@WSX",
-      confirmPassword: "zaq1@WSX",
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
-  //TODO: handle errors(user already exists)
   const onSubmit = async (data: FormData) => {
     setFormErrorMessage("");
     await signUp.email(
@@ -99,6 +98,7 @@ export default function RegisterForm() {
         name: data.name,
         email: data.email,
         password: data.password,
+        preferredLocale: locale,
       },
       {
         onResponse: () => {
@@ -153,7 +153,7 @@ export default function RegisterForm() {
                 </Button>
               </form>
             </Form>
-            <GoogleLogin />
+            <GoogleLogin setPending={setPending}/>
             <p className="text-sm text-muted-foreground mb-2">
               {t("alreadySignedUp")}
             </p>

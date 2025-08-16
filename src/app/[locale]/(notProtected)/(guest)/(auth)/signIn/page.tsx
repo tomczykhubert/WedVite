@@ -69,7 +69,6 @@ export default function SignInForm() {
     },
   });
   const router = useRouter();
-  //TODO: handle errors(email not verified, wrong password)
   const onSubmit = async (data: SignInFormData) => {
     setFormErrorMessage("");
     await signIn.email(
@@ -158,7 +157,7 @@ export default function SignInForm() {
                 </Button>
               </form>
             </Form>
-            <GoogleLogin />
+            <GoogleLogin setPending={setPending}/>
             <p className="text-sm text-muted-foreground mb-2">
               {t("notYetSignedUp")}
             </p>

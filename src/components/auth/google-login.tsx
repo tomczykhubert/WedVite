@@ -6,14 +6,25 @@ import { Button } from "../ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { useTranslations } from "next-intl";
 
-export default function GoogleLogin() {
+export default function GoogleLogin({ setPending }: { setPending: React.Dispatch<React.SetStateAction<boolean>> }) {
   const t = useTranslations("user");
 
   const handleGoogleSignIn = async () => {
-    await signIn.social({
-      provider: "google",
-      callbackURL: routes.dashboard.index,
-    });
+    await signIn.social(
+      {
+        provider: "google",
+        callbackURL: routes.dashboard.index,
+
+      },
+      {
+        onResponse: () => {
+          setPending(false);
+        },
+        onRequest: () => {
+          setPending(true);
+        },
+      }
+    );
   };
 
   return (

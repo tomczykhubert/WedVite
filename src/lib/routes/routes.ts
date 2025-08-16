@@ -1,5 +1,3 @@
-import ID from "@/types/id";
-
 export const routes = {
   home: "/",
   auth: {
@@ -8,6 +6,6 @@ export const routes = {
     profile: "/profile",
   },
   dashboard: {
-    index: "/dashboard"
-  }
+    index: "/dashboard",
+  },
 };

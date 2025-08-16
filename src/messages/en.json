@@ -1,8 +1,5 @@
 {
-  "HomePage": {
-    "title": "Hello world!",
-    "about": "This is a sample application to demonstrate internationalization in Next.js."
-  },
+  "base": {},
   "user": {
     "name": "Name",
     "signIn": "Sign in",
@@ -23,7 +20,13 @@
     "email": "Please enter a valid email address.",
     "minLength": "Minimum length is {min} characters.",
     "maxLength": "Maximum length is {max} characters.",
-    "passwordMismatch": "Passwords must match."
+    "passwordMismatch": "Passwords must match.",
+    "auth": {
+      "default": "An error occurred. Please try again.",
+      "emailAlreadyTaken": "Given email is already taken.",
+      "invalidEmailOrPassword": "Given email or password is invalid.",
+      "emailNotVerified": "Email address of this account has not been verified yet."
+    }
   },
   "emails": {
     "verification": {

@@ -20,25 +20,27 @@ export const auth = betterAuth({
     autoSignIn: true,
     minPasswordLength: 8,
     maxPasswordLength: 20,
-    requireEmailVerification: true
+    requireEmailVerification: true,
   },
   emailVerification: {
     sendOnSignUp: true,
+    sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       const cookieStore = await cookies();
-      let locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale
+      let locale =
+        cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
       if (!hasLocale(routing.locales, locale)) {
-        locale = routing.defaultLocale
+        locale = routing.defaultLocale;
       }
-      const t = await getTranslations({locale: locale, namespace: "emails"})
+      const t = await getTranslations({ locale: locale, namespace: "emails" });
       await resend.emails.send({
         from: process.env.RESEND_FROM as string,
         to: user.email,
         subject: t("verification.subject"),
         react: EmailVerification(url, user.email, locale as Locale),
       });
-    }
+    },
   },
   user: {
     additionalFields: {

@@ -21,8 +21,15 @@ import { LuLogIn, LuUserPlus } from "react-icons/lu";
 import ActionButton from "@/components/button-link";
 import GoogleLogin from "@/components/auth/google-login";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FormConfig, translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import {
+  FormConfig,
+  translateSchemaConfig,
+} from "@/lib/forms/schemaTranslator";
 import { stc } from "@/i18n/utils";
+import { getErrorTypeConfig } from "@/lib/auth/errors";
+import { useState } from "react";
+import Loader from "@/components/loader";
+import FormErrorMessage from "@/components/form-error-messege";
 
 const formConfig: FormConfig = [
   {
@@ -42,19 +49,18 @@ const formConfig: FormConfig = [
     type: "password",
     label: stc("user.password"),
     required: true,
-    validation: z
-      .string()
-      .nonempty(stc("required"))
-  }
+    validation: z.string().nonempty(stc("required")),
+  },
 ];
 
-const formSchema = z.object(translateSchemaConfig(formConfig))
+const formSchema = z.object(translateSchemaConfig(formConfig));
 
 type SignInFormData = z.infer<typeof formSchema>;
 
 export default function SignInForm() {
+  const [isPending, setPending] = useState(false);
+  const [formErrorMessage, setFormErrorMessage] = useState("");
   const t = useTranslations("user");
-
   const form = useForm<SignInFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,91 +69,111 @@ export default function SignInForm() {
     },
   });
   const router = useRouter();
-  //TODO: handle errors(email not verified)
+  //TODO: handle errors(email not verified, wrong password)
   const onSubmit = async (data: SignInFormData) => {
-    try {
-      await signIn.email(
-        {
-          email: data.email,
-          password: data.password,
+    setFormErrorMessage("");
+    await signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onResponse: () => {
+          setPending(false);
         },
-        {
-          onSuccess: () => {
-            router.replace(routes.dashboard.index);
-          },
-
-          onError: (error) => {
-            form.setError("email", {
+        onRequest: () => {
+          setPending(true);
+        },
+        onSuccess: () => {
+          router.replace(routes.dashboard.index);
+        },
+        onError: (error) => {
+          const errorType = getErrorTypeConfig(error.error.code);
+          if (errorType.fieldName) {
+            form.setError(errorType.fieldName, {
               type: "manual",
-              message: t("signInError"),
+              message: stc(errorType.message),
             });
-          },
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
+          } else {
+            setFormErrorMessage(errorType.message);
+          }
+        },
+      }
+    );
   };
 
   return (
     <div className="my-5 max-w-[600px] mx-auto">
-      <Card className="mx-4">
-        <CardHeader>
-          <CardTitle>
-            <h1 className="text-center m-0">{t("signIn")}</h1>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("email")}</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder={t("email")} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("password")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder={t("password")}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full">
-                <LuLogIn className="mr-1" />
-                {t("signIn")}
-              </Button>
-            </form>
-          </Form>
-          <GoogleLogin />
-          <p className="text-sm text-muted-foreground mb-2">{t("notYetSignedUp")}</p>
-          <ActionButton
-            href={routes.auth.signUp}
-            className="w-full"
-            variant={"outline"}
-          >
-            <LuUserPlus className="mr-1" />
-            {t("signUp")}
-          </ActionButton>
-        </CardContent>
-      </Card>
+      <div className="relative">
+        <Card className="mx-4">
+          <CardHeader>
+            <CardTitle>
+              <h1 className="text-center m-0">{t("signIn")}</h1>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FormErrorMessage message={formErrorMessage} />
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("email")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder={t("email")}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("password")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder={t("password")}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full">
+                  <LuLogIn className="mr-1" />
+                  {t("signIn")}
+                </Button>
+              </form>
+            </Form>
+            <GoogleLogin />
+            <p className="text-sm text-muted-foreground mb-2">
+              {t("notYetSignedUp")}
+            </p>
+            <ActionButton
+              href={routes.auth.signUp}
+              className="w-full"
+              variant={"outline"}
+            >
+              <LuUserPlus className="mr-1" />
+              {t("signUp")}
+            </ActionButton>
+          </CardContent>
+        </Card>
+        <Loader isLoading={isPending} />
+      </div>
     </div>
   );
 }

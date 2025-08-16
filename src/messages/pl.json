@@ -1,8 +1,5 @@
 {
-  "base": {
-    "title": "Witaj świecie!",
-    "about": "To jest przykładowa aplikacja, która demonstruje internacjonalizację w Next.js."
-  },
+  "base": {},
   "user": {
     "name": "Nazwa",
     "signIn": "Zaloguj się",
@@ -23,7 +20,13 @@
     "email": "Proszę podać prawidłowy adres email.",
     "minLength": "Minimalna długość to {min} znaków.",
     "maxLength": "Maksymalna długość to {max} znaków.",
-    "passwordMismatch": "Hasła muszą się zgadzać."
+    "passwordMismatch": "Hasła muszą się zgadzać.",
+    "auth": {
+      "default": "Wystąpił błąd. Spróbuj ponownie.",
+      "emailAlreadyTaken": "Podany email jest już zajęty.",
+      "invalidEmailOrPassword": "Podany email lub hasło jest nieprawidłowe.",
+      "emailNotVerified": "Adres email tego konta nie został jeszcze zweryfkiowany."
+    }
   },
   "emails": {
     "verification": {

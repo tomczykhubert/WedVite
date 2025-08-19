@@ -1,17 +1,9 @@
-import { headers } from "next/headers";
-import { getSession } from "@/lib/auth/authClient";
 import UserMenu from "@/components/user/user-menu/user-menu";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
-import { User } from "@prisma/client";
+import { getUser } from "@/lib/auth/getUser";
 
 export async function SidebarUser() {
-  const { data } = await getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
-
-  const user = data?.user as User;
+  const user = await getUser();
   if (!user) return;
   return (
     <SidebarMenu>

@@ -1,5 +1,10 @@
 {
-  "base": {},
+  "base": {
+    "forms": {
+      "submit": "Potwierdź",
+      "cancel": "Anuluj"
+    }
+  },
   "user": {
     "name": "Nazwa",
     "signIn": "Zaloguj się",
@@ -44,6 +49,12 @@
   },
   "dashboard": {
     "home": "Strona główna",
-    "events": "Wydarzenia"
+    "events": "Wydarzenia",
+    "forms": {
+      "addEventForm": {
+        "addEvent": "Dodaj wydarzenie",
+        "name": "Nazwa wydarzenia"
+      }
+    }
   }
 }

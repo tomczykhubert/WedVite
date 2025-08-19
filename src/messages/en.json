@@ -1,5 +1,10 @@
 {
-  "base": {},
+  "base": {
+    "form": {
+      "submit": "Submit",
+      "cancel": "Cancel"
+    }
+  },
   "user": {
     "name": "Name",
     "signIn": "Sign in",
@@ -44,6 +49,12 @@
   },
     "dashboard": {
     "home": "Homepage",
-    "events": "Events"
+    "events": "Events",
+    "forms": {
+      "addEventForm": {
+        "addEvent": "Add event",
+        "name": "Event name"
+      }
+    }
   }
 }

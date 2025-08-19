@@ -76,7 +76,7 @@ export default async function UserMenuItems({
       <UserMenuSeparator />
       {renderItems(userMenuItemsConfig)}
       <UserMenuSeparator />
-      <UserSignOut />
+      {/* <UserSignOut /> */}
     </>
   );
 }

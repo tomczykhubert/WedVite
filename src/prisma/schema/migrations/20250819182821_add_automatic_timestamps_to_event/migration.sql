@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."event" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;

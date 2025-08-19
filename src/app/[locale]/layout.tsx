@@ -5,6 +5,8 @@ import {routing} from '@/i18n/routing';
 import { ThemeProvider } from "@/components/theme-provider";
 import "../globals.css";
 import { Toaster } from "sonner";
+import { TRPCProvider } from "@/trpc/client";
+import { Header } from "@/components/header/header";
 
 export const metadata: Metadata = {
   title: "WedVite",
@@ -33,8 +35,10 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
           <NextIntlClientProvider>
-            <Toaster />
-            {children}
+            <TRPCProvider>
+              <Toaster />
+              {children}
+            </TRPCProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

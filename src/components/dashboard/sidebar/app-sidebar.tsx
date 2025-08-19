@@ -7,9 +7,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Navigation } from "./navigation";
 import Image from "next/image";
-import { UserActions } from "@/components/user-actions";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { LangSwitcher } from "@/components/lang-switcher";
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes/routes";
 import { SidebarUser } from "./sidebar-user";

@@ -10,11 +10,13 @@
     "password": "Hasło",
     "confirmPassword": "Powtórz hasło",
     "continueWithGoogle": "Kontynuuj z Google",
-    "profile": "Profil",
     "anonymous": "Anonimowy",
     "avatar": "Awatar",
     "alreadySignedUp": "Masz już konto?",
-    "notYetSignedUp": "Nie masz jeszcze konta?"
+    "notYetSignedUp": "Nie masz jeszcze konta?",
+    "account": "Konto",
+    "billing": "Rozliczenia",
+    "notifications": "Powiadomienia"
   },
   "formValidation": {
     "required": "To pole jest wymagane.",
@@ -39,7 +41,7 @@
       "urlWillExpire": "Ten link weryfikacyjny wygaśnie po 24 godzinach ze względów bezpieczeństwa.",
       "ignoreEmail": "Jeśli nie zakładałeś konta, możesz zignorować tę wiadomość."
     }
-  }, 
+  },
   "dashboard": {
     "home": "Strona główna",
     "events": "Wydarzenia"

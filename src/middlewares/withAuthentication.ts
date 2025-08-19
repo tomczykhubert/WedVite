@@ -8,6 +8,7 @@ import { PathEntry } from "@/lib/routes/PathEntry";
 import { routes } from "@/lib/routes/routes";
 import { routing } from "@/i18n/routing";
 import { apiRoutes } from "@/lib/routes/apiRoutes";
+import { removeLocalePrefix } from "./withLocale";
 
 type AuthMiddlewareParams = {
   request: NextRequest;
@@ -81,14 +82,4 @@ function handleAuthenticationRedirect(params: AuthMiddlewareParams, redirectUrl:
   return params.request.nextUrl.pathname.startsWith("/api")
     ? NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     : NextResponse.redirect(new URL(redirectUrl, params.request.url));
-}
-
-function removeLocalePrefix(path: string): string {
-  if (routing.locales.some((loc) => path === `/${loc}` || path === `/${loc}/`)) {
-    return "";
-  }
-
-  const locale = routing.locales.find((loc) => path.startsWith(`/${loc}/`));
-
-  return locale ? path.replace(`/${locale}/`, "/") : path;
 }

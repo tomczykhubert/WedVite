@@ -3,9 +3,13 @@ export const routes = {
   auth: {
     signIn: "/signIn",
     signUp: "/signUp",
-    profile: "/profile",
   },
   dashboard: {
     index: "/dashboard",
+  },
+  account: {
+    index: "/account",
+    billing: "/account/billing",
+    notifications: "/account/notifications",
   },
 };

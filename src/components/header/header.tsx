@@ -1,5 +1,3 @@
-"use client";
-
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 
 import {
@@ -27,11 +25,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { routes } from "@/lib/routes/routes";
-import { UserActions } from "./user-actions";
-import { ThemeSwitcher } from "./theme-switcher";
 import Image from "next/image";
-import { LangSwitcher } from "./lang-switcher";
 import { Link } from "@/i18n/navigation";
+import { ThemeSwitcher } from "../theme-switcher";
+import { LangSwitcher } from "../lang-switcher";
+import { UserActions } from "./user-actions";
 
 interface MenuItem {
   title: string;
@@ -101,104 +99,102 @@ const Header = ({
       url: "#",
     },
   ],
-  
 }: HeaderProps) => {
-  const logoSize = 56
+  const logoSize = 56;
 
   return (
     <header className="p-4 border-b-1 shadow-sm">
-        {/* Desktop Menu */}
-        <nav className="hidden justify-between lg:flex">
-          <div className="flex items-center gap-6 grow">
-            {/* Logo */}
-            <Link href={logo.url} className="flex items-center gap-2">
-              <Image
-                src={logo.src}
-                className="h-14"
-                alt={logo.alt}
-                width={logoSize}
-                height={logoSize}
-              />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
-              </span>
-            </Link>
-            <div className="flex items-center grow">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
+      {/* Desktop Menu */}
+      <nav className="hidden justify-between lg:flex">
+        <div className="flex items-center gap-6 grow">
+          {/* Logo */}
+          <Link href={logo.url} className="flex items-center gap-2">
+            <Image
+              src={logo.src}
+              className="h-14"
+              alt={logo.alt}
+              width={logoSize}
+              height={logoSize}
+            />
+            <span className="text-lg font-semibold tracking-tighter">
+              {logo.title}
+            </span>
+          </Link>
+          <div className="flex items-center grow">
+            <NavigationMenu>
+              <NavigationMenuList>
+                {menu.map((item) => renderMenuItem(item))}
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
-          <div className="flex items-center gap-2">
-            <UserActions />
-            <ThemeSwitcher />
-            <LangSwitcher/>
-          </div>
-        </nav>
+        </div>
+        <div className="flex items-center gap-2">
+          <UserActions />
+          <ThemeSwitcher />
+          <LangSwitcher />
+        </div>
+      </nav>
 
-        {/* Mobile Menu */}
-        <div className="block lg:hidden">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href={logo.url} className="flex items-center gap-2">
-              <Image
-                src={logo.src}
-                className="h-14"
-                alt={logo.alt}
-                width={logoSize}
-                height={logoSize}
-              />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
-              </span>
-            </Link>
-            <div className="flex items-center gap-2">
-              <Sheet>
-                <SheetTrigger asChild className="h-9">
-                  <Button variant="outline" size="icon">
-                    <Menu className="size-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="overflow-y-auto gap-0">
-                  <SheetHeader>
-                    <SheetTitle>
-                      <div className="flex items-center gap-2">
-                        <Link href={logo.url} className="flex items-center gap-2">
-                          <Image
-                          
+      {/* Mobile Menu */}
+      <div className="block lg:hidden">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link href={logo.url} className="flex items-center gap-2">
+            <Image
+              src={logo.src}
+              className="h-14"
+              alt={logo.alt}
+              width={logoSize}
+              height={logoSize}
+            />
+            <span className="text-lg font-semibold tracking-tighter">
+              {logo.title}
+            </span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild className="h-9">
+                <Button variant="outline" size="icon">
+                  <Menu className="size-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="overflow-y-auto gap-0">
+                <SheetHeader>
+                  <SheetTitle>
+                    <div className="flex items-center gap-2">
+                      <Link href={logo.url} className="flex items-center gap-2">
+                        <Image
                           src={logo.src}
                           className="h-14"
                           alt={logo.alt}
                           width={logoSize}
                           height={logoSize}
-                          />
-                        </Link>
-                        <span className="text-lg font-semibold tracking-tighter">
-                          {logo.title}
-                        </span>
-                      </div>
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className="flex flex-col gap-6 p-4">
-                    <Accordion
-                      type="single"
-                      collapsible
-                      className="flex w-full flex-col gap-4"
-                    >
-                      {menu.map((item) => renderMobileMenuItem(item))}
-                    </Accordion>
+                        />
+                      </Link>
+                      <span className="text-lg font-semibold tracking-tighter">
+                        {logo.title}
+                      </span>
+                    </div>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-6 p-4">
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="flex w-full flex-col gap-4"
+                  >
+                    {menu.map((item) => renderMobileMenuItem(item))}
+                  </Accordion>
 
-                    <UserActions buttonSize="sm"/>
-                  </div>
-                </SheetContent>
-              </Sheet>
-              <ThemeSwitcher />   
-              <LangSwitcher/>          
-            </div>
+                  <UserActions />
+                </div>
+              </SheetContent>
+            </Sheet>
+            <ThemeSwitcher />
+            <LangSwitcher />
           </div>
         </div>
+      </div>
     </header>
   );
 };

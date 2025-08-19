@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../prisma/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { Resend } from "resend";
 import EmailVerification from "@/components/emails/email-verification";
 import { hasLocale } from "next-intl";
 import resend from "../resend/resend";
@@ -52,8 +51,8 @@ export const auth = betterAuth({
       preferredLocale: {
         type: "string",
         required: true,
-        defaultValue: routing.defaultLocale
-      }
+        defaultValue: routing.defaultLocale,
+      },
     },
   },
   socialProviders: {

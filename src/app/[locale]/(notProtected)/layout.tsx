@@ -1,16 +1,14 @@
-import { Header } from "@/components/header";
+import { Header } from "@/components/header/header";
 
 export default async function PublicLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
-    return (
+  return (
     <>
-        <Header />
-        {children}
+      <Header />
+      {children}
     </>
-    );
+  );
 }
-
-

@@ -10,11 +10,13 @@
     "password": "Password",
     "confirmPassword": "Confirm password",
     "continueWithGoogle": "Continue with Google",
-    "profile": "Profile",
     "anonymous": "Anonymous",
     "avatar": "Avatar",
     "alreadySignedUp": "Already signed up?",
-    "notYetSignedUp": "Not yet signed up?"
+    "notYetSignedUp": "Not yet signed up?",
+    "account": "Account",
+    "billing": "Billing",
+    "notifications": "Notifications"
   },
   "formValidation": {
     "required": "This field is required.",
@@ -39,5 +41,9 @@
       "urlWillExpire": "This verification link will expire in 24 hours for security reasons.",
       "ignoreEmail": "If you didn't create an account, you can safely ignore this email."
     }
+  },
+    "dashboard": {
+    "home": "Homepage",
+    "events": "Events"
   }
 }

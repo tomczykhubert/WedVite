@@ -1,6 +1,7 @@
 import { AppHeader } from "@/components/dashboard/sidebar/app-header";
 import { AppSidebar } from "@/components/dashboard/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { HydrateClient } from "@/trpc/server";
 import { cookies } from "next/headers";
 
 export default async function PublicLayout({
@@ -18,7 +19,7 @@ export default async function PublicLayout({
           <AppSidebar />
           <SidebarInset>
             <AppHeader />
-            <div className="flex flex-1 flex-col p-4">
+            <div className="flex flex-1 flex-col p-4 relative">
               {children}
             </div>
           </SidebarInset>

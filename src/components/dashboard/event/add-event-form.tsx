@@ -2,6 +2,7 @@
 import FormErrorMessage from "@/components/form-error-messege";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -12,18 +13,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AutoFormField, Form } from "@/components/ui/form";
-import { useRouter } from "@/i18n/navigation";
-import { stc } from "@/i18n/utils";
 import {
-  FormConfig,
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
 import { addEventSchema } from "@/schemas/event/addEventSchema";
-import { trpc } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LuCalendarPlus2 } from "react-icons/lu";
+import { toast } from "sonner";
 import z from "zod";
 
 const formSchema = z.object(translateSchemaConfig(addEventSchema));
@@ -36,8 +37,24 @@ export default function AddEventForm() {
   const [isPending, setPending] = useState(false);
   const [isOpen, setOpen] = useState(false)
   const [formErrorMessage, setFormErrorMessage] = useState("");
-  const addEvent = trpc.event.add.useMutation();
-  const router = useRouter();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const createPost = useMutation(
+    trpc.event.add.mutationOptions({
+      onSuccess: async () => {
+        form.reset();
+        await queryClient.invalidateQueries(trpc.event.pathFilter());
+      },
+      onError: (err) => {
+        toast.error(
+          err.data?.code === "UNAUTHORIZED"
+            ? "You must be logged in to post"
+            : "Failed to create post",
+        );
+      },
+    }),
+  );
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,17 +64,28 @@ export default function AddEventForm() {
 
   const onSubmit = (data: FormData) => {
     setFormErrorMessage("");
-    const response = addEvent.mutate({ name: data.name });
-    console.log(response);
-    router.refresh();
-		setOpen(false);
-		form.reset();
+    createPost.mutate(data);
+    setOpen(false);
   };
 
+  const openChange = (open: boolean) => {
+    setOpen(open)
+
+    if(open)
+      form.reset()
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={openChange}>
       <DialogTrigger asChild>
-        <Button variant="outline">{t("addEvent")}</Button>
+        <Card className="h-full min-h-[300px] text-gray-400 hover:bg-muted hover:text-current transition-all duration-200 cursor-pointer">
+          <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
+            <LuCalendarPlus2 className="h-20 w-20" />
+            <span>
+              {t("addEvent")}
+            </span>
+          </CardContent>
+        </Card>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>

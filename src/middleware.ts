@@ -8,6 +8,6 @@ export default stackMiddlewares(middlewares);
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.json|icon.svg|images/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.json|icon.svg|images/|api/trpc/).*)",
   ],
 };

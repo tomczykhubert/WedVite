@@ -1,18 +1,15 @@
 import { z } from "zod";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "../init";
-import prisma from "@/lib/prisma/prisma";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { addEventSchema } from "@/schemas/event/addEventSchema";
 
 export const eventRouter = createTRPCRouter({
   add: protectedProcedure
     .input(z.object(translateSchemaConfig(addEventSchema)))
-    .mutation(async (opts) => {
-      const { input } = opts;
-      const userId = opts.ctx.user.id;
-      console.log(input)
-      console.log('siemaneczko')
-      await prisma.event.create({
+    .mutation(async ({ ctx: { user, db }, input }) => {
+      const userId = user.id;
+
+      const event = await db.event.create({
         data: {
           name: input.name,
           userId: userId,
@@ -20,12 +17,13 @@ export const eventRouter = createTRPCRouter({
           respondDeadline: new Date(Date.now()).toISOString(),
         }
       })
+      return event
     }),
-  get: protectedProcedure.query(async (opts) => {
-    const userId = opts.ctx.user.id;
+  get: protectedProcedure.query(async ({ ctx: { user, db } }) => {
+    const userId = user.id;
     if (!userId) return null;
 
-    return await prisma.event.findMany({
+    return await db.event.findMany({
       where: {
         userId: userId,
       },

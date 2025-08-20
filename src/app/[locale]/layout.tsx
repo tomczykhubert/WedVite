@@ -5,7 +5,7 @@ import {routing} from '@/i18n/routing';
 import { ThemeProvider } from "@/components/theme-provider";
 import "../globals.css";
 import { Toaster } from "sonner";
-import { TRPCProvider } from "@/trpc/client";
+import { TRPCProvider, TRPCReactProvider } from "@/trpc/client";
 import { Header } from "@/components/header/header";
 
 export const metadata: Metadata = {
@@ -35,10 +35,10 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
           <NextIntlClientProvider>
-            <TRPCProvider>
+            <TRPCReactProvider>
               <Toaster />
               {children}
-            </TRPCProvider>
+            </TRPCReactProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -1,6 +1,6 @@
 {
   "base": {
-    "form": {
+    "forms": {
       "submit": "Submit",
       "cancel": "Cancel"
     }

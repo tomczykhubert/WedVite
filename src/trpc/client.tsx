@@ -1,56 +1,77 @@
-'use client';
+"use client";
 
-import type { QueryClient } from '@tanstack/react-query';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { httpBatchLink } from '@trpc/client';
-import { createTRPCReact } from '@trpc/react-query';
-import { useState } from 'react';
-import type { AppRouter } from './routers/_app';
-import { makeQueryClient } from './query-client';
+import type { QueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import {
+  createTRPCClient,
+  httpBatchStreamLink,
+  loggerLink,
+} from "@trpc/client";
+import { createTRPCContext } from "@trpc/tanstack-react-query";
+import SuperJSON from "superjson";
 
-export const trpc = createTRPCReact<AppRouter>();
+import { createQueryClient } from "./query-client";
+import { AppRouter } from "./routers/_app";
 
-let clientQueryClientSingleton: QueryClient;
-
-function getQueryClient() {
-  if (typeof window === 'undefined') {
-    return makeQueryClient();
+let clientQueryClientSingleton: QueryClient | undefined = undefined;
+const getQueryClient = () => {
+  if (typeof window === "undefined") {
+    // Server: always make a new query client
+    return createQueryClient();
+  } else {
+    // Browser: use singleton pattern to keep the same query client
+    return (clientQueryClientSingleton ??= createQueryClient());
   }
+};
 
-  return (clientQueryClientSingleton ??= makeQueryClient());
-}
+// const createContext = cache(async () => {
+//   const user = await getUser()
+//   return {
+//     user: user,
+//     db: prisma
+//   };
+// });
 
-function getUrl() {
-  const base = (() => {
-    if (typeof window !== 'undefined') return '';
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return 'http://localhost:3000';
-  })();
-  
-  return `${base}/api/trpc`;
-}
 
-export function TRPCProvider(
-  props: Readonly<{
-    children: React.ReactNode;
-  }>,
-) {
+export const { useTRPC, TRPCProvider } = createTRPCContext<AppRouter>();
+
+export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
+
   const [trpcClient] = useState(() =>
-    trpc.createClient({
+    createTRPCClient<AppRouter>({
       links: [
-        httpBatchLink({
-          url: getUrl(),
+        loggerLink({
+          enabled: (op) =>
+            process.env.NODE_ENV === "development" ||
+            (op.direction === "down" && op.result instanceof Error),
+        }),
+        httpBatchStreamLink({
+          transformer: SuperJSON,
+          url: getBaseUrl() + "/api/trpc",
+          headers() {
+            const headers = new Headers();
+            headers.set("x-trpc-source", "nextjs-react");
+            return headers;
+          },
         }),
       ],
     }),
   );
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
         {props.children}
-      </QueryClientProvider>
-    </trpc.Provider>
+      </TRPCProvider>
+    </QueryClientProvider>
   );
 }
+
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") return window.location.origin;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  // eslint-disable-next-line no-restricted-properties
+  return `http://localhost:${process.env.PORT ?? 3000}`;
+};

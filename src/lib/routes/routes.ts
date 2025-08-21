@@ -10,6 +10,7 @@ export const routes = {
     index: "/dashboard",
     event: {
       byId: (eventId: ID) => `/dashboard/${eventId}`,
+      settings: (eventId: ID) => `/dashboard/${eventId}/settings`,
     },
   },
   account: {

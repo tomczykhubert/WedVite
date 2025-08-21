@@ -11,5 +11,21 @@ export default async function EventPage({
   if (!data) {
     return notFound();
   }
-  return <div>{data.name}</div>;
+  return <div>
+
+    <section>
+      <h2>plan items</h2>
+      <div className="item"></div>
+      <div className="item"></div>
+      <div className="item"></div>
+      <div className="item"></div>
+    </section>
+    <section>
+      <h2>constacts</h2>
+      <div className="contact"></div>
+      <div className="contact"></div>
+      <div className="contact"></div>
+      <div className="contact"></div>
+    </section>
+  </div>;
 }

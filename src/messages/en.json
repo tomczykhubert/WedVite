@@ -2,7 +2,8 @@
   "base": {
     "forms": {
       "submit": "Submit",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "save": "Save"
     },
     "loadMore": "Load more",
     "loading": "Loading..."
@@ -49,14 +50,18 @@
       "ignoreEmail": "If you didn't create an account, you can safely ignore this email."
     }
   },
-    "dashboard": {
+  "dashboard": {
     "home": "Homepage",
     "app": "Application",
     "events": "Events",
     "forms": {
-      "addEventForm": {
+      "event": {
         "addEvent": "Add event",
-        "name": "Event name"
+        "name": "Event name",
+        "respondStart": "Respond start date",
+        "respondEnd": "Respond end date",
+        "onImageUpload": "Notifications on image upload",
+        "onAttendanceRespond": "Notifications on attendance upload"
       }
     },
     "notFound": "Page not found",

@@ -1,34 +1,66 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { addEventSchema } from "@/schemas/event/addEventSchema";
+import { addEventConfig, updateEventConfig } from "@/schemas/event/eventFormConfig";
 import { TRPCError } from "@trpc/server";
 
 export const eventRouter = createTRPCRouter({
   add: protectedProcedure
-    .input(z.object(translateSchemaConfig(addEventSchema)))
+    .input(z.object(translateSchemaConfig(addEventConfig)))
     .mutation(async ({ ctx: { user, db }, input }) => {
       const userId = user.id;
 
       const event = await db.event.create({
         data: {
           name: input.name,
-          userId: userId,
-          startAt: new Date(Date.now()).toISOString(),
-          respondDeadline: new Date(Date.now()).toISOString(),
+          userId: userId
         },
       });
       return event;
     }),
   getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), withNotificationSettings: z.boolean().nullish()}))
     .query(async ({ ctx: { db }, input }) => {
       const event = await db.event.findUnique({
         where: {
           id: input.id,
         },
+        include: {
+          notificationSettings: input.withNotificationSettings ?? false
+        }
       });
       // if (!event) throw new TRPCError({ code: "NOT_FOUND" });
+      return event;
+    }),
+  update: protectedProcedure
+    .input(z.object(translateSchemaConfig(updateEventConfig)))
+    .mutation(async ({ ctx: { user, db }, input }) => {
+      const event = await db.event.update({
+        where: {
+          id: input.id,
+          userId: user.id
+        },
+        include: {
+          notificationSettings: true
+        },
+        data: {
+          name: input.name,
+          respondStart: input.respondStart,
+          respondEnd: input.respondEnd,
+          notificationSettings: {
+            upsert: {
+              create: {
+                onImageUpload: input.onImageUpload,
+                onAttendanceRespond: input.onAttendanceRespond
+              },
+              update: {
+                onImageUpload: input.onImageUpload,
+                onAttendanceRespond: input.onAttendanceRespond
+              },
+            }
+          }
+        },
+      });
       return event;
     }),
   get: protectedProcedure

@@ -9,8 +9,9 @@ import { FaAddressBook, FaHome, FaUsers } from "react-icons/fa";
 import { LuSettings } from "react-icons/lu";
 import { buildBaseBreadcrumbs } from "../../(index)/layout";
 import { Event } from "@prisma/client";
+import { buildEventBreadcrumbs, buildEventSidebarItems } from "../(index)/layout";
 
-export default async function EventLayout({
+export default async function EventSettingsLayout({
   children,
   params
 }: {
@@ -27,40 +28,26 @@ export default async function EventLayout({
     return notFound();
   }
 
-  const breadcrumbs = await buildEventBreadcrumbs(event, false)
+  const breadcrumbs = await buildEventSettingsBreadcrumbs(event, false)
 
-  const sidebarItems = await buildEventSidebarItems(event)
+  const sidebarItems = await buildEventSettingsSidebarItems(event)
 
   return (
     <Layout sidebarItems={sidebarItems} breadcrumbs={breadcrumbs}>{children}</Layout>
   );
 }
 
-export const buildEventBreadcrumbs = async (event: Event, addLink: boolean): Promise<BreadcrumbsItem[]> => {
+export const buildEventSettingsBreadcrumbs = async (event: Event, addLink: boolean): Promise<BreadcrumbsItem[]> => {
+  const t = await getTranslations("dashboard.event")
   return [
-    ...(await buildBaseBreadcrumbs()),
+    ...(await buildEventBreadcrumbs(event, true)),
     {
-      name: event.name,
-      link: addLink ? routes.dashboard.event.byId(event.id) : undefined
+      name: t("settings"),
+      link: addLink ? routes.dashboard.event.settings(event.id) : undefined
     },
   ]
 }
 
-export const buildEventSidebarItems = async (event: Event): Promise<SidebarGroupType[]> => {
-  const t = await getTranslations('dashboard.event')
-  return [{
-    name: event.name,
-    items: [
-      {
-        link: routes.dashboard.event.settings(event.id),
-        name: t("settings"),
-        icon: LuSettings,
-      },
-      {
-        link: routes.dashboard.event.byId(event.id),
-        name: t("guestsList"),
-        icon: FaUsers,
-      },
-    ]
-  }]
+export const buildEventSettingsSidebarItems = async (event: Event): Promise<SidebarGroupType[]> => {
+  return [...(await buildEventSidebarItems(event))]
 }

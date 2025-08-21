@@ -2,7 +2,8 @@
   "base": {
     "forms": {
       "submit": "Potwierdź",
-      "cancel": "Anuluj"
+      "cancel": "Anuluj",
+      "save": "Zapisz"
     },
     "loadMore": "Załaduj więcej",
     "loading": "Ładowanie..."
@@ -54,9 +55,13 @@
     "app": "Aplikacja",
     "events": "Wydarzenia",
     "forms": {
-      "addEventForm": {
+      "event": {
         "addEvent": "Dodaj wydarzenie",
-        "name": "Nazwa wydarzenia"
+        "name": "Nazwa wydarzenia",
+        "respondStart": "Data rozpoczęcia potwierdzeń obecności",
+        "respondEnd": "Data zakończenia potwierdzeń obecności",
+        "onImageUpload": "Powiadomienia podczas dodawania zdjęć",
+        "onAttendanceRespond": "Powiadomienia podczas potwierdzania obecnościć"
       }
     },
     "goToDashboard": "Przejdź do wydarzeń",

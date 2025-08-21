@@ -16,7 +16,7 @@ import { AutoFormField, Form } from "@/components/ui/form";
 import {
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
-import { addEventSchema } from "@/schemas/event/addEventSchema";
+import { addEventConfig } from "@/schemas/event/eventFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,13 +27,13 @@ import { LuCalendarPlus2 } from "react-icons/lu";
 import { toast } from "sonner";
 import z from "zod";
 
-const formSchema = z.object(translateSchemaConfig(addEventSchema));
+const formSchema = z.object(translateSchemaConfig(addEventConfig));
 
 type FormData = z.infer<typeof formSchema>;
 
 export default function AddEventForm() {
   const baseT = useTranslations("base.forms");
-  const t = useTranslations("dashboard.forms.addEventForm");
+  const t = useTranslations("dashboard.forms.event");
   const [isPending, setPending] = useState(false);
   const [isOpen, setOpen] = useState(false)
   const [formErrorMessage, setFormErrorMessage] = useState("");
@@ -96,7 +96,7 @@ export default function AddEventForm() {
                 <FormErrorMessage message={formErrorMessage} />
               </DialogDescription>
             </AlertDialogHeader>
-            {addEventSchema.map((fieldConfig) => (
+            {addEventConfig.map((fieldConfig) => (
               <AutoFormField
                 key={fieldConfig.name}
                 control={form.control}

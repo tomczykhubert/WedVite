@@ -1,14 +1,15 @@
 model Event {
-  id              String          @id @default(cuid())
-  name            String
-  eventPlanItems  EventPlanItem[]
-  eventContacts   EventContact[]
-  respondDeadline DateTime
-  startAt         DateTime
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  userId          String
-  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String                @id @default(cuid())
+  name                 String
+  eventPlanItems       EventPlanItem[]
+  eventContacts        EventContact[]
+  notificationSettings NotificationSettings?
+  respondStart         DateTime?
+  respondEnd           DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  userId               String
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("event")
 }
@@ -34,16 +35,26 @@ model EventPlanItem {
 }
 
 model EventContact {
-  id          String           @id @default(cuid())
+  id          String            @id @default(cuid())
   firstName   String
   lastName    String
   phoneNumber String
   email       String
   type        EventContactType?
   eventId     String
-  event       Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event       Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@map("event_contact")
+}
+
+model NotificationSettings {
+  id            String  @id @default(cuid())
+  onImageUpload Boolean
+  onAttendanceRespond Boolean
+  eventId       String  @unique
+  event         Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("notification_settings")
 }
 
 enum EventContactType {

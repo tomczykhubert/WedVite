@@ -2,7 +2,7 @@ import { ZodTypeAny } from "zod";
 
 export type FormFieldConfig = {
     name: string;
-    required: boolean;
+    required?: boolean;
     type: string
     label: string
     validation: ZodTypeAny
@@ -16,4 +16,14 @@ export const translateSchemaConfig = (config: FormConfig) => {
     result[item.name] = item.validation;
   }
   return result;
+}
+
+
+export function getFieldsByName<
+  Schema extends readonly FormFieldConfig[],
+  N extends Schema[number]["name"]
+>(schema: Schema, ...names: N[]): Extract<Schema[number], { name: N }>[] {
+  return schema.filter((field) =>
+    names.includes(field.name as N)
+  ) as any;
 }

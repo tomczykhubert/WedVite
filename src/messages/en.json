@@ -3,7 +3,9 @@
     "forms": {
       "submit": "Submit",
       "cancel": "Cancel"
-    }
+    },
+    "loadMore": "Load more",
+    "loading": "Loading..."
   },
   "user": {
     "name": "Name",
@@ -49,12 +51,19 @@
   },
     "dashboard": {
     "home": "Homepage",
+    "app": "Application",
     "events": "Events",
     "forms": {
       "addEventForm": {
         "addEvent": "Add event",
         "name": "Event name"
       }
-    }
+    },
+    "notFound": "Page not found",
+    "event": {
+      "settings": "Settings",
+      "guestsList": "Guests list"
+    },
+    "goToDashboard": "Go to dashboard"
   }
 }

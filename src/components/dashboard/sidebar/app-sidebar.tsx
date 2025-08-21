@@ -5,16 +5,16 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Navigation } from "./navigation";
+import { Navigation, SidebarGroupType } from "./navigation";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes/routes";
 import { SidebarUser } from "./sidebar-user";
 
-export function AppSidebar() {
+export function AppSidebar({sidebarItems}: {sidebarItems: SidebarGroupType[]}) {
   return (
     <Sidebar collapsible="icon">
-      <SidebarContent>
+      <SidebarContent className="gap-0">
         <SidebarGroup>
           <SidebarHeader className="flex-row items-center gap-2 justify-between p-0">
             <Link href={routes.dashboard.index} className="flex items-center gap-2">
@@ -31,7 +31,7 @@ export function AppSidebar() {
             </Link>
           </SidebarHeader>
         </SidebarGroup>
-        <Navigation />
+        <Navigation sidebarItems={sidebarItems}/>
       </SidebarContent>
       <SidebarFooter>
         <SidebarUser />

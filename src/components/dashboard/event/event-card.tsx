@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { routes } from "@/lib/routes/routes";
 import { cn } from "@/lib/utils";
 import { Event } from "@prisma/client";
-import { FilePlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,22 +12,20 @@ export default function EventCard({ event }: { event: Event }) {
         key={event.id}
         className="h-full min-h-[300px] relative overflow-hidden py-0"
       >
-        {/* Background image with blur effect */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/venue.jpg"
             alt="Venue background"
             fill
-            className="object-cover blur-[2px] brightness-50"
+            className="object-cover blur-[2px] brightness-100 opacity-75 dark:brightness-25 dark:opacity-100"
             priority
           />
         </div>
-        {/* Content with glass effect */}
-        <div className="relative z-10 h-full backdrop-blur-sm hover:backdrop-blur-md transition-all">
+        <div className="relative z-10 h-full backdrop-blur-sm hover:backdrop-blur-md transition-all duration-200">
           <div className="py-6">
             <CardHeader>
               <CardTitle>
-                <h2 className="m-0 text-white">{event.name}</h2>
+                <h2 className="m-0 text-white whitespace-normal [overflow-wrap:anywhere]">{event.name}</h2>
               </CardTitle>
             </CardHeader>
             <CardContent className="text-white/80">{event.userId}</CardContent>

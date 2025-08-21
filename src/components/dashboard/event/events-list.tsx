@@ -5,8 +5,10 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import EventCard from "./event-card";
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export default function EventsList({ limit }: { limit: number }) {
+  const t = useTranslations('base')
   const trpc = useTRPC();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery(
@@ -33,7 +35,7 @@ export default function EventsList({ limit }: { limit: number }) {
             disabled={isFetchingNextPage}
             variant="outline"
           >
-            {isFetchingNextPage ? "Loading more..." : "Load more"}
+            {isFetchingNextPage ? t('loading') : t('loadMore')}
           </Button>
         </div>
       )}

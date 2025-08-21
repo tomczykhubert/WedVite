@@ -3,7 +3,9 @@
     "forms": {
       "submit": "Potwierdź",
       "cancel": "Anuluj"
-    }
+    },
+    "loadMore": "Załaduj więcej",
+    "loading": "Ładowanie..."
   },
   "user": {
     "name": "Nazwa",
@@ -49,12 +51,19 @@
   },
   "dashboard": {
     "home": "Strona główna",
+    "app": "Aplikacja",
     "events": "Wydarzenia",
     "forms": {
       "addEventForm": {
         "addEvent": "Dodaj wydarzenie",
         "name": "Nazwa wydarzenia"
       }
-    }
+    },
+    "goToDashboard": "Przejdź do wydarzeń",
+    "event": {
+      "settings": "Ustawienia",
+      "guestsList": "Lista gości"
+    },
+    "notFound": "Nie znaleziono strony"
   }
 }

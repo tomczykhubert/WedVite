@@ -11,6 +11,6 @@ export const addEventSchema = [
       .string()
       .nonempty(stc("required"))
       .min(6, stc("minLength", { min: 6 }))
-      .max(30, stc("maxLength", { min: 30 })),
+      .max(30, stc("maxLength", { max: 30 })),
   },
 ];

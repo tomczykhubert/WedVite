@@ -7,6 +7,8 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { FaAddressBook, FaHome, FaUsers } from "react-icons/fa";
 import { LuSettings } from "react-icons/lu";
+import { buildBaseBreadcrumbs } from "../../(index)/layout";
+import { Event } from "@prisma/client";
 
 export default async function EventLayout({
   children,
@@ -17,7 +19,7 @@ export default async function EventLayout({
 }) {
 
   const t = await getTranslations('user')
-  const tEvent = await getTranslations('dashboard.event')
+
   const { id } = await params;
   const event = await caller.event.getById({ id });
 
@@ -25,37 +27,40 @@ export default async function EventLayout({
     return notFound();
   }
 
-  const breadcrumbs: BreadcrumbsItem[] = [
-    {
-      icon: FaHome,
-      link: routes.dashboard.index
-    },
-    {
-      link: routes.dashboard.index,
-      name: t('dashboard'),
-    },
-    {
-      name: event.name,
-    },
-  ]
+  const breadcrumbs = await buildEventBreadcrumbs(event, false)
 
-  const sidebarItems:SidebarGroupType[] = [{
-    name: event.name,
-    items: [
-        {
-        link: routes.dashboard.event.byId(event.id),
-        name: tEvent("settings"),
-        icon: LuSettings ,
-      },
-        {
-        link: routes.dashboard.event.byId(event.id),
-        name: tEvent("guestsList"),
-        icon: FaUsers ,
-      },
-    ]
-  }]
+  const sidebarItems = await buildEventSidebarItems(event)
 
   return (
     <Layout sidebarItems={sidebarItems} breadcrumbs={breadcrumbs}>{children}</Layout>
   );
+}
+
+export const buildEventBreadcrumbs = async (event: Event, addLink: boolean): Promise<BreadcrumbsItem[]> => {
+  return [
+    ...(await buildBaseBreadcrumbs()),
+    {
+      name: event.name,
+      link: addLink ? routes.dashboard.event.byId(event.id) : undefined
+    },
+  ]
+}
+
+export const buildEventSidebarItems = async (event: Event): Promise<SidebarGroupType[]> => {
+  const t = await getTranslations('dashboard.event')
+  return [{
+    name: event.name,
+    items: [
+      {
+        link: routes.dashboard.event.byId(event.id),
+        name: t("settings"),
+        icon: LuSettings,
+      },
+      {
+        link: routes.dashboard.event.byId(event.id),
+        name: t("guestsList"),
+        icon: FaUsers,
+      },
+    ]
+  }]
 }

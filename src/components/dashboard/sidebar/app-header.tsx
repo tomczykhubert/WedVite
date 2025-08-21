@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import Breadcrumbs, { BreadcrumbsItem } from "./breadcrumbs"
 
-//TODO: Breadcrumbs
 export function AppHeader({ breadcrumbs }: { breadcrumbs: BreadcrumbsItem[] }) {
   return (
     <header className="flex  shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">

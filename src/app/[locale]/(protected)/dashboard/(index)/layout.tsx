@@ -11,17 +11,23 @@ export default async function DashboardLayout({
 }) {
   const t = await getTranslations('user')
 
-  const breadcrumbs: BreadcrumbsItem[] = [
+  const breadcrumbs = await buildBaseBreadcrumbs()
+
+  return (
+    <Layout sidebarItems={[]} breadcrumbs={breadcrumbs}>{children}</Layout>
+  );
+}
+
+export const buildBaseBreadcrumbs = async (): Promise<BreadcrumbsItem[]> => {
+  const t = await getTranslations('user')
+  return [
     {
       icon: FaHome,
       link: routes.dashboard.index
     },
     {
+      link: routes.dashboard.index,
       name: t('dashboard'),
     },
   ]
-
-  return (
-      <Layout sidebarItems={[]} breadcrumbs={breadcrumbs}>{children}</Layout>
-  );
 }

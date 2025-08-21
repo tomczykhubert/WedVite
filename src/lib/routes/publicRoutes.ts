@@ -1,9 +1,7 @@
 import { apiRoutes } from "./apiRoutes";
 import { routes } from "./routes";
 
-const PUBLIC_PAGES_ROUTES = [
-    routes.home,
-];
+const PUBLIC_PAGES_ROUTES = [routes.home];
 
 const PUBLIC_API_ROUTES = [apiRoutes.auth.getSession, apiRoutes.emails.test];
 

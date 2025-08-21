@@ -1,19 +1,42 @@
-"use client"
+"use client";
 
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
-import EventCard, { EventCardSkeleton } from "./event-card";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import EventCard from "./event-card";
+import { Button } from "@/components/ui/button";
+import React from "react";
 
-export default function EventsList() {
+export default function EventsList({ limit }: { limit: number }) {
   const trpc = useTRPC();
-  const { data: events } = useQuery(trpc.event.get.queryOptions());
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useSuspenseInfiniteQuery(
+      trpc.event.get.infiniteQueryOptions(
+        { limit },
+        { getNextPageParam: (lastPage) => lastPage.nextCursor }
+      )
+    );
 
-  if (!events) return [...Array(7)].map((e, i) => <EventCardSkeleton key={i} />)
+  return (
+    <>
+      {data.pages.map((page, i) => (
+        <React.Fragment key={i}>
+          {page.items.map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </React.Fragment>
+      ))}
 
-  return (<>
-    {events.map((e) => {
-      return <EventCard key={e.id} event={e} />;
-    })}
-  </>
+      {hasNextPage && (
+        <div className="col-span-full flex justify-center m-4">
+          <Button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            variant="outline"
+          >
+            {isFetchingNextPage ? "Loading more..." : "Load more"}
+          </Button>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,12 +1,11 @@
 import { Metadata } from "next";
-import {NextIntlClientProvider, hasLocale} from 'next-intl';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 import { ThemeProvider } from "@/components/theme-provider";
 import "../globals.css";
 import { Toaster } from "sonner";
-import { TRPCProvider, TRPCReactProvider } from "@/trpc/client";
-import { Header } from "@/components/header/header";
+import { TRPCReactProvider } from "@/trpc/client";
 
 export const metadata: Metadata = {
   title: "WedVite",
@@ -15,25 +14,25 @@ export const metadata: Metadata = {
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
   // Ensure that the incoming `locale` is valid
-  const {locale} = await params;
+  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
- 
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
         <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            disableTransitionOnChange
-          >
+          attribute="class"
+          defaultTheme="light"
+          disableTransitionOnChange
+        >
           <NextIntlClientProvider>
             <TRPCReactProvider>
               <Toaster />

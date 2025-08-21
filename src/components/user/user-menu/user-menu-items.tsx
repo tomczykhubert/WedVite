@@ -50,9 +50,9 @@ export default async function UserMenuItems({
     return items.map((item, index) => {
       if (Array.isArray(item)) {
         return (
-            <DropdownMenuGroup key={item[0].title}>
-              {renderItems(item)}
-            </DropdownMenuGroup>
+          <DropdownMenuGroup key={item[0].title}>
+            {renderItems(item)}
+          </DropdownMenuGroup>
         );
       } else {
         return getMenuItem(item);
@@ -76,7 +76,7 @@ export default async function UserMenuItems({
       <UserMenuSeparator />
       {renderItems(userMenuItemsConfig)}
       <UserMenuSeparator />
-      {/* <UserSignOut /> */}
+      <UserSignOut />
     </>
   );
 }

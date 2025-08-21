@@ -1,3 +1,5 @@
+import ID from "@/types/id";
+
 export const routes = {
   home: "/",
   auth: {
@@ -6,6 +8,9 @@ export const routes = {
   },
   dashboard: {
     index: "/dashboard",
+    event: {
+      byId: (eventId: ID) => `/dashboard/${eventId}`,
+    },
   },
   account: {
     index: "/account",

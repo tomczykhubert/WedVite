@@ -1,5 +1,5 @@
 import Layout from "@/components/dashboard/layout";
-import { BreadcrumbsItem } from "@/components/dashboard/sidebar/breadcrumbs";
+import { BreadcrumbsItemType } from "@/components/dashboard/sidebar/breadcrumbs";
 import { SidebarGroupType } from "@/components/dashboard/sidebar/navigation";
 import { routes } from "@/lib/routes/routes";
 import { caller } from "@/trpc/server";
@@ -36,7 +36,7 @@ export default async function EventLayout({
   );
 }
 
-export const buildEventBreadcrumbs = async (event: Event, addLink: boolean): Promise<BreadcrumbsItem[]> => {
+export const buildEventBreadcrumbs = async (event: Event, addLink: boolean): Promise<BreadcrumbsItemType[]> => {
   return [
     ...(await buildBaseBreadcrumbs()),
     {

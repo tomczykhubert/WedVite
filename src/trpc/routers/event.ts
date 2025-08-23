@@ -20,21 +20,30 @@ export const eventRouter = createTRPCRouter({
     }),
   getById: protectedProcedure
     .input(z.object({ id: z.string(), withNotificationSettings: z.boolean().nullish()}))
-    .query(async ({ ctx: { db }, input }) => {
+    .query(async ({ ctx: { user, db }, input }) => {
       const event = await db.event.findUnique({
         where: {
           id: input.id,
+          userId: user.id
         },
         include: {
           notificationSettings: input.withNotificationSettings ?? false
         }
       });
-      // if (!event) throw new TRPCError({ code: "NOT_FOUND" });
       return event;
     }),
   update: protectedProcedure
-    .input(z.object(translateSchemaConfig(updateEventConfig)))
+    .input(z.object({...translateSchemaConfig(updateEventConfig), id: z.string()}))
     .mutation(async ({ ctx: { user, db }, input }) => {
+      const count = await db.event.count({
+        where: {
+          id: input.id,
+          userId: user.id
+        },
+      })
+
+      if(count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
+
       const event = await db.event.update({
         where: {
           id: input.id,
@@ -45,8 +54,8 @@ export const eventRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
-          respondStart: input.respondStart,
-          respondEnd: input.respondEnd,
+          respondStart: input.respondStart.toISOString(),
+          respondEnd: input.respondEnd.toISOString(),
           notificationSettings: {
             upsert: {
               create: {

@@ -3,7 +3,8 @@
     "forms": {
       "submit": "Submit",
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "selectDate": "Select a date"
     },
     "loadMore": "Load more",
     "loading": "Loading..."
@@ -37,6 +38,10 @@
       "emailAlreadyTaken": "Given email is already taken.",
       "invalidEmailOrPassword": "Given email or password is invalid.",
       "emailNotVerified": "Email address of this account has not been verified yet."
+    },
+    "forms": {
+      "error": "An error occurred. Please try again.",
+      "success": "Form submitted successfully."
     }
   },
   "emails": {

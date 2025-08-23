@@ -39,18 +39,14 @@ export default function AddEventForm() {
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const createPost = useMutation(
+  const createEvent = useMutation(
     trpc.event.add.mutationOptions({
       onSuccess: async () => {
         form.reset();
         await queryClient.invalidateQueries(trpc.event.pathFilter());
       },
       onError: (err) => {
-        toast.error(
-          err.data?.code === "UNAUTHORIZED"
-            ? "You must be logged in to post"
-            : "Failed to create post",
-        );
+        toast.error(baseT("error"));
       },
     }),
   );
@@ -64,7 +60,7 @@ export default function AddEventForm() {
 
   const onSubmit = (data: FormData) => {
     setFormErrorMessage("");
-    createPost.mutate(data);
+    createEvent.mutate(data);
     setOpen(false);
   };
 

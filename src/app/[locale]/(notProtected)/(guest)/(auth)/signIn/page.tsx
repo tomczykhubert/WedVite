@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
+  AutoFormField,
   Form,
   FormControl,
   FormField,
@@ -117,40 +118,13 @@ export default function SignInForm() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("email")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder={t("email")}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("password")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder={t("password")}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {formConfig.map((fieldConfig) => (
+                  <AutoFormField
+                    key={fieldConfig.name}
+                    control={form.control}
+                    fieldConfig={fieldConfig}
+                  />
+                ))}
                 <Button type="submit" className="w-full">
                   <LuLogIn className="mr-1" />
                   {t("signIn")}

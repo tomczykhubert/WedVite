@@ -20,7 +20,6 @@ type AuthMiddlewareParams = {
 export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     let pathname = request.nextUrl.pathname;
-    console.log(pathname)
     pathname = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
     pathname = removeLocalePrefix(pathname);
     const isPublic = checkPaths(PUBLIC_ROUTES, pathname);

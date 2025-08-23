@@ -1,22 +1,28 @@
-import { ZodTypeAny } from "zod";
+import { ZodType } from "zod";
 
 export type FormFieldConfig = {
-    name: string;
-    required?: boolean;
-    type: string
-    label: string
-    validation: ZodTypeAny
-}
+  name: string;
+  required?: boolean;
+  type: string;
+  label: string;
+  validation: ZodType;
+};
 
 export type FormConfig = FormFieldConfig[]
 
-export const translateSchemaConfig = (config: FormConfig) => {
-  const result: Record<string, any> = {};
+export const translateSchemaConfig = <T extends FormConfig>(config: T) => {
+  type SchemaType = {
+    [K in T[number]['name']]: ZodType;
+  };
+
+  const result = {} as SchemaType;
+  
   for (const item of config) {
-    result[item.name] = item.validation;
+    result[item.name as T[number]['name']] = item.validation;
   }
+  
   return result;
-}
+};
 
 
 export function getFieldsByName<

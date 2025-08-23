@@ -16,14 +16,14 @@ export const eventConfig = [
   },
   {
     name: "respondStart",
-    type: "date",
+    type: "datetime",
     required: true,
     label: stc("dashboard.forms.event.respondStart"),
     validation: z.date()
   },
   {
     name: "respondEnd",
-    type: "date",
+    type: "datetime",
     required: true,
     label: stc("dashboard.forms.event.respondEnd"),
     validation: z.date()

@@ -2,7 +2,7 @@ import { AppHeader } from "@/components/dashboard/sidebar/app-header";
 import { AppSidebar } from "@/components/dashboard/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { BreadcrumbsItem } from "./sidebar/breadcrumbs";
+import { BreadcrumbsItemType } from "./sidebar/breadcrumbs";
 import { SidebarGroupType } from "./sidebar/navigation";
 
 export default async function Layout({
@@ -12,7 +12,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
   sidebarItems: SidebarGroupType[]
-  breadcrumbs: BreadcrumbsItem[]
+  breadcrumbs: BreadcrumbsItemType[]
 }) {
   const cookieStore = await cookies()
   const sidebarCookie = cookieStore.get("sidebar_state")

@@ -28,7 +28,7 @@ const handler = async (req: NextRequest) => {
     req,
     createContext: createContext,
     onError({ error, path }) {
-      console.error(`>>> tRPC Error on '${path}'`, error);
+      // console.error(`>>> tRPC Error on '${path}'`, error);
     },
   });
 

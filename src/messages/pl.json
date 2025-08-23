@@ -3,7 +3,9 @@
     "forms": {
       "submit": "Potwierdź",
       "cancel": "Anuluj",
-      "save": "Zapisz"
+      "save": "Zapisz",
+      "selectDate": "Wybierz datę",
+      "selectTime": "Wybierz czas"
     },
     "loadMore": "Załaduj więcej",
     "loading": "Ładowanie..."
@@ -37,6 +39,10 @@
       "emailAlreadyTaken": "Podany email jest już zajęty.",
       "invalidEmailOrPassword": "Podany email lub hasło jest nieprawidłowe.",
       "emailNotVerified": "Adres email tego konta nie został jeszcze zweryfkiowany."
+    },
+    "forms": {
+      "error": "Wystąpił błąd. Spróbuj ponownie.",
+      "success": "Formularz przesłany pomyślnie."
     }
   },
   "emails": {

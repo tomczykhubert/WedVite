@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { addEventConfig, updateEventConfig } from "@/schemas/event/eventFormConfig";
+import {
+  addEventConfig,
+  updateEventConfig,
+} from "@/schemas/event/eventFormConfig";
 import { TRPCError } from "@trpc/server";
 
 export const eventRouter = createTRPCRouter({
@@ -13,44 +16,55 @@ export const eventRouter = createTRPCRouter({
       const event = await db.event.create({
         data: {
           name: input.name,
-          userId: userId
+          userId: userId,
         },
       });
       return event;
     }),
   getById: protectedProcedure
-    .input(z.object({ id: z.string(), withNotificationSettings: z.boolean().nullish()}))
+    .input(
+      z.object({
+        id: z.string(),
+        withNotificationSettings: z.boolean().nullish(),
+        withContacts: z.boolean().nullish(),
+        withPlanItems: z.boolean().nullish(),
+      })
+    )
     .query(async ({ ctx: { user, db }, input }) => {
       const event = await db.event.findUnique({
         where: {
           id: input.id,
-          userId: user.id
+          userId: user.id,
         },
         include: {
-          notificationSettings: input.withNotificationSettings ?? false
-        }
+          notificationSettings: input.withNotificationSettings ?? false,
+          eventContacts: input.withContacts ?? false,
+          eventPlanItems: input.withPlanItems ?? false,
+        },
       });
       return event;
     }),
   update: protectedProcedure
-    .input(z.object({...translateSchemaConfig(updateEventConfig), id: z.string()}))
+    .input(
+      z.object({ ...translateSchemaConfig(updateEventConfig), id: z.string() })
+    )
     .mutation(async ({ ctx: { user, db }, input }) => {
       const count = await db.event.count({
         where: {
           id: input.id,
-          userId: user.id
+          userId: user.id,
         },
-      })
+      });
 
-      if(count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
+      if (count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const event = await db.event.update({
         where: {
           id: input.id,
-          userId: user.id
+          userId: user.id,
         },
         include: {
-          notificationSettings: true
+          notificationSettings: true,
         },
         data: {
           name: input.name,
@@ -60,14 +74,14 @@ export const eventRouter = createTRPCRouter({
             upsert: {
               create: {
                 onImageUpload: input.onImageUpload,
-                onAttendanceRespond: input.onAttendanceRespond
+                onAttendanceRespond: input.onAttendanceRespond,
               },
               update: {
                 onImageUpload: input.onImageUpload,
-                onAttendanceRespond: input.onAttendanceRespond
+                onAttendanceRespond: input.onAttendanceRespond,
               },
-            }
-          }
+            },
+          },
         },
       });
       return event;

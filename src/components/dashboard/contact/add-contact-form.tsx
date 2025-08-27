@@ -16,7 +16,7 @@ import { AutoFormField, Form } from "@/components/ui/form";
 import {
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
-import { addEventConfig } from "@/schemas/event/eventFormConfig";
+import { baseContactConfig } from "@/schemas/contact/contactFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -26,23 +26,28 @@ import { useForm } from "react-hook-form";
 import { LuCalendarPlus2 } from "react-icons/lu";
 import { toast } from "sonner";
 import z from "zod";
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 
-const formSchema = z.object(translateSchemaConfig(addEventConfig));
+const formSchema = z.object(translateSchemaConfig(baseContactConfig));
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function AddEventForm() {
+type AddContactFormProps = {
+  eventId: string
+}
+
+export default function AddContactForm({ eventId }: AddContactFormProps) {
   const baseT = useTranslations("base.forms");
-  const t = useTranslations("dashboard.forms.event");
+  const t = useTranslations("dashboard.forms.contact");
   const [isOpen, setOpen] = useState(false)
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const createEvent = useMutation(
-    trpc.event.add.mutationOptions({
+  const createContact = useMutation(
+    trpc.contact.upsert.mutationOptions({
       onSuccess: async () => {
         form.reset();
-        await queryClient.invalidateQueries(trpc.event.pathFilter());
+        await queryClient.invalidateQueries(trpc.contact.pathFilter());
       },
       onError: (err) => {
         toast.error(baseT("error"));
@@ -53,13 +58,20 @@ export default function AddEventForm() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      contactType: undefined
     },
   });
 
   const onSubmit = (data: FormData) => {
     setFormErrorMessage("");
-    createEvent.mutate(data);
+    createContact.mutate({
+      ...data,
+      eventId: eventId
+    });
     setOpen(false);
   };
 
@@ -77,7 +89,7 @@ export default function AddEventForm() {
           <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
             <LuCalendarPlus2 className="h-20 w-20" />
             <span>
-              {t("addEvent")}
+              {t("addContact")}
             </span>
           </CardContent>
         </Card>
@@ -86,12 +98,12 @@ export default function AddEventForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <AlertDialogHeader>
-              <DialogTitle>{t("addEvent")}</DialogTitle>
+              <DialogTitle>{t("addContact")}</DialogTitle>
               <DialogDescription>
                 <FormErrorMessage message={formErrorMessage} />
               </DialogDescription>
             </AlertDialogHeader>
-            {addEventConfig.map((fieldConfig) => (
+            {baseContactConfig.map((fieldConfig) => (
               <AutoFormField
                 key={fieldConfig.name}
                 control={form.control}

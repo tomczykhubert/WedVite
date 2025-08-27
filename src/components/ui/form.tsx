@@ -17,21 +17,20 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import {
   deserializeTranslationCall,
   isSerializedTranslationCall,
+  translate,
 } from "@/i18n/utils";
 import { Input } from "./input";
 import { FormFieldConfig } from "@/lib/forms/schemaTranslator";
 import { Textarea } from "./textarea";
-import { Calendar } from "./calendar";
 import { Checkbox } from "./checkbox";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Button } from "./button";
-import { ChevronDownIcon } from "lucide-react";
-import { LuCalendar } from "react-icons/lu";
-import { ScrollArea, ScrollBar } from "./scroll-area";
+import { PhoneInput } from "./phone-input";
+import DateTimePicker from "./datetime-picker";
+import DatePicker from "./date-picker";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 
 const Form = FormProvider;
 
@@ -202,20 +201,11 @@ function AutoFormField({
   fieldConfig: FormFieldConfig;
 }) {
   const t = useTranslations();
-  let translatedLabel: string;
-  try {
-    const label = fieldConfig.label || "";
-    const isSerialized = isSerializedTranslationCall(label);
-    if (isSerialized) {
-      translatedLabel = deserializeTranslationCall(label, t);
-    } else {
-      translatedLabel = fieldConfig.label;
-    }
-  } catch (e) {
-    translatedLabel = fieldConfig.label;
-  }
+  const translatedLabel = translate(fieldConfig.label, t);
 
   const inlineLabel = ["checkbox"].includes(fieldConfig.type)
+  const ownFormControl = ["select"].includes(fieldConfig.type)
+
   const renderField = (field: ControllerRenderProps<FieldValues, string>) => {
     switch (fieldConfig.type) {
       case "text":
@@ -229,6 +219,8 @@ function AutoFormField({
             {...field}
           />
         );
+      case "tel":
+        return <PhoneInput {...field} />;
       case "textarea":
         return <Textarea placeholder={translatedLabel} {...field} />;
       case "datetime":
@@ -239,6 +231,26 @@ function AutoFormField({
         return (
           <Checkbox {...field} checked={field.value} onCheckedChange={field.onChange}/>
         );
+      case "select":
+        return <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder={translatedLabel}
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {fieldConfig.values && fieldConfig.values.map((item, i) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {translate(item.name, t)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>;
       default:
         throw Error(
           `Field type ${fieldConfig.type} is not supported in AutoFormField`
@@ -256,7 +268,12 @@ function AutoFormField({
           <FormLabel required={fieldConfig.required} className="mb-2">
             {translatedLabel}
           </FormLabel>
+          { ownFormControl 
+          ?
+          <>{renderField(field)}</>
+          :
           <FormControl>{renderField(field)}</FormControl>
+          }
           </div>
           <FormMessage />
         </FormItem>
@@ -265,138 +282,7 @@ function AutoFormField({
   );
 }
 
-function DatePicker({ ...field }: ControllerRenderProps<FieldValues, string>) {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          id="date-picker"
-          className="w-32 justify-between font-normal"
-        >
-          {field.value ? field.value.toLocaleDateString() : "Select date"}
-          <ChevronDownIcon />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-        <Calendar
-          mode="single"
-          captionLayout="dropdown"
-          selected={field.value as Date}
-          onSelect={(date) => {
-            field.onChange(date);
-            setOpen(false);
-          }}
-        />
-      </PopoverContent>
-    </Popover>
-  );
-}
 
-export function DateTimePicker({
-  ...field
-}: ControllerRenderProps<FieldValues, string>) {
-  const t = useTranslations('base.forms')
-  const [date, setDate] = React.useState<Date>(field.value ?? new Date());
-  const [isOpen, setIsOpen] = React.useState(false);
-  const format = useFormatter();
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      selectedDate.setHours(date.getHours(), date.getMinutes())
-      setDate(selectedDate);
-      field.onChange(selectedDate)
-    }
-  };
-
-  const handleTimeChange = (
-    type: "hour" | "minute",
-    value: string
-  ) => {
-    if (date) {
-      const newDate = new Date(date);
-      if (type === "hour") {
-        newDate.setHours(parseInt(value));
-      } else if (type === "minute") {
-        newDate.setMinutes(parseInt(value));
-      }
-      setDate(newDate);
-      field.onChange(newDate)
-    }
-  };
-
-  return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <LuCalendar className="mr-2 h-4 w-4" />
-            {date? (
-              format.dateTime(date, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              })
-            ) : (
-              <span>{t('selectDate')}</span>
-            )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <div className="sm:flex">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
-          />
-          <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-            <ScrollArea className="w-64 sm:w-auto">
-              <div className="flex sm:flex-col p-2">
-                {hours.reverse().map((hour) => (
-                  <Button
-                    key={hour}
-                    size="icon"
-                    variant={date && date.getHours() === hour ? "default" : "ghost"}
-                    className="sm:w-full shrink-0 aspect-square"
-                    onClick={() => handleTimeChange("hour", hour.toString())}
-                  >
-                    {hour}
-                  </Button>
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" className="sm:hidden" />
-            </ScrollArea>
-            <ScrollArea className="w-64 sm:w-auto">
-              <div className="flex sm:flex-col p-2">
-                {Array.from({ length: 60 }, (_, i) => i ).map((minute) => (
-                  <Button
-                    key={minute}
-                    size="icon"
-                    variant={date && date.getMinutes() === minute ? "default" : "ghost"}
-                    className="sm:w-full shrink-0 aspect-square"
-                    onClick={() => handleTimeChange("minute", minute.toString())}
-                  >
-                    {minute.toString().padStart(2, '0')}
-                  </Button>
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" className="sm:hidden" />
-            </ScrollArea>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
 
 
 

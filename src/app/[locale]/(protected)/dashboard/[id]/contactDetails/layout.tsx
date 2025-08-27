@@ -1,4 +1,3 @@
-// "use client"
 import Layout from "@/components/dashboard/layout";
 import { BreadcrumbsItemType } from "@/components/dashboard/sidebar/breadcrumbs";
 import { SidebarGroupType } from "@/components/dashboard/sidebar/navigation";
@@ -8,14 +7,13 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Event } from "@prisma/client";
 import { buildEventBreadcrumbs, buildEventSidebarItems } from "../(index)/layout";
-// import { useEvent } from "@/contexts/EventContext";
 
-export default async function EventSettingsLayout({
-  params,
-  children
+export default async function EventContactDetailsLayout({
+  children,
+  params
 }: {
-  params: Promise<{ id: string }>;
   children: React.ReactNode;
+  params: Promise<{ id: string }>
 }) {
   const { id } = await params;
   const event = await caller.event.getById({ id });
@@ -23,7 +21,6 @@ export default async function EventSettingsLayout({
   if (!event) {
     return notFound();
   }
-  // const { event } = useEvent()
 
   const breadcrumbs = await buildEventSettingsBreadcrumbs(event, false)
 
@@ -39,8 +36,8 @@ export const buildEventSettingsBreadcrumbs = async (event: Event, addLink: boole
   return [
     ...(await buildEventBreadcrumbs(event, true)),
     {
-      name: t("settings"),
-      link: addLink ? routes.dashboard.event.settings(event.id) : undefined
+      name: t("overview"),
+      link: addLink ? routes.dashboard.event.contactDetails(event.id) : undefined
     },
   ]
 }

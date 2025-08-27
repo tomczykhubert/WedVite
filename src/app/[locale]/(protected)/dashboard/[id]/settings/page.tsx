@@ -17,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Event, NotificationSettings } from "@prisma/client";
 import Loader from "@/components/loader";
 import { toast } from "sonner";
+import { useRouter } from "@/i18n/navigation";
 
 const formSchema = z.object(translateSchemaConfig(updateEventConfig));
 
@@ -46,7 +47,7 @@ const EventSettingsForm = ({
 }) => {
   const [formErrorMessage, setFormErrorMessage] = useState("");
   const [isLoading, setLoading] = useState(false);
-
+  const router = useRouter();
   const t = useTranslations("base");
   const tEvent = useTranslations("dashboard.event");
   const formT = useTranslations("formValidation.forms");
@@ -54,8 +55,8 @@ const EventSettingsForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: event.name,
-      respondStart: event.respondStart,
-      respondEnd: event.respondEnd,
+      respondStart: event.respondStart ?? new Date(),
+      respondEnd: event.respondEnd ?? new Date(),
       onImageUpload: event.notificationSettings?.onImageUpload ?? false,
       onAttendanceRespond:
         event.notificationSettings?.onAttendanceRespond ?? false,
@@ -63,11 +64,13 @@ const EventSettingsForm = ({
   });
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+
   const updateEvent = useMutation(
     trpc.event.update.mutationOptions({
       onSuccess: async (response) => {
         await queryClient.invalidateQueries(trpc.event.pathFilter());
         toast.success(formT("success"));
+        router.refresh()
       },
       onError: (err) => {
         setFormErrorMessage("forms.error");

@@ -8,7 +8,11 @@
       "selectTime": "Wybierz czas"
     },
     "loadMore": "Załaduj więcej",
-    "loading": "Ładowanie..."
+    "loading": "Ładowanie...",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "phoneNumber": "Numer telefonu",
+    "email": "Email"
   },
   "user": {
     "name": "Nazwa",
@@ -34,6 +38,8 @@
     "minLength": "Minimalna długość to {min} znaków.",
     "maxLength": "Maksymalna długość to {max} znaków.",
     "passwordMismatch": "Hasła muszą się zgadzać.",
+    "invalidPhoneNumber": "Proszę podać prawidłowy numer telefonu.",
+    "invalidContactType": "Proszę wybrać prawidłowy typ kontaktu.",
     "auth": {
       "default": "Wystąpił błąd. Spróbuj ponownie.",
       "emailAlreadyTaken": "Podany email jest już zajęty.",
@@ -68,12 +74,21 @@
         "respondEnd": "Data zakończenia potwierdzeń obecności",
         "onImageUpload": "Powiadomienia podczas dodawania zdjęć",
         "onAttendanceRespond": "Powiadomienia podczas potwierdzania obecnościć"
+      },
+      "contact": {
+        "addContact": "Add contact"
       }
     },
     "goToDashboard": "Przejdź do wydarzeń",
     "event": {
       "settings": "Ustawienia",
-      "guestsList": "Lista gości"
+      "guestsList": "Lista gości",
+      "overview": "Przegląd",
+      "contactType": "Typ kontaktu",
+      "MAID_OF_HONOR": "Świadkowa",
+      "BEST_MAN": "Świadek",
+      "GROOM": "Pan młody",
+      "BRIDE": "Panna młoda"
     },
     "notFound": "Nie znaleziono strony"
   }

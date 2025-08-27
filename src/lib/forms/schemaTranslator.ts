@@ -1,11 +1,15 @@
 import { ZodType } from "zod";
 
+export type FieldType = 'text'|'number'|'password'|'email'|'tel'|'textarea'|
+                        'datetime'|'date'|'checkbox'|'select'
+
 export type FormFieldConfig = {
   name: string;
   required?: boolean;
-  type: string;
+  type: FieldType;
   label: string;
   validation: ZodType;
+  values?: { value: string, name: string }[]
 };
 
 export type FormConfig = FormFieldConfig[]

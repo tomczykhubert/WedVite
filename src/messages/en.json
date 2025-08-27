@@ -7,7 +7,11 @@
       "selectDate": "Select a date"
     },
     "loadMore": "Load more",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phoneNumber": "Phone number",
+    "email": "Email"
   },
   "user": {
     "name": "Name",
@@ -33,6 +37,8 @@
     "minLength": "Minimum length is {min} characters.",
     "maxLength": "Maximum length is {max} characters.",
     "passwordMismatch": "Passwords must match.",
+    "invalidPhoneNumber": "Please enter a valid phone number.",
+    "invalidContactType": "Please select a valid contact type.",
     "auth": {
       "default": "An error occurred. Please try again.",
       "emailAlreadyTaken": "Given email is already taken.",
@@ -67,12 +73,21 @@
         "respondEnd": "Respond end date",
         "onImageUpload": "Notifications on image upload",
         "onAttendanceRespond": "Notifications on attendance upload"
+      },
+      "contact": {
+        "addContact": "Add contact"
       }
     },
     "notFound": "Page not found",
     "event": {
       "settings": "Settings",
-      "guestsList": "Guests list"
+      "guestsList": "Guests list",
+      "overview": "Overview",
+      "contactType": "Contact type",
+      "MAID_OF_HONOR": "Maid of honor",
+      "BEST_MAN": "Bestman",
+      "GROOM": "Groom",
+      "BRIDE": "Bride"
     },
     "goToDashboard": "Go to dashboard"
   }

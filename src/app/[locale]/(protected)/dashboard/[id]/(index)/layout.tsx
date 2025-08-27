@@ -5,10 +5,11 @@ import { routes } from "@/lib/routes/routes";
 import { caller } from "@/trpc/server";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { FaAddressBook, FaHome, FaUsers } from "react-icons/fa";
-import { LuSettings } from "react-icons/lu";
+import { FaUsers } from "react-icons/fa";
+import { LuContact, LuSettings } from "react-icons/lu";
 import { buildBaseBreadcrumbs } from "../../(index)/layout";
 import { Event } from "@prisma/client";
+import { MdEvent } from "react-icons/md";
 
 export default async function EventLayout({
   children,
@@ -52,6 +53,11 @@ export const buildEventSidebarItems = async (event: Event): Promise<SidebarGroup
     name: event.name,
     items: [
       {
+        link: routes.dashboard.event.byId(event.id),
+        name: t("overview"),
+        icon: MdEvent,
+      },
+      {
         link: routes.dashboard.event.settings(event.id),
         name: t("settings"),
         icon: LuSettings,
@@ -60,7 +66,7 @@ export const buildEventSidebarItems = async (event: Event): Promise<SidebarGroup
         link: routes.dashboard.event.byId(event.id),
         name: t("guestsList"),
         icon: FaUsers,
-      },
+      }
     ]
   }]
 }

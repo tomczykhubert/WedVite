@@ -46,3 +46,22 @@ export function isSerializedTranslationCall(str: string): boolean {
         return false;
     }
 }
+
+export const translate = (
+    key: string,
+    t: ReturnType<typeof useTranslations>
+): string => {
+  let translation: string;
+  try {
+    const isSerialized = isSerializedTranslationCall(key);
+    if (isSerialized) {
+      translation = deserializeTranslationCall(key, t);
+    } else {
+      translation = key;
+    }
+  } catch (e) {
+    translation = key;
+  }
+
+  return translation
+}

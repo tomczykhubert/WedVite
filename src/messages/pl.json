@@ -5,7 +5,8 @@
       "cancel": "Anuluj",
       "save": "Zapisz",
       "selectDate": "Wybierz datę",
-      "selectTime": "Wybierz czas"
+      "selectTime": "Wybierz czas",
+      "selectCountry": "Wybierz kraj ..."
     },
     "loadMore": "Załaduj więcej",
     "loading": "Ładowanie...",
@@ -76,7 +77,8 @@
         "onAttendanceRespond": "Powiadomienia podczas potwierdzania obecnościć"
       },
       "contact": {
-        "addContact": "Add contact"
+        "addContact": "Dodaj kontakt",
+        "updateContact": "Zaktualizuj kontakt"
       }
     },
     "goToDashboard": "Przejdź do wydarzeń",

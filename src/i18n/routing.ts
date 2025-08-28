@@ -18,6 +18,10 @@ export const getLocaleConfig = (locale: Locale) => {
   return availableLocales.find((l) => l.code === locale);
 }
 
+export const getAvailableLocales = () => {
+  return availableLocales.map((l) => l.code);
+}
+
 export const routing = defineRouting({
   locales: availableLocales.map((l) => l.code),
   defaultLocale: 'pl',

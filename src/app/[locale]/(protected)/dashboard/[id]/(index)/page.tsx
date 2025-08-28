@@ -16,8 +16,8 @@ export default async function EventPage({
   if (!event) {
     return notFound();
   }
-  const limit = 3;
-  prefetch(trpc.contact.get.infiniteQueryOptions({ limit }));
+
+  prefetch(trpc.contact.get.queryOptions({ eventId: event.id }));
   return (
   <HydrateClient>
     <div>
@@ -34,7 +34,7 @@ export default async function EventPage({
           <AddContactForm eventId={event.id} />
           <ErrorBoundary fallback={<div>Something went wrong</div>}>
             <Suspense fallback={<EventCardSkeleton />}>
-              <ContactsList limit={limit} />
+              <ContactsList event={event} />
             </Suspense>
           </ErrorBoundary>
         </div>

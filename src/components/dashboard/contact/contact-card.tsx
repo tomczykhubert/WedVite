@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { EventContact } from "@prisma/client";
+import UpdateContactForm from "./update-contact-form";
 
 export default function ContactCard({ contact }: { contact: EventContact }) {
   return (
@@ -14,6 +15,7 @@ export default function ContactCard({ contact }: { contact: EventContact }) {
             {contact.firstName} {contact.lastName}
           </h2>
         </CardTitle>
+        <UpdateContactForm contact={contact} />
       </CardHeader>
       <CardContent>
         <div>

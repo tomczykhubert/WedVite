@@ -2,6 +2,7 @@ import * as React from "react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
+import pl from 'react-phone-number-input/locale/pl';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 type PhoneInputProps = Omit<
   React.ComponentProps<"input">,
@@ -30,9 +31,34 @@ type PhoneInputProps = Omit<
     onChange?: (value: RPNInput.Value) => void;
   };
 
+const loadTranslations = async (locale: string) => {
+  try {
+    return await import(`/node_modules/react-phone-number-input/locale/${locale}.json`)
+  } catch (error) {
+    console.error(`Failed to load translations for locale: ${locale}`, error);
+    return pl;
+  }
+};
+
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
   React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
     ({ className, onChange, value, ...props }, ref) => {
+      const locale = useLocale()
+      const [labels, setLabels] = React.useState(pl);
+
+      React.useEffect(() => {
+        const loadLabels = async () => {
+          try {
+            const result = await loadTranslations(locale);
+            setLabels(result);
+          } catch (error) {
+            console.error(`Failed to load dictionary for locale: ${locale}`, error);
+          }
+        };
+
+        loadLabels();
+      }, [locale]);
+
       return (
         <RPNInput.default
           ref={ref}
@@ -42,6 +68,8 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
           inputComponent={InputComponent}
           smartCaret={false}
           value={value || undefined}
+          labels={labels}
+
           /**
            * Handles the onChange event.
            *
@@ -89,6 +117,7 @@ const CountrySelect = ({
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const [searchValue, setSearchValue] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
+  const t = useTranslations('base.forms')
 
   return (
     <Popover
@@ -135,7 +164,7 @@ const CountrySelect = ({
                 }
               }, 0);
             }}
-            placeholder="Search country..."
+            placeholder={t("selectCountry")}
           />
           <CommandList>
             <ScrollArea ref={scrollAreaRef} className="h-72">

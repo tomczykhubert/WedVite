@@ -1,44 +1,25 @@
 "use client";
 
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
 import { useTranslations } from "next-intl";
 import ContactCard from "./contact-card";
+import { Event } from "@prisma/client";
 
-export default function ContactsList({ limit }: { limit: number }) {
+export default function ContactsList({ event }: { event: Event }) {
   const t = useTranslations('base')
   const trpc = useTRPC();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteQuery(
-      trpc.contact.get.infiniteQueryOptions(
-        { limit },
-        { getNextPageParam: (lastPage) => lastPage.nextCursor }
-      )
+  const { data: contacts } =
+    useSuspenseQuery(
+      trpc.contact.get.queryOptions({ eventId: event.id })
     );
-
+  if (!contacts) return null;
   return (
     <>
-      {data.pages.map((page, i) => (
-        <React.Fragment key={i}>
-          {page.items.map((contact) => (
-            <ContactCard key={contact.id} contact={contact} />
-          ))}
-        </React.Fragment>
+      {contacts.map((contact) => (
+        <ContactCard key={contact.id} contact={contact} />
       ))}
-
-      {hasNextPage && (
-        <div className="col-span-full flex justify-center m-4">
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            variant="outline"
-          >
-            {isFetchingNextPage ? t('loading') : t('loadMore')}
-          </Button>
-        </div>
-      )}
     </>
   );
 }

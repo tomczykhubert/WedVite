@@ -11,7 +11,6 @@ export const routes = {
     event: {
       byId: (eventId: ID) => `/dashboard/${eventId}`,
       settings: (eventId: ID) => `/dashboard/${eventId}/settings`,
-      contactDetails: (eventId: ID) => `/dashboard/${eventId}/contactDetails`,
     },
   },
   account: {

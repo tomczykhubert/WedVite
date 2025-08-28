@@ -31,6 +31,7 @@ import { PhoneInput } from "./phone-input";
 import DateTimePicker from "./datetime-picker";
 import DatePicker from "./date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
+import { getAvailableLocales } from "@/i18n/routing";
 
 const Form = FormProvider;
 
@@ -237,7 +238,7 @@ function AutoFormField({
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue
                           placeholder={translatedLabel}
                         />

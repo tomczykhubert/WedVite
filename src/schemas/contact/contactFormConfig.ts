@@ -29,6 +29,7 @@ export const contactConfig = [
   {
     name: "phoneNumber",
     type: "tel",
+    required: true,
     label: stc("base.phoneNumber"),
     validation: z.string().nonempty(stc("required"))
     .refine(validatePhoneNumber, {message: stc("invalidPhoneNumber")}),
@@ -37,7 +38,7 @@ export const contactConfig = [
     name: "contactType",
     type: "select",
     label: stc("dashboard.event.contactType"),
-    validation: z.nativeEnum(EventContactType, {message: stc("invalidContactType")}).optional(),
+    validation: z.nativeEnum(EventContactType, {message: stc("invalidContactType")}).nullish(),
     values: getEnumKeys(EventContactType).map(key => ({
       value: key,
       name: stc(`dashboard.event.${key}`)

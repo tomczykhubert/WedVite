@@ -4,7 +4,8 @@
       "submit": "Submit",
       "cancel": "Cancel",
       "save": "Save",
-      "selectDate": "Select a date"
+      "selectDate": "Select a date",
+      "selectCountry": "Select country ..."
     },
     "loadMore": "Load more",
     "loading": "Loading...",
@@ -75,7 +76,8 @@
         "onAttendanceRespond": "Notifications on attendance upload"
       },
       "contact": {
-        "addContact": "Add contact"
+        "addContact": "Add contact",
+        "updateContact": "Update contact"
       }
     },
     "notFound": "Page not found",

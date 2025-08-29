@@ -19,9 +19,6 @@ export const apiRoutes = {
       update: (userId: ID) => `/api/auth/update-user/${userId}`,
     },
   },
-  users: {
-    getUser: (userId: ID) => `/api/users/${userId}`,
-  },
   emails: {
     test: "/api/emails/test"
   }

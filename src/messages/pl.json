@@ -5,7 +5,6 @@
       "cancel": "Anuluj",
       "save": "Zapisz",
       "selectDate": "Wybierz datę",
-      "selectTime": "Wybierz czas",
       "selectCountry": "Wybierz kraj ..."
     },
     "loadMore": "Załaduj więcej",
@@ -13,7 +12,11 @@
     "firstName": "Imię",
     "lastName": "Nazwisko",
     "phoneNumber": "Numer telefonu",
-    "email": "Email"
+    "email": "Email",
+    "other": "Inny",
+    "yes": "Tak",
+    "no": "Nie",
+    "reorder": "Zmień kolejność"
   },
   "user": {
     "name": "Nazwa",
@@ -78,7 +81,11 @@
       },
       "contact": {
         "addContact": "Dodaj kontakt",
-        "updateContact": "Zaktualizuj kontakt"
+        "updateContact": "Zaktualizuj kontakt",
+        "delete": {
+          "header": "Usuń kontakt",
+          "message": "Czy jesteś pewien że chcesz usunąć ten kontakt?"
+        }
       }
     },
     "goToDashboard": "Przejdź do wydarzeń",

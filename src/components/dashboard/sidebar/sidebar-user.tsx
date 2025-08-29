@@ -1,9 +1,9 @@
 import UserMenu from "@/components/user/user-menu/user-menu";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
-import { getUser } from "@/lib/auth/getUser";
 
+import { caller } from "@/trpc/server";
 export async function SidebarUser() {
-  const user = await getUser();
+  const user = await caller.user.get();
   if (!user) return;
   return (
     <SidebarMenu>

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
-export const isOwnerOfEvent = async (userId: string, eventId: string, db: PrismaClient) => {
+export const assertOwnerOfEvent = async (userId: string, eventId: string, db: PrismaClient) => {
   const count = await db.event.count({
     where: {
       id: eventId,
@@ -8,10 +9,10 @@ export const isOwnerOfEvent = async (userId: string, eventId: string, db: Prisma
     },
   })
 
-  return count > 0;
+  assertOwnership(count);
 }
 
-export const isOwnerOfContact = async (userId: string, contactId: string, db: PrismaClient) => {
+export const assertOwnerOfContact = async (userId: string, contactId: string, db: PrismaClient) => {
   const count = await db.eventContact.count({
     where: {
       id: contactId,
@@ -21,5 +22,9 @@ export const isOwnerOfContact = async (userId: string, contactId: string, db: Pr
     },
   })
 
-  return count > 0;
+  assertOwnership(count);
 }
+
+const assertOwnership = (count: number) => {
+  if (count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
+};

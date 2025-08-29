@@ -58,7 +58,7 @@ export default function ContactForm({
   const openChange = (open: boolean) => {
     setOpen(open)
 
-    if (open)
+    if (!open)
       form.reset()
   }
 

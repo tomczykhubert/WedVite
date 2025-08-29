@@ -6,7 +6,7 @@ import {
   updateEventConfig,
 } from "@/schemas/event/eventFormConfig";
 import { TRPCError } from "@trpc/server";
-import { isOwnerOfEvent } from "@/lib/prisma/eventUtils";
+import { assertOwnerOfEvent } from "@/lib/prisma/eventUtils";
 
 export const eventRouter = createTRPCRouter({
   add: protectedProcedure
@@ -32,7 +32,7 @@ export const eventRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
-      if (!(await isOwnerOfEvent(user.id, input.id, db))) throw new TRPCError({ code: "UNAUTHORIZED" });
+      await assertOwnerOfEvent(user.id, input.id, db)
 
       const event = await db.event.findUnique({
         where: {
@@ -52,7 +52,8 @@ export const eventRouter = createTRPCRouter({
       z.object({ ...translateSchemaConfig(updateEventConfig), id: z.string() })
     )
     .mutation(async ({ ctx: { user, db }, input }) => {
-      if (!(await isOwnerOfEvent(user.id, input.id, db))) throw new TRPCError({ code: "UNAUTHORIZED" });
+      await assertOwnerOfEvent(user.id, input.id, db)
+
       const event = await db.event.update({
         where: {
           id: input.id,

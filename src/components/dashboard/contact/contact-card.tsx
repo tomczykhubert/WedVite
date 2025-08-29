@@ -2,30 +2,120 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { EventContact } from "@prisma/client";
 import UpdateContactForm from "./update-contact-form";
+import ActionButton from "@/components/button-link";
+import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
+import { useTranslations } from "next-intl";
+import { useTRPC } from "@/trpc/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import ConfirmModal from "@/components/confirmModal";
+import { FaTrash } from "react-icons/fa";
 
-export default function ContactCard({ contact }: { contact: EventContact }) {
+export default function ContactCard({
+  contact,
+  dragListeners,
+  dragAttributes,
+}: {
+  contact: EventContact;
+  dragListeners?: React.HTMLAttributes<HTMLButtonElement>;
+  dragAttributes?: React.HTMLAttributes<HTMLButtonElement>;
+}) {
+  const eventT = useTranslations("dashboard.event");
+  const t = useTranslations("base");
+  const details = [
+    {
+      id: "name",
+      icon: MdPerson,
+      text: `${contact.firstName} ${contact.lastName}`,
+    },
+    {
+      id: "email",
+      icon: MdEmail,
+      text: contact.email,
+    },
+    {
+      id: "phone",
+      icon: MdPhone,
+      text: contact.phoneNumber,
+    },
+  ] as const;
+
   return (
     <Card
       key={contact.id}
-      className="h-full min-h-[300px] relative overflow-hidden py-0"
+      className="h-full min-h-[300px] relative overflow-hidden"
     >
-      <CardHeader>
+      <CardHeader className="flex items-center justify-between">
         <CardTitle>
           <h2 className="m-0 whitespace-normal [overflow-wrap:anywhere]">
-            {contact.firstName} {contact.lastName}
+            {contact.type ? eventT(contact.type) : t("other")}
           </h2>
         </CardTitle>
-        <UpdateContactForm contact={contact} />
+        <div className="flex gap-2">
+          <UpdateContactForm contact={contact} />
+          <ActionButton
+            variant="secondary"
+            size="icon"
+            tooltip={t("reorder")}
+            {...dragListeners}
+            {...dragAttributes}
+          >
+            <MdDragIndicator />
+          </ActionButton>
+          <DeleteContact contact={contact} />
+        </div>
       </CardHeader>
       <CardContent>
-        <div>
-          {contact.email}
-        </div>
-        <div>
-          {contact.phoneNumber}
-        </div>
+        {details.map((detail) => {
+          return (
+            <div
+              key={`detail-${detail.id}`}
+              className="flex items-center text-xl gap-2 mb-2"
+            >
+              <div>
+                <detail.icon />
+              </div>
+              <div>{detail.text}</div>
+            </div>
+          );
+        })}
       </CardContent>
     </Card>
+  );
+}
+
+function DeleteContact({ contact }: { contact: EventContact }) {
+  const formsT = useTranslations("formValidation.forms");
+  const t = useTranslations("dashboard.forms.contact.delete");
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  const deleteContact = useMutation(
+    trpc.contact.delete.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.contact.pathFilter());
+        toast.success(formsT("success"));
+      },
+      onError: (err) => {
+        toast.error(formsT("error"));
+      },
+    })
+  );
+  const onConfirm = () => {
+    deleteContact.mutate({ id: contact.id });
+  };
+
+  return (
+    <ConfirmModal
+      header={t("header")}
+      message={t("message")}
+      onConfirm={onConfirm}
+      trigger={
+        <ActionButton variant="destructive" size="icon" tooltip={t("header")}>
+          <FaTrash />
+        </ActionButton>
+      }
+    />
   );
 }
 

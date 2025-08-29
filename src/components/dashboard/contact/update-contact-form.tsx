@@ -59,7 +59,7 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
     contactType: contact.type
   }
   
-  const trigger = (<ActionButton variant="outline" size="icon" tooltip={t("updateContact")} ><FaEdit /></ActionButton>);
+  const trigger = (<ActionButton variant="default" size="icon" tooltip={t("updateContact")} ><FaEdit /></ActionButton>);
   return (
     <ContactForm title={t("updateContact")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></ContactForm>
   );

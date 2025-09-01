@@ -27,7 +27,6 @@ model EventPlanItem {
   postalCode   String
   region       String?
   country      String?
-  order        Int
   eventId      String
   event        Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
 

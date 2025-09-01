@@ -5,7 +5,10 @@
       "cancel": "Anuluj",
       "save": "Zapisz",
       "selectDate": "Wybierz datę",
-      "selectCountry": "Wybierz kraj ..."
+      "selectCountry": "Wybierz kraj ...",
+      "selectEmpty": "Puste",
+      "selectNone": "Brak",
+      "noCountryFound": "Nie znaleziono kraju"
     },
     "loadMore": "Załaduj więcej",
     "loading": "Ładowanie...",
@@ -16,7 +19,15 @@
     "other": "Inny",
     "yes": "Tak",
     "no": "Nie",
-    "reorder": "Zmień kolejność"
+    "reorder": "Zmień kolejność",
+    "addressLine1": "Linia adresowa 1",
+    "addressLine2": "Linia adresowa 2",
+    "city": "Miasto",
+    "postalCode": "Kod pocztowy",
+    "region": "Region",
+    "country": "Kraj",
+    "name": "Nazwa",
+    "description": "Opis"
   },
   "user": {
     "name": "Nazwa",
@@ -43,6 +54,7 @@
     "maxLength": "Maksymalna długość to {max} znaków.",
     "passwordMismatch": "Hasła muszą się zgadzać.",
     "invalidPhoneNumber": "Proszę podać prawidłowy numer telefonu.",
+    "invalidCountry": "Proszę podać prawidłowy kraj.",
     "invalidContactType": "Proszę wybrać prawidłowy typ kontaktu.",
     "auth": {
       "default": "Wystąpił błąd. Spróbuj ponownie.",
@@ -72,7 +84,7 @@
     "events": "Wydarzenia",
     "forms": {
       "event": {
-        "addEvent": "Dodaj wydarzenie",
+        "add": "Dodaj wydarzenie",
         "name": "Nazwa wydarzenia",
         "respondStart": "Data rozpoczęcia potwierdzeń obecności",
         "respondEnd": "Data zakończenia potwierdzeń obecności",
@@ -80,11 +92,22 @@
         "onAttendanceRespond": "Powiadomienia podczas potwierdzania obecnościć"
       },
       "contact": {
-        "addContact": "Dodaj kontakt",
-        "updateContact": "Zaktualizuj kontakt",
+        "add": "Dodaj kontakt",
+        "update": "Zaktualizuj kontakt",
         "delete": {
           "header": "Usuń kontakt",
           "message": "Czy jesteś pewien że chcesz usunąć ten kontakt?"
+        }
+      },
+      "planItem": {
+        "add": "Dodaj punkt planu",
+        "update": "Zaktualizuj punkt planu",
+        "details": "Szczegóły",
+        "startAt": "Początek",
+        "endAt": "Koniec",
+        "delete": {
+          "header": "Usuń punkt planu",
+          "message": "Czy jesteś pewien że chcesz usunąć ten punkt planu?"
         }
       }
     },
@@ -97,7 +120,9 @@
       "MAID_OF_HONOR": "Świadkowa",
       "BEST_MAN": "Świadek",
       "GROOM": "Pan młody",
-      "BRIDE": "Panna młoda"
+      "BRIDE": "Panna młoda",
+      "planItems": "Plan wydarzenia",
+      "contacts": "Kontakty"
     },
     "notFound": "Nie znaleziono strony"
   }

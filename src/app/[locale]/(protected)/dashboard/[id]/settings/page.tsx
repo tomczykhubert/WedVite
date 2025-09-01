@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { useEffect, useState } from "react";
 import FormErrorMessage from "@/components/form-error-messege";
-import { updateEventConfig } from "@/schemas/event/eventFormConfig";
+import { updateEventConfig } from "@/schemas/eventFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { notFound, useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

@@ -1,67 +1,89 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { EventContact } from "@prisma/client";
-import UpdateContactForm from "./update-contact-form";
+import { EventPlanItem } from "@prisma/client";
 import ActionButton from "@/components/button-link";
 import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
-import { useTranslations } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ConfirmModal from "@/components/confirmModal";
 import { FaTrash } from "react-icons/fa";
 import Image from "next/image";
+import UpdatePlanItemForm from "./update-plan-item-form";
 
-export default function ContactCard({
-  contact,
-  dragListeners,
-  dragAttributes,
+export default function PlanItemCard({
+  planItem,
 }: {
-  contact: EventContact;
-  dragListeners?: React.HTMLAttributes<HTMLButtonElement>;
-  dragAttributes?: React.HTMLAttributes<HTMLButtonElement>;
+  planItem: EventPlanItem;
 }) {
-  const eventT = useTranslations("dashboard.event");
+  const format = useFormatter();
   const t = useTranslations("base");
   const details = [
     {
-      id: "name",
+      id: "description",
       icon: MdPerson,
-      text: `${contact.firstName} ${contact.lastName}`,
+      text: planItem.description
     },
     {
-      id: "email",
-      icon: MdEmail,
-      text: contact.email,
+      id: "startAt",
+      icon: MdPerson,
+      text: planItem.startAt
+    },
+        {
+      id: "endAt",
+      icon: MdPerson,
+      text: planItem.endAt
     },
     {
-      id: "phone",
-      icon: MdPhone,
-      text: contact.phoneNumber,
+      id: "details",
+      icon: MdPerson,
+      text: planItem.details
+    },
+    {
+      id: "adressLine1",
+      icon: MdPerson,
+      text: planItem.addressLine1
+    },
+    {
+      id: "adressLine2",
+      icon: MdPerson,
+      text: planItem.addressLine2
+    },
+    {
+      id: "city",
+      icon: MdPerson,
+      text: planItem.city
+    },
+    {
+      id: "postalCode",
+      icon: MdPerson,
+      text: planItem.postalCode
+    },
+    {
+      id: "region",
+      icon: MdPerson,
+      text: planItem.region
+    },
+    {
+      id: "country",
+      icon: MdPerson,
+      text: planItem.country
     },
   ] as const;
 
   return (
     <Card
-      key={contact.id}
+      key={planItem.id}
       className="h-full min-h-[300px] relative overflow-hidden"
     >
       <CardHeader className="flex items-center justify-between">
         <CardTitle>
-          <Image src={`/images/contact_types/${contact.type ? contact.type.toLowerCase() : 'other'}.png`} alt={contact.type ? eventT(contact.type) : t("other")} width={64} height={64} />
+          <h2>{planItem.name}</h2>
         </CardTitle>
         <div className="flex gap-2">
-          <UpdateContactForm contact={contact} />
-          <ActionButton
-            variant="secondary"
-            size="icon"
-            tooltip={t("reorder")}
-            {...dragListeners}
-            {...dragAttributes}
-          >
-            <MdDragIndicator />
-          </ActionButton>
-          <DeleteContact contact={contact} />
+          <UpdatePlanItemForm planItem={planItem} />
+          <DeletePlanItem planItem={planItem} />
         </div>
       </CardHeader>
       <CardContent>
@@ -74,7 +96,15 @@ export default function ContactCard({
               <div>
                 <detail.icon />
               </div>
-              <div>{detail.text}</div>
+              {detail.text instanceof Date ? format.dateTime(detail.text, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+              }) :<div>{detail.text}</div> }
+
             </div>
           );
         })}
@@ -83,16 +113,16 @@ export default function ContactCard({
   );
 }
 
-function DeleteContact({ contact }: { contact: EventContact }) {
+function DeletePlanItem({ planItem }: { planItem: EventPlanItem }) {
   const formsT = useTranslations("formValidation.forms");
-  const t = useTranslations("dashboard.forms.contact.delete");
+  const t = useTranslations("dashboard.forms.planItem.delete");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const deleteContact = useMutation(
-    trpc.contact.delete.mutationOptions({
+  const deletePlanItem = useMutation(
+    trpc.planItem.delete.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.contact.pathFilter());
+        await queryClient.invalidateQueries(trpc.planItem.pathFilter());
         toast.success(formsT("success"));
       },
       onError: (err) => {
@@ -101,7 +131,7 @@ function DeleteContact({ contact }: { contact: EventContact }) {
     })
   );
   const onConfirm = () => {
-    deleteContact.mutate({ id: contact.id });
+    deletePlanItem.mutate({ id: planItem.id });
   };
 
   return (
@@ -118,7 +148,7 @@ function DeleteContact({ contact }: { contact: EventContact }) {
   );
 }
 
-export function ContactCardSkeleton(props: { pulse?: boolean }) {
+export function PlanItemCardSkeleton(props: { pulse?: boolean }) {
   const { pulse = true } = props;
 
   const lines = ["w-1/3", "w-4/5", "w-2/3", "w-1/4", "w-3/5"];

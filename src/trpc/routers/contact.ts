@@ -4,8 +4,7 @@ import {
 } from "@/lib/prisma/eventUtils";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { baseContactConfig } from "@/schemas/contact/contactFormConfig";
-import { TRPCError } from "@trpc/server";
+import { baseContactConfig } from "@/schemas/contactFormConfig";
 import z from "zod";
 
 export const contactRouter = createTRPCRouter({

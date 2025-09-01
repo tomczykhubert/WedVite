@@ -16,7 +16,7 @@ import { AutoFormField, Form } from "@/components/ui/form";
 import {
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
-import { addEventConfig } from "@/schemas/event/eventFormConfig";
+import { addEventConfig } from "@/schemas/eventFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -77,7 +77,7 @@ export default function AddEventForm() {
           <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
             <LuCalendarPlus2 className="h-20 w-20" />
             <span>
-              {t("addEvent")}
+              {t("add")}
             </span>
           </CardContent>
         </Card>
@@ -86,7 +86,7 @@ export default function AddEventForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <AlertDialogHeader>
-              <DialogTitle>{t("addEvent")}</DialogTitle>
+              <DialogTitle>{t("add")}</DialogTitle>
               <DialogDescription>
                 <FormErrorMessage message={formErrorMessage} />
               </DialogDescription>

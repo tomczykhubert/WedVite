@@ -1,24 +1,17 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AutoFormField, Form } from "@/components/ui/form";
 import {
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
-import { baseContactConfig } from "@/schemas/contact/contactFormConfig";
+import { baseContactConfig } from "@/schemas/contactFormConfig";
 import { useTRPC } from "@/trpc/client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Contact } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { FaAddressBook, FaEdit } from "react-icons/fa";
 import { toast } from "sonner";
 import z from "zod";
 import ContactForm from "./contact-form";
 import { EventContact } from "@prisma/client";
 import ActionButton from "@/components/button-link";
+import { FaEdit } from "react-icons/fa";
 
 const formSchema = z.object(translateSchemaConfig(baseContactConfig));
 
@@ -59,8 +52,8 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
     contactType: contact.type
   }
   
-  const trigger = (<ActionButton variant="default" size="icon" tooltip={t("updateContact")} ><FaEdit /></ActionButton>);
+  const trigger = (<ActionButton variant="default" size="icon" tooltip={t("update")} ><FaEdit /></ActionButton>);
   return (
-    <ContactForm title={t("updateContact")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></ContactForm>
+    <ContactForm title={t("update")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></ContactForm>
   );
 }

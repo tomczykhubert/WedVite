@@ -168,7 +168,7 @@ const CountrySelect = ({
           />
           <CommandList>
             <ScrollArea ref={scrollAreaRef} className="h-72">
-              <CommandEmpty>No country found.</CommandEmpty>
+              <CommandEmpty>{t("noCountryFound")}</CommandEmpty>
               <CommandGroup>
                 {countryList.map(({ value, label }) =>
                   value ? (
@@ -221,7 +221,7 @@ const CountrySelectOption = ({
   );
 };
 
-const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
+export const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
   const Flag = flags[country];
 
   return (

@@ -2,11 +2,13 @@ import { createTRPCRouter } from '../init';
 import { eventRouter } from './event';
 import { contactRouter } from './contact';
 import { userRouter } from './user';
+import { planItemRouter } from './planItem';
 
 export const appRouter = createTRPCRouter({
   event: eventRouter,
   contact: contactRouter,
-  user: userRouter
+  planItem: planItemRouter,
+  user: userRouter,
 });
 
 export type AppRouter = typeof appRouter;

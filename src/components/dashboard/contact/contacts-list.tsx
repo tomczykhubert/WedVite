@@ -10,6 +10,7 @@ import {
   DndContext,
   closestCenter,
   DragEndEvent,
+  TouchSensor,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -51,6 +52,7 @@ export default function ContactsList({ event }: { event: Event }) {
 
   const sensors = useSensors(
     useSensor(PointerSensor),
+    useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -95,15 +97,16 @@ export default function ContactsList({ event }: { event: Event }) {
 }
 
 function SortableContactCard({ contact }: { contact: any }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: contact.id,
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    zIndex: isDragging ? 2 : 1,
   };
-  const dragAttributes = { ...attributes, style: { cursor: 'grab',  } };
+  const dragAttributes = { ...attributes, style: { cursor: 'grab', zIndex: 1 } };
 
   return (
     <div ref={setNodeRef} style={style}>

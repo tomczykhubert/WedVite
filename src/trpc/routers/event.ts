@@ -4,8 +4,7 @@ import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import {
   addEventConfig,
   updateEventConfig,
-} from "@/schemas/event/eventFormConfig";
-import { TRPCError } from "@trpc/server";
+} from "@/schemas/eventFormConfig";
 import { assertOwnerOfEvent } from "@/lib/prisma/eventUtils";
 
 export const eventRouter = createTRPCRouter({

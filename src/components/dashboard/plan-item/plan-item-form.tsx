@@ -15,18 +15,18 @@ import { AutoFormField, Form } from "@/components/ui/form";
 import {
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
-import { baseContactConfig } from "@/schemas/contactFormConfig";
+import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
-const formSchema = z.object(translateSchemaConfig(baseContactConfig));
+const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
 
 type FormData = z.infer<typeof formSchema>;
 
-type ContactFormProps = {
+type PlanItemFormProps = {
   initialValues?: Partial<z.infer<typeof formSchema>>;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
   title: string;
@@ -34,12 +34,12 @@ type ContactFormProps = {
   event?: Event;
 }
 
-export default function ContactForm({
+export default function PlanItemForm({
   initialValues,
   onSubmit,
   title,
   trigger,
-}: ContactFormProps) {
+}: PlanItemFormProps) {
   const t = useTranslations("base.forms");
   const [isOpen, setOpen] = useState(false)
   const [formErrorMessage, setFormErrorMessage] = useState("");
@@ -76,7 +76,7 @@ export default function ContactForm({
                 <FormErrorMessage message={formErrorMessage} />
               </DialogDescription>
             </AlertDialogHeader>
-            {baseContactConfig.map((fieldConfig) => (
+            {basePlanItemConfig.map((fieldConfig) => (
               <AutoFormField
                 key={fieldConfig.name}
                 control={form.control}

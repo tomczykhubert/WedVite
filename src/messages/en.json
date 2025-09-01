@@ -5,7 +5,10 @@
       "cancel": "Cancel",
       "save": "Save",
       "selectDate": "Select a date",
-      "selectCountry": "Select country ..."
+      "selectCountry": "Select country ...",
+      "selectEmpty": "Empty",
+      "selectNone": "None",
+      "noCountryFound": "No country found"
     },
     "loadMore": "Load more",
     "loading": "Loading...",
@@ -16,7 +19,15 @@
     "other": "Other",
     "yes": "Yes",
     "no": "No",
-    "reorder": "Reorder"
+    "reorder": "Reorder",
+    "addressLine1": "Address line 1",
+    "addressLine2": "Address line 2",
+    "city": "City",
+    "postalCode": "Postal code",
+    "region": "Region",
+    "country": "Country",
+    "name": "Name",
+    "description": "Description"
   },
   "user": {
     "name": "Name",
@@ -43,6 +54,7 @@
     "maxLength": "Maximum length is {max} characters.",
     "passwordMismatch": "Passwords must match.",
     "invalidPhoneNumber": "Please enter a valid phone number.",
+    "invalidCountry": "Please enter a valid country.",
     "invalidContactType": "Please select a valid contact type.",
     "auth": {
       "default": "An error occurred. Please try again.",
@@ -72,7 +84,7 @@
     "events": "Events",
     "forms": {
       "event": {
-        "addEvent": "Add event",
+        "add": "Add event",
         "name": "Event name",
         "respondStart": "Respond start date",
         "respondEnd": "Respond end date",
@@ -80,11 +92,22 @@
         "onAttendanceRespond": "Notifications on attendance upload"
       },
       "contact": {
-        "addContact": "Add contact",
-        "updateContact": "Update contact",
+        "add": "Add contact",
+        "update": "Update contact",
         "delete": {
           "header": "Delete contact",
           "message": "Are you sure you want to delete this contact?"
+        }
+      },
+      "planItem": {
+        "add": "Add plan item",
+        "update": "Update plan item",
+        "details": "Details",
+        "startAt": "Start at",
+        "endAt": "End at",
+        "delete": {
+          "header": "Delete plan item",
+          "message": "Are you sure you want to delete this plan item?"
         }
       }
     },
@@ -97,7 +120,9 @@
       "MAID_OF_HONOR": "Maid of honor",
       "BEST_MAN": "Bestman",
       "GROOM": "Groom",
-      "BRIDE": "Bride"
+      "BRIDE": "Bride",
+      "planItems": "Event plan",
+      "contacts": "Contacts"
     },
     "goToDashboard": "Go to dashboard"
   }

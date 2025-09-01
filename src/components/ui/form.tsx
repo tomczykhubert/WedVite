@@ -32,6 +32,8 @@ import DateTimePicker from "./datetime-picker";
 import DatePicker from "./date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { getAvailableLocales } from "@/i18n/routing";
+import { CountryDropdown } from "./country-dropdown";
+import { CountryPicker } from "./country-select";
 
 const Form = FormProvider;
 
@@ -230,29 +232,14 @@ function AutoFormField({
         return <DatePicker {...field} />;
       case "checkbox":
         return (
-          <Checkbox {...field} checked={field.value} onCheckedChange={field.onChange}/>
+          <Checkbox {...field} checked={field.value} onCheckedChange={field.onChange} />
         );
       case "select":
-        return <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue
-                          placeholder={translatedLabel}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {fieldConfig.values && fieldConfig.values.map((item, i) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {translate(item.name, t)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>;
+        return <FormSelect {...field} fieldConfig={fieldConfig} label={translatedLabel}/>
+      // case "country_select": return <CountryDropdown {...field} onChange={(country) => field.onChange(country.alpha2)} />;
+      case "country_select": return <CountryPicker {...field} fieldConfig={fieldConfig} />;
       default:
+        const _exhaustiveCheck: never = fieldConfig.type;
         throw Error(
           `Field type ${fieldConfig.type} is not supported in AutoFormField`
         );
@@ -266,15 +253,15 @@ function AutoFormField({
       render={({ field }) => (
         <FormItem>
           <div className={cn(inlineLabel && "flex flex-row-reverse justify-end gap-2")}>
-          <FormLabel required={fieldConfig.required} className="mb-2">
-            {translatedLabel}
-          </FormLabel>
-          { ownFormControl 
-          ?
-          <>{renderField(field)}</>
-          :
-          <FormControl>{renderField(field)}</FormControl>
-          }
+            <FormLabel required={fieldConfig.required} className="mb-2">
+              {translatedLabel}
+            </FormLabel>
+            {ownFormControl
+              ?
+              <>{renderField(field)}</>
+              :
+              <FormControl>{renderField(field)}</FormControl>
+            }
           </div>
           <FormMessage />
         </FormItem>
@@ -283,9 +270,33 @@ function AutoFormField({
   );
 }
 
-
-
-
+function FormSelect({
+  fieldConfig,
+  label,
+  ...field
+}: ControllerRenderProps<FieldValues, string> & { fieldConfig: FormFieldConfig, label?: string }) {
+  const t = useTranslations();
+  return <Select
+    onValueChange={(value) => field.onChange(value == "_null" ? null : value)}
+    defaultValue={field.value}
+  >
+    <FormControl>
+      <SelectTrigger className="w-full">
+        <SelectValue
+          placeholder={label}
+        />
+      </SelectTrigger>
+    </FormControl>
+    <SelectContent >
+      {!fieldConfig.required && <SelectItem value="_null" className="opacity-50">{t('base.forms.selectEmpty')}</SelectItem>}
+      {fieldConfig.values && fieldConfig.values.map((item, i) => (
+        <SelectItem key={item.value} value={item.value}>
+          {translate(item.name, t)}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>;
+}
 
 export {
   useFormField,

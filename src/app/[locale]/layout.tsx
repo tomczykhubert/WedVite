@@ -35,7 +35,7 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider>
             <TRPCReactProvider>
-              <Toaster />
+              <Toaster duration={5000}/>
               {children}
             </TRPCReactProvider>
           </NextIntlClientProvider>

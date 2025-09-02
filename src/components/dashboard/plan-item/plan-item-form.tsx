@@ -1,5 +1,4 @@
 "use client";
-import FormErrorMessage from "@/components/form-error-messege";
 import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +7,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -42,7 +42,6 @@ export default function PlanItemForm({
 }: PlanItemFormProps) {
   const t = useTranslations("base.forms");
   const [isOpen, setOpen] = useState(false)
-  const [formErrorMessage, setFormErrorMessage] = useState("");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -50,16 +49,13 @@ export default function PlanItemForm({
   });
 
   const handleSubmit = (data: FormData) => {
-    setFormErrorMessage("");
     onSubmit(data);
     setOpen(false);
   };
 
   const openChange = (open: boolean) => {
     setOpen(open)
-
-    if (!open)
-      form.reset()
+    form.reset(initialValues)
   }
 
   return (
@@ -67,15 +63,12 @@ export default function PlanItemForm({
       <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] overflow-y-scroll max-h-[90vh]">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-            <AlertDialogHeader>
-              <DialogTitle>{title}</DialogTitle>
-              <DialogDescription>
-                <FormErrorMessage message={formErrorMessage} />
-              </DialogDescription>
-            </AlertDialogHeader>
             {basePlanItemConfig.map((fieldConfig) => (
               <AutoFormField
                 key={fieldConfig.name}

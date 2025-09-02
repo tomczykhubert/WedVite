@@ -31,9 +31,7 @@ import { PhoneInput } from "./phone-input";
 import DateTimePicker from "./datetime-picker";
 import DatePicker from "./date-picker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
-import { getAvailableLocales } from "@/i18n/routing";
-import { CountryDropdown } from "./country-dropdown";
-import { CountryPicker } from "./country-select";
+import { CountryPicker } from "./country-picker";
 
 const Form = FormProvider;
 
@@ -236,7 +234,6 @@ function AutoFormField({
         );
       case "select":
         return <FormSelect {...field} fieldConfig={fieldConfig} label={translatedLabel}/>
-      // case "country_select": return <CountryDropdown {...field} onChange={(country) => field.onChange(country.alpha2)} />;
       case "country_select": return <CountryPicker {...field} fieldConfig={fieldConfig} />;
       default:
         const _exhaustiveCheck: never = fieldConfig.type;

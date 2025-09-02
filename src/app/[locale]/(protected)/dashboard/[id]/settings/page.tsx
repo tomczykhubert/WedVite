@@ -15,7 +15,7 @@ import { useTRPC } from "@/trpc/client";
 import { notFound, useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Event, NotificationSettings } from "@prisma/client";
-import Loader from "@/components/loader";
+import Loader, { BaseLoader } from "@/components/loader";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 
@@ -33,11 +33,15 @@ export default function EventSettings() {
     })
   );
 
-  if (isPending) return <>Ladowanie</>;
+  if (isPending) return <BaseLoader isLoading={isPending}></BaseLoader>;
 
   if (!event) return notFound();
 
-  return <EventSettingsForm event={event} />;
+  return (
+    <>
+      <EventSettingsForm event={event} />;
+    </>
+  )
 }
 
 const EventSettingsForm = ({
@@ -93,32 +97,26 @@ const EventSettingsForm = ({
   };
 
   return (
-    <div className="relative">
-      <Card className="my-5 max-w-[600px] mx-auto">
-        <CardHeader>
-          <CardTitle>
-            <h1 className="text-center m-0">{tEvent("settings")}</h1>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormErrorMessage message={formErrorMessage} />
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {updateEventConfig.map((fieldConfig) => (
-                <AutoFormField
-                  key={fieldConfig.name}
-                  control={form.control}
-                  fieldConfig={fieldConfig}
-                />
-              ))}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {t("forms.save")}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      <Loader isLoading={isLoading}/>
-    </div>
+    <>
+      <div className="max-w-[600px]">
+        <h1 className="">{tEvent("settings")}</h1>
+        <FormErrorMessage message={formErrorMessage} />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {updateEventConfig.map((fieldConfig) => (
+              <AutoFormField
+                key={fieldConfig.name}
+                control={form.control}
+                fieldConfig={fieldConfig}
+              />
+            ))}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {t("forms.save")}
+            </Button>
+          </form>
+        </Form>
+      </div>
+      <Loader isLoading={isLoading} />
+    </>
   );
 };

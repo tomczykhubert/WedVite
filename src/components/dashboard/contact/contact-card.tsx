@@ -44,16 +44,16 @@ export default function ContactCard({
   return (
     <Card
       key={contact.id}
-      className="h-full min-h-[300px] relative overflow-hidden"
+      className="h-full min-h-[250px] overflow-hidden bg-accent/20 pt-0 border-dashed border-2"
     >
-      <CardHeader className="flex items-center justify-between">
+      <CardHeader className="flex items-center justify-between bg-muted py-4 px-8 border-dashed border-b-2 border-b-accent">
         <CardTitle>
           <Image src={`/images/contact_types/${contact.type ? contact.type.toLowerCase() : 'other'}.png`} alt={contact.type ? eventT(contact.type) : t("other")} width={64} height={64} />
         </CardTitle>
         <div className="flex gap-2">
           <UpdateContactForm contact={contact} />
           <ActionButton
-            variant="secondary"
+            variant="outline"
             size="icon"
             tooltip={t("reorder")}
             {...dragListeners}
@@ -69,12 +69,12 @@ export default function ContactCard({
           return (
             <div
               key={`detail-${detail.id}`}
-              className="flex items-center text-xl gap-2 mb-2"
+              className="flex items-center gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2"
             >
-              <div>
+              <div className="text-primary">
                 <detail.icon />
               </div>
-              <div>{detail.text}</div>
+              <div className="whitespace-normal [overflow-wrap:anywhere]">{detail.text}</div>
             </div>
           );
         })}

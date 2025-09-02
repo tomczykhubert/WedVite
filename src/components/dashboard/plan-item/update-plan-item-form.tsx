@@ -12,6 +12,8 @@ import ActionButton from "@/components/button-link";
 import { FaEdit } from "react-icons/fa";
 import PlanItemForm from "./plan-item-form";
 import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
+import Loader from "@/components/loader";
+import { useState } from "react";
 
 const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
 
@@ -22,8 +24,9 @@ type UpdatePlanItemFormProps = {
 }
 
 export default function UpdatePlanItemForm({ planItem }: UpdatePlanItemFormProps) {
-  const baseT = useTranslations("formValidation.forms");
+  const validationT = useTranslations("formValidation.forms");
   const t = useTranslations("dashboard.forms.planItem");
+  const [loading, setLoading] = useState(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const updatePlanItem = useMutation(
@@ -32,8 +35,14 @@ export default function UpdatePlanItemForm({ planItem }: UpdatePlanItemFormProps
         await queryClient.invalidateQueries(trpc.planItem.pathFilter());
       },
       onError: (err) => {
-        toast.error(baseT("error"));
+        toast.error(validationT("error"));
       },
+      onMutate: async () => {
+        setLoading(true);
+      },
+      onSettled: async () => {
+        setLoading(false);
+      }
     }),
   );
 
@@ -48,8 +57,8 @@ export default function UpdatePlanItemForm({ planItem }: UpdatePlanItemFormProps
     name: planItem.name,
     description: planItem.description,
     details: planItem.details,
-    startAt: planItem.startAt ?? new Date(),
-    endAt: planItem.endAt ?? new Date(),
+    startAt: planItem.startAt,
+    endAt: planItem.endAt,
     addressLine1:  planItem.addressLine1,
     addressLine2: planItem.addressLine2,
     city: planItem.city,
@@ -60,6 +69,9 @@ export default function UpdatePlanItemForm({ planItem }: UpdatePlanItemFormProps
   
   const trigger = (<ActionButton variant="default" size="icon" tooltip={t("update")} ><FaEdit /></ActionButton>);
   return (
-    <PlanItemForm title={t("update")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></PlanItemForm>
+    <>
+      <Loader isLoading={loading} />
+      <PlanItemForm title={t("update")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></PlanItemForm>
+    </>
   );
 }

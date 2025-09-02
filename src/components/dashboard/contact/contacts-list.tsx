@@ -97,16 +97,17 @@ export default function ContactsList({ event }: { event: Event }) {
 }
 
 function SortableContactCard({ contact }: { contact: any }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging, isSorting } = useSortable({
     id: contact.id,
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    zIndex: isDragging ? 2 : 1,
+    zIndex: isSorting ? (isDragging ? 2 : 1) : "auto",
   };
-  const dragAttributes = { ...attributes, style: { cursor: 'grab', zIndex: 1 } };
+
+  const dragAttributes = { ...attributes, style: { cursor: 'grab' } };
 
   return (
     <div ref={setNodeRef} style={style}>

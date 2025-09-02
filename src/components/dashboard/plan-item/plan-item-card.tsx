@@ -3,14 +3,16 @@ import { cn } from "@/lib/utils";
 import { EventPlanItem } from "@prisma/client";
 import ActionButton from "@/components/button-link";
 import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
+import { IoTime, IoLocation } from "react-icons/io5";
 import { useTranslations, useFormatter } from "next-intl";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ConfirmModal from "@/components/confirmModal";
-import { FaTrash } from "react-icons/fa";
-import Image from "next/image";
+import { FaTrash, FaCity } from "react-icons/fa";
 import UpdatePlanItemForm from "./update-plan-item-form";
+import flags from "react-phone-number-input/flags";
+import * as RPNInput from "react-phone-number-input";
 
 export default function PlanItemCard({
   planItem,
@@ -19,67 +21,26 @@ export default function PlanItemCard({
 }) {
   const format = useFormatter();
   const t = useTranslations("base");
-  const details = [
-    {
-      id: "description",
-      icon: MdPerson,
-      text: planItem.description
-    },
-    {
-      id: "startAt",
-      icon: MdPerson,
-      text: planItem.startAt
-    },
-        {
-      id: "endAt",
-      icon: MdPerson,
-      text: planItem.endAt
-    },
-    {
-      id: "details",
-      icon: MdPerson,
-      text: planItem.details
-    },
-    {
-      id: "adressLine1",
-      icon: MdPerson,
-      text: planItem.addressLine1
-    },
-    {
-      id: "adressLine2",
-      icon: MdPerson,
-      text: planItem.addressLine2
-    },
-    {
-      id: "city",
-      icon: MdPerson,
-      text: planItem.city
-    },
-    {
-      id: "postalCode",
-      icon: MdPerson,
-      text: planItem.postalCode
-    },
-    {
-      id: "region",
-      icon: MdPerson,
-      text: planItem.region
-    },
-    {
-      id: "country",
-      icon: MdPerson,
-      text: planItem.country
-    },
-  ] as const;
+
+  const FormatDate = (date: Date) => {
+    return format.dateTime(date, {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+  }
 
   return (
     <Card
       key={planItem.id}
-      className="h-full min-h-[300px] relative overflow-hidden"
+      className="h-full min-h-[300px] overflow-hidden bg-accent/20 pt-0 border-dashed border-2"
     >
-      <CardHeader className="flex items-center justify-between">
+      <CardHeader className="flex justify-between bg-muted py-4 px-8 border-dashed border-b-2 border-b-accent">
         <CardTitle>
-          <h2>{planItem.name}</h2>
+          <h3 className="whitespace-normal [overflow-wrap:anywhere] mb-0">{planItem.name}</h3>
         </CardTitle>
         <div className="flex gap-2">
           <UpdatePlanItemForm planItem={planItem} />
@@ -87,27 +48,38 @@ export default function PlanItemCard({
         </div>
       </CardHeader>
       <CardContent>
-        {details.map((detail) => {
-          return (
-            <div
-              key={`detail-${detail.id}`}
-              className="flex items-center text-xl gap-2 mb-2"
-            >
-              <div>
-                <detail.icon />
-              </div>
-              {detail.text instanceof Date ? format.dateTime(detail.text, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              }) :<div>{detail.text}</div> }
+        {planItem.description &&
+          <div className="gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
+            {planItem.description}
+          </div>
+        }
+        <div className="flex items-center text-lg gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
+          <div className="text-primary"><IoTime /></div>
+          <div>
+            <span>{FormatDate(planItem.startAt)}</span>
+            {planItem.endAt && (
+              <>
+                <span className="ml-3 mr-3">—</span>
+                <span className="text-nowrap">{FormatDate(planItem.endAt)}</span>
+              </>
+            )}
 
+
+          </div>
+        </div>
+        <div className="flex items-center text-lg gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
+          <div className="text-primary"><IoLocation /></div>
+          <div>
+            <div>{planItem.addressLine1}</div>
+            <div>{planItem.addressLine2}</div>
+            <div>{planItem.postalCode}, {planItem.city}</div>
+            <div className="flex items-center">
+              {planItem.country && <Flag country={planItem.country as unknown as RPNInput.Country}/>}
+              {planItem.region && <span className="ml-2">{planItem.region}</span>}
             </div>
-          );
-        })}
+          </div>
+        </div>
+          
       </CardContent>
     </Card>
   );
@@ -180,3 +152,12 @@ export function PlanItemCardSkeleton(props: { pulse?: boolean }) {
     </div>
   );
 }
+
+const Flag = ({ country }: { country: RPNInput.Country }) => {
+  const FlagIcon = flags[country];
+  return (
+    <span className="flex h-4 w-6 overflow-hidden rounded-sm bg-foreground/20 [&_svg:not([class*='size-'])]:size-full">
+      {FlagIcon && <FlagIcon title={country} />}
+    </span>
+  );
+};

@@ -65,6 +65,10 @@
     "forms": {
       "error": "Wystąpił błąd. Spróbuj ponownie.",
       "success": "Formularz przesłany pomyślnie."
+    },
+    "trpcError": {
+      "maxPlanItemsReached": "Osiągnięto maksymalną liczbę punktów planu ({max}).",
+      "maxContactsReached": "Osiągnięto maksymalną liczbę kontaków ({max})."
     }
   },
   "emails": {
@@ -122,7 +126,9 @@
       "GROOM": "Pan młody",
       "BRIDE": "Panna młoda",
       "planItems": "Plan wydarzenia",
-      "contacts": "Kontakty"
+      "planItemsDescription": "W tej sekcji możesz dodać poszczególne elementy planu wydarzenia, takie jak ślub czy wesele. Podaj szczegóły dotyczące daty, godziny i miejsca każdej części uroczstości, aby mieć pełny harmonogram. Informacje te będą później widoczne dla gości, którzy potwierdzają swoją obecność, co ułatwi im orientację w planie całego wydarzenia.",
+      "contacts": "Kontakty",
+      "contactsDescription": "W tej sekcji dodaj kontakty kluczowych osób związanych z wydarzeniem. Informacje te będą widoczne dla gości podczas potwierdzania obecności, dlatego upewnij się, że dane są aktualne i kompletne. Możesz łatwo przeglądać, edytować lub dodawać nowe kontakty, aby organizacja wydarzenia przebiegała sprawnie."
     },
     "notFound": "Nie znaleziono strony"
   }

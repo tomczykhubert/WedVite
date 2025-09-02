@@ -24,7 +24,7 @@ export default async function Layout({
         <AppSidebar sidebarItems={sidebarItems}/>
         <SidebarInset>
           <AppHeader breadcrumbs={breadcrumbs}/>
-          <div className="flex flex-1 flex-col p-4 relative">
+          <div className="flex flex-1 flex-col p-4 lg:p-8 relative">
             {children}
           </div>
         </SidebarInset>

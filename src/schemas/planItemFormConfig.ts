@@ -1,10 +1,8 @@
+import { availableCountries } from "@/components/ui/country-picker";
 import { stc } from "@/i18n/utils";
 import { getFieldsByName } from "@/lib/forms/schemaTranslator";
 import { maxString, minMaxString } from "@/lib/zod/extension";
-// import { Country, getCountries } from "react-phone-number-input";
 import z from "zod";
-import { countries } from "country-data-list";
-export const availableCountries = Object.values(countries.all).map(c => c.alpha2);
 
 export const planItemConfig = [
   {
@@ -33,7 +31,7 @@ export const planItemConfig = [
     type: "datetime",
     required: false,
     label: stc("dashboard.forms.planItem.endAt"),
-    validation: z.date().optional()
+    validation: z.date().nullish()
   },
   {
     name: "details",

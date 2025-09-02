@@ -1,6 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { parsePhoneNumberFromString, isValidPhoneNumber } from "libphonenumber-js";
+import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+import { TRPCErrorResponseConfig } from "@/trpc/routers/_app";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -45,4 +48,8 @@ export const getEnumKeys = <
     TEnumValue extends string | number,
 >(enumVariable: { [key in T]: TEnumValue }) => {
     return Object.keys(enumVariable) as Array<T>;
+}
+
+export const showError = async (t: ReturnType<typeof useTranslations>, error: TRPCErrorResponseConfig) => { 
+  toast.error(t(error.key, error.values));
 }

@@ -17,7 +17,7 @@ import flags from "react-phone-number-input/flags";
 import pl from "react-phone-number-input/locale/pl";
 import { FormFieldConfig } from "@/lib/forms/schemaTranslator";
 import * as RPNInput from "react-phone-number-input";
-import { availableCountries } from "@/schemas/planItemFormConfig";
+import { countries } from "country-data-list";
 
 type Labels = Record<string, string>;
 
@@ -168,6 +168,8 @@ const Flag = ({ country }: { country: RPNInput.Country }) => {
     </span>
   );
 };
+
+export const availableCountries = Object.values(countries.all).map(c => c.alpha2);
 
 function isCountry(value: unknown): value is RPNInput.Country {
   return typeof value === "string" && availableCountries.includes(value as any);

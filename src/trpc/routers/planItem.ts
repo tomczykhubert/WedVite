@@ -6,6 +6,11 @@ import { createTRPCRouter, protectedProcedure } from "../init";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import z from "zod";
 import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
+import { stc } from "@/i18n/utils";
+import { EventPlanItem } from "@prisma/client";
+import { TRPCResponse } from "./_app";
+
+const MAX_PLAN_ITEMS = 8;
 
 export const planItemRouter = createTRPCRouter({
   add: protectedProcedure
@@ -15,8 +20,21 @@ export const planItemRouter = createTRPCRouter({
         eventId: z.string(),
       })
     )
-    .mutation(async ({ ctx: { user, db }, input }) => {
+    .mutation(async ({ ctx: { user, db }, input }): Promise<TRPCResponse<EventPlanItem>> => {
       await assertOwnerOfEvent(user.id, input.eventId, db);
+
+      const count = await db.eventPlanItem.count({
+          where: {
+            eventId: input.eventId,
+          }
+      })
+      
+      if (count >= MAX_PLAN_ITEMS) return {
+        success: false, error: {
+          key: "trpcError.maxPlanItemsReached",
+          values: { max: MAX_PLAN_ITEMS }
+        }
+      };
 
       const planItem = await db.eventPlanItem.create({
         data: {
@@ -24,7 +42,7 @@ export const planItemRouter = createTRPCRouter({
           description: input.description,
           details: input.details,
           startAt: input.startAt.toISOString(),
-          endAt: input.endAt.toISOString(),
+          endAt:  input.endAt ? input.endAt.toISOString() : null,
           addressLine1: input.addressLine1,
           addressLine2: input.addressLine2,
           city: input.city,
@@ -34,7 +52,7 @@ export const planItemRouter = createTRPCRouter({
           eventId: input.eventId,
         },
       });
-      return planItem;
+      return { success: true, data: planItem };
     }),
   update: protectedProcedure
     .input(

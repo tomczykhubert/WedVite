@@ -12,3 +12,12 @@ export const appRouter = createTRPCRouter({
 });
 
 export type AppRouter = typeof appRouter;
+
+export type TRPCResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: TRPCErrorResponseConfig };
+
+export type TRPCErrorResponseConfig = {
+  key: string;
+  values?: Record<string, any>;
+};

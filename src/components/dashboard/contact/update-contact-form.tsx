@@ -12,6 +12,8 @@ import ContactForm from "./contact-form";
 import { EventContact } from "@prisma/client";
 import ActionButton from "@/components/button-link";
 import { FaEdit } from "react-icons/fa";
+import { useState } from "react";
+import Loader from "@/components/loader";
 
 const formSchema = z.object(translateSchemaConfig(baseContactConfig));
 
@@ -24,6 +26,7 @@ type UpdateContactFormProps = {
 export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
   const baseT = useTranslations("formValidation.forms");
   const t = useTranslations("dashboard.forms.contact");
+  const [loading, setLoading] = useState(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const updateContact = useMutation(
@@ -34,6 +37,12 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
       onError: (err) => {
         toast.error(baseT("error"));
       },
+      onMutate: async () => {
+        setLoading(true);
+      },
+      onSettled: async () => {
+        setLoading(false);
+      }
     }),
   );
 
@@ -51,9 +60,12 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
     phoneNumber: contact.phoneNumber,
     contactType: contact.type
   }
-  
+
   const trigger = (<ActionButton variant="default" size="icon" tooltip={t("update")} ><FaEdit /></ActionButton>);
   return (
-    <ContactForm title={t("update")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></ContactForm>
+    <>
+      <Loader isLoading={loading}/>
+      <ContactForm title={t("update")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></ContactForm>
+    </>
   );
 }

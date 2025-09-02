@@ -149,4 +149,8 @@
   h6 {
     @apply text-base font-semibold tracking-tight mb-1;
   }
+
+  [data-sonner-toast][data-type="error"] [data-icon] {
+    color: var(--destructive);
+  }
 }

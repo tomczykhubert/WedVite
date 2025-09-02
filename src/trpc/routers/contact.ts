@@ -6,6 +6,9 @@ import { createTRPCRouter, protectedProcedure } from "../init";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { baseContactConfig } from "@/schemas/contactFormConfig";
 import z from "zod";
+import { TRPCResponse } from "./_app";
+import { EventContact } from "@prisma/client";
+const MAX_CONTACTS = 5;
 
 export const contactRouter = createTRPCRouter({
   add: protectedProcedure
@@ -15,8 +18,21 @@ export const contactRouter = createTRPCRouter({
         eventId: z.string(),
       })
     )
-    .mutation(async ({ ctx: { user, db }, input }) => {
+    .mutation(async ({ ctx: { user, db }, input }): Promise<TRPCResponse<EventContact>> => {
       await assertOwnerOfEvent(user.id, input.eventId, db);
+
+      const count = await db.eventContact.count({
+        where: {
+          eventId: input.eventId,
+        },
+      });
+
+      if (count >= MAX_CONTACTS) return {
+        success: false, error: {
+          key: "trpcError.maxContactsReached",
+          values: { max: MAX_CONTACTS }
+        }
+      };
 
       const maxContact = await db.eventContact.findFirst({
         where: { eventId: input.eventId },
@@ -34,7 +50,7 @@ export const contactRouter = createTRPCRouter({
           order: maxContact ? maxContact.order + 1 : 0,
         },
       });
-      return contact;
+      return { success: true, data: contact };
     }),
   update: protectedProcedure
     .input(

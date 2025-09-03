@@ -8,7 +8,8 @@
       "selectCountry": "Wybierz kraj ...",
       "selectEmpty": "Puste",
       "selectNone": "Brak",
-      "noCountryFound": "Nie znaleziono kraju"
+      "noCountryFound": "Nie znaleziono kraju",
+      "reset": "Wyczyść"
     },
     "loadMore": "Załaduj więcej",
     "loading": "Ładowanie...",
@@ -56,6 +57,7 @@
     "invalidPhoneNumber": "Proszę podać prawidłowy numer telefonu.",
     "invalidCountry": "Proszę podać prawidłowy kraj.",
     "invalidContactType": "Proszę wybrać prawidłowy typ kontaktu.",
+    "selectValidDate": "Wybierz poprawną datę",
     "auth": {
       "default": "Wystąpił błąd. Spróbuj ponownie.",
       "emailAlreadyTaken": "Podany email jest już zajęty.",
@@ -115,6 +117,7 @@
         }
       }
     },
+    "notFound": "Nie znaleziono strony",
     "goToDashboard": "Przejdź do wydarzeń",
     "event": {
       "settings": "Ustawienia",
@@ -129,7 +132,6 @@
       "planItemsDescription": "W tej sekcji możesz dodać poszczególne elementy planu wydarzenia, takie jak ślub czy wesele. Podaj szczegóły dotyczące daty, godziny i miejsca każdej części uroczstości, aby mieć pełny harmonogram. Informacje te będą później widoczne dla gości, którzy potwierdzają swoją obecność, co ułatwi im orientację w planie całego wydarzenia.",
       "contacts": "Kontakty",
       "contactsDescription": "W tej sekcji dodaj kontakty kluczowych osób związanych z wydarzeniem. Informacje te będą widoczne dla gości podczas potwierdzania obecności, dlatego upewnij się, że dane są aktualne i kompletne. Możesz łatwo przeglądać, edytować lub dodawać nowe kontakty, aby organizacja wydarzenia przebiegała sprawnie."
-    },
-    "notFound": "Nie znaleziono strony"
+    }
   }
 }

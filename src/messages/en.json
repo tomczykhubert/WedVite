@@ -8,7 +8,8 @@
       "selectCountry": "Select country ...",
       "selectEmpty": "Empty",
       "selectNone": "None",
-      "noCountryFound": "No country found"
+      "noCountryFound": "No country found",
+      "reset": "Reset"
     },
     "loadMore": "Load more",
     "loading": "Loading...",
@@ -56,6 +57,7 @@
     "invalidPhoneNumber": "Please enter a valid phone number.",
     "invalidCountry": "Please enter a valid country.",
     "invalidContactType": "Please select a valid contact type.",
+    "selectValidDate": "Select valid date",
     "auth": {
       "default": "An error occurred. Please try again.",
       "emailAlreadyTaken": "Given email is already taken.",
@@ -116,6 +118,7 @@
       }
     },
     "notFound": "Page not found",
+    "goToDashboard": "Go to dashboard",
     "event": {
       "settings": "Settings",
       "guestsList": "Guests list",
@@ -129,7 +132,6 @@
       "planItemsDescription": "In this section, you can add individual elements of the event schedule, such as the wedding ceremony or the reception. Provide details about the date, time, and location of each part of the celebration to have a complete timetable. This information will later be visible to guests confirming their attendance, helping them navigate the overall event plan.",
       "contacts": "Contacts",
       "contactsDescription": "In this section, add the contacts of key people related to the event. This information will be visible to guests when confirming their attendance, so make sure the details are up-to-date and complete. You can easily view, edit, or add new contacts to ensure smooth event organization."
-    },
-    "goToDashboard": "Go to dashboard"
+    }
   }
 }

@@ -1,23 +1,22 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { AutoFormField, Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { useEffect, useState } from "react";
 import FormErrorMessage from "@/components/form-error-messege";
+import Loader, { BaseLoader } from "@/components/loader";
+import { Button } from "@/components/ui/button";
+import { AutoFormField, Form } from "@/components/ui/form";
+import { useRouter } from "@/i18n/navigation";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { updateEventConfig } from "@/schemas/eventFormConfig";
 import { useTRPC } from "@/trpc/client";
-import { notFound, useParams } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Event, NotificationSettings } from "@prisma/client";
-import Loader, { BaseLoader } from "@/components/loader";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { notFound, useParams } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useRouter } from "@/i18n/navigation";
+import { z } from "zod";
 
 const formSchema = z.object(translateSchemaConfig(updateEventConfig));
 
@@ -39,9 +38,9 @@ export default function EventSettings() {
 
   return (
     <>
-      <EventSettingsForm event={event} />;
+      <EventSettingsForm event={event} />
     </>
-  )
+  );
 }
 
 const EventSettingsForm = ({
@@ -59,13 +58,14 @@ const EventSettingsForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: event.name,
-      respondStart: event.respondStart ?? new Date(),
-      respondEnd: event.respondEnd ?? new Date(),
+      respondStart: event.respondStart,
+      respondEnd: event.respondEnd,
       onImageUpload: event.notificationSettings?.onImageUpload ?? false,
       onAttendanceRespond:
         event.notificationSettings?.onAttendanceRespond ?? false,
     },
   });
+
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -74,7 +74,7 @@ const EventSettingsForm = ({
       onSuccess: async (response) => {
         await queryClient.invalidateQueries(trpc.event.pathFilter());
         toast.success(formT("success"));
-        router.refresh()
+        router.refresh();
       },
       onError: (err) => {
         setFormErrorMessage("forms.error");
@@ -83,7 +83,7 @@ const EventSettingsForm = ({
         setLoading(true);
       },
       onSettled: () => {
-        setLoading(false)
+        setLoading(false);
       },
     })
   );

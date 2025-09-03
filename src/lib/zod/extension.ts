@@ -12,9 +12,23 @@ z.ZodString.prototype.required = function () {
   return this.nonempty(stc("required"));
 };
 
-export const minMaxString = (min: number, max: number = DEFAULT_MAX_STRING_LENGTH) => 
-    z.string().min(min, stc("minLength", { min })).max(max, stc("maxLength", { max }))
+export const zMinMaxString = (
+  min: number,
+  max: number = DEFAULT_MAX_STRING_LENGTH
+) =>
+  z
+    .string()
+    .min(min, stc("minLength", { min }))
+    .max(max, stc("maxLength", { max }));
 
-export const minString = (min: number) => z.string().min(min, stc("minLength", { min }))
+export const zMinString = (min: number) =>
+  z.string().min(min, stc("minLength", { min }));
 
-export const maxString = (max: number = DEFAULT_MAX_STRING_LENGTH) => z.string().max(max, stc("maxLength", { max }))
+export const zMaxString = (max: number = DEFAULT_MAX_STRING_LENGTH) =>
+  z.string().max(max, stc("maxLength", { max }));
+
+export const zDate = () =>
+  z.date({
+    required_error: stc("required"),
+    invalid_type_error: stc("selectValidDate"),
+  });

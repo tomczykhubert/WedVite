@@ -1,36 +1,28 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-  AutoFormField,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { signIn } from "@/lib/auth/authClient";
-import { routes } from "@/lib/routes/routes";
-import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
-import { LuLogIn, LuUserPlus } from "react-icons/lu";
-import ActionButton from "@/components/button-link";
 import GoogleLogin from "@/components/auth/google-login";
+import ActionButton from "@/components/button-link";
+import FormErrorMessage from "@/components/form-error-messege";
+import Loader from "@/components/loader";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AutoFormField, Form } from "@/components/ui/form";
+import { useRouter } from "@/i18n/navigation";
+import { stc } from "@/i18n/utils";
+import { signIn } from "@/lib/auth/authClient";
+import { getErrorTypeConfig } from "@/lib/auth/errors";
 import {
   FormConfig,
   translateSchemaConfig,
 } from "@/lib/forms/schemaTranslator";
-import { stc } from "@/i18n/utils";
-import { getErrorTypeConfig } from "@/lib/auth/errors";
+import { routes } from "@/lib/routes/routes";
+import { zMaxString } from "@/lib/zod/extension";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import Loader from "@/components/loader";
-import FormErrorMessage from "@/components/form-error-messege";
+import { useForm } from "react-hook-form";
+import { LuLogIn, LuUserPlus } from "react-icons/lu";
+import { z } from "zod";
 
 const formConfig: FormConfig = [
   {
@@ -38,19 +30,16 @@ const formConfig: FormConfig = [
     type: "email",
     required: true,
     label: stc("user.email"),
-    validation: z
-      .string()
-      .nonempty(stc("required"))
-      .email({
-        message: stc("email"),
-      }),
+    validation: zMaxString()
+      .email({ message: stc("email") })
+      .required(),
   },
   {
     name: "password",
     type: "password",
     label: stc("user.password"),
     required: true,
-    validation: z.string().nonempty(stc("required")),
+    validation: z.string().required(),
   },
 ];
 
@@ -131,7 +120,7 @@ export default function SignInForm() {
                 </Button>
               </form>
             </Form>
-            <GoogleLogin setPending={setPending}/>
+            <GoogleLogin setPending={setPending} />
             <p className="text-sm text-muted-foreground mb-2">
               {t("notYetSignedUp")}
             </p>

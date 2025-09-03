@@ -1,5 +1,6 @@
 import { stc } from "@/i18n/utils";
 import { getFieldsByName } from "@/lib/forms/schemaTranslator";
+import { zDate, zMinMaxString } from "@/lib/zod/extension";
 import z from "zod";
 
 export const eventConfig = [
@@ -8,39 +9,42 @@ export const eventConfig = [
     type: "text",
     required: true,
     label: stc("dashboard.forms.event.name"),
-    validation: z
-      .string()
-      .nonempty(stc("required"))
-      .min(6, stc("minLength", { min: 6 }))
-      .max(30, stc("maxLength", { max: 30 })),
+    validation: zMinMaxString(6, 30).required(),
   },
   {
     name: "respondStart",
     type: "datetime",
     required: true,
     label: stc("dashboard.forms.event.respondStart"),
-    validation: z.date()
+    validation: zDate(),
   },
   {
     name: "respondEnd",
     type: "datetime",
     required: true,
     label: stc("dashboard.forms.event.respondEnd"),
-    validation: z.date()
+    validation: zDate(),
   },
   {
     name: "onImageUpload",
     type: "checkbox",
     label: stc("dashboard.forms.event.onImageUpload"),
-    validation: z.boolean()
+    validation: z.boolean(),
   },
   {
     name: "onAttendanceRespond",
     type: "checkbox",
     label: stc("dashboard.forms.event.onAttendanceRespond"),
-    validation: z.boolean()
+    validation: z.boolean(),
   },
-] as const
+] as const;
 
-export const addEventConfig = getFieldsByName(eventConfig, "name")
-export const updateEventConfig = getFieldsByName(eventConfig, "name", "onImageUpload", "onAttendanceRespond", "respondEnd", "respondStart")
+export const addEventConfig = getFieldsByName(eventConfig, "name");
+export const updateEventConfig = getFieldsByName(
+  eventConfig,
+  "name",
+  "onImageUpload",
+  "onAttendanceRespond",
+  "respondEnd",
+  "respondStart"
+);

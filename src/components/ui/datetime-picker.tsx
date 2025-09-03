@@ -1,43 +1,43 @@
+import { cn } from "@/lib/utils";
 import { useFormatter, useTranslations } from "next-intl";
 import React from "react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Button } from "./button";
 import { LuCalendar } from "react-icons/lu";
+import { Button } from "./button";
 import { Calendar } from "./calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { ScrollArea, ScrollBar } from "./scroll-area";
-import { cn } from "@/lib/utils";
 
 export default function DateTimePicker({
   ...field
 }: ControllerRenderProps<FieldValues, string>) {
-  const t = useTranslations('base.forms')
-  const [date, setDate] = React.useState<Date>(field.value);
+  const t = useTranslations("base.forms");
+  const [date, setDate] = React.useState<Date | null>(field.value);
   const [isOpen, setIsOpen] = React.useState(false);
   const format = useFormatter();
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      selectedDate.setHours(date.getHours(), date.getMinutes())
+      if (date) selectedDate.setHours(date.getHours(), date.getMinutes());
       setDate(selectedDate);
-      field.onChange(selectedDate)
+      field.onChange(selectedDate);
     }
   };
 
-  const handleTimeChange = (
-    type: "hour" | "minute",
-    value: string
-  ) => {
-    if (date) {
-      const newDate = new Date(date);
-      if (type === "hour") {
-        newDate.setHours(parseInt(value));
-      } else if (type === "minute") {
-        newDate.setMinutes(parseInt(value));
-      }
-      setDate(newDate);
-      field.onChange(newDate)
+  const handleTimeChange = (type: "hour" | "minute", value: string) => {
+    const newDate = date ? new Date(date) : new Date();
+    if (type === "hour") {
+      newDate.setHours(parseInt(value));
+    } else if (type === "minute") {
+      newDate.setMinutes(parseInt(value));
     }
+    setDate(newDate);
+    field.onChange(newDate);
+  };
+
+  const resetDate = () => {
+    setDate(null);
+    field.onChange(null);
   };
 
   return (
@@ -51,35 +51,43 @@ export default function DateTimePicker({
           )}
         >
           <LuCalendar className="mr-2 h-4 w-4" />
-            {date? (
-              format.dateTime(date, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              })
-            ) : (
-              <span>{t('selectDate')}</span>
-            )}
+          {date ? (
+            format.dateTime(date, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })
+          ) : (
+            <span>{t("selectDate")}</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <div className="sm:flex">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleDateSelect}
-          />
-          <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+          <div>
+            <Calendar
+              mode="single"
+              selected={date ? date : undefined}
+              onSelect={handleDateSelect}
+              className="pb-0"
+            />
+            <Button onClick={resetDate} variant={"ghost"}>
+              {t("reset")}
+            </Button>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:h-[315px] divide-y sm:divide-y-0 sm:divide-x">
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
-                {hours.reverse().map((hour) => (
+                {hours.map((hour) => (
                   <Button
                     key={hour}
                     size="icon"
-                    variant={date && date.getHours() === hour ? "default" : "ghost"}
+                    variant={
+                      date && date.getHours() === hour ? "default" : "ghost"
+                    }
                     className="sm:w-full shrink-0 aspect-square"
                     onClick={() => handleTimeChange("hour", hour.toString())}
                   >
@@ -91,15 +99,19 @@ export default function DateTimePicker({
             </ScrollArea>
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
-                {Array.from({ length: 60 }, (_, i) => i ).map((minute) => (
+                {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                   <Button
                     key={minute}
                     size="icon"
-                    variant={date && date.getMinutes() === minute ? "default" : "ghost"}
+                    variant={
+                      date && date.getMinutes() === minute ? "default" : "ghost"
+                    }
                     className="sm:w-full shrink-0 aspect-square"
-                    onClick={() => handleTimeChange("minute", minute.toString())}
+                    onClick={() =>
+                      handleTimeChange("minute", minute.toString())
+                    }
                   >
-                    {minute.toString().padStart(2, '0')}
+                    {minute.toString().padStart(2, "0")}
                   </Button>
                 ))}
               </div>

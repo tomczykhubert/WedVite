@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../init";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import { assertOwnerOfEvent } from "@/lib/prisma/eventUtils";
 import {
   addEventConfig,
   updateEventConfig,
 } from "@/schemas/eventFormConfig";
-import { assertOwnerOfEvent } from "@/lib/prisma/eventUtils";
+import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "../init";
 
 export const eventRouter = createTRPCRouter({
   add: protectedProcedure

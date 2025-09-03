@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
+import * as React from "react";
 import {
   Control,
   Controller,
@@ -15,23 +15,29 @@ import {
   type FieldValues,
 } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { useTranslations } from "next-intl";
 import {
   deserializeTranslationCall,
   isSerializedTranslationCall,
   translate,
 } from "@/i18n/utils";
-import { Input } from "./input";
 import { FormFieldConfig } from "@/lib/forms/schemaTranslator";
-import { Textarea } from "./textarea";
+import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { Checkbox } from "./checkbox";
-import { PhoneInput } from "./phone-input";
-import DateTimePicker from "./datetime-picker";
-import DatePicker from "./date-picker";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { CountryPicker } from "./country-picker";
+import DatePicker from "./date-picker";
+import DateTimePicker from "./datetime-picker";
+import { Input } from "./input";
+import { PhoneInput } from "./phone-input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+import { Textarea } from "./textarea";
 
 const Form = FormProvider;
 
@@ -197,15 +203,19 @@ function FormMessage({
 function AutoFormField({
   control,
   fieldConfig,
+  name,
 }: {
   control: Control;
   fieldConfig: FormFieldConfig;
+  name?: string;
 }) {
   const t = useTranslations();
   const translatedLabel = translate(fieldConfig.label, t);
 
-  const inlineLabel = ["checkbox"].includes(fieldConfig.type)
-  const ownFormControl = ["select"].includes(fieldConfig.type)
+  const inlineLabel = ["checkbox"].includes(fieldConfig.type);
+  const ownFormControl = ["select"].includes(fieldConfig.type);
+
+  if (fieldConfig.type == "custom") return;
 
   const renderField = (field: ControllerRenderProps<FieldValues, string>) => {
     switch (fieldConfig.type) {
@@ -230,11 +240,24 @@ function AutoFormField({
         return <DatePicker {...field} />;
       case "checkbox":
         return (
-          <Checkbox {...field} checked={field.value} onCheckedChange={field.onChange} />
+          <Checkbox
+            {...field}
+            checked={field.value}
+            onCheckedChange={field.onChange}
+          />
         );
       case "select":
-        return <FormSelect {...field} fieldConfig={fieldConfig} label={translatedLabel}/>
-      case "country_select": return <CountryPicker {...field} fieldConfig={fieldConfig} />;
+        return (
+          <FormSelect
+            {...field}
+            fieldConfig={fieldConfig}
+            label={translatedLabel}
+          />
+        );
+      case "country_select":
+        return <CountryPicker {...field} fieldConfig={fieldConfig} />;
+      case "custom":
+        return <></>;
       default:
         const _exhaustiveCheck: never = fieldConfig.type;
         throw Error(
@@ -246,19 +269,22 @@ function AutoFormField({
   return (
     <FormField
       control={control}
-      name={fieldConfig.name}
+      name={name ? name : fieldConfig.name}
       render={({ field }) => (
         <FormItem>
-          <div className={cn(inlineLabel && "flex flex-row-reverse justify-end gap-2")}>
+          <div
+            className={cn(
+              inlineLabel && "flex flex-row-reverse justify-end gap-2"
+            )}
+          >
             <FormLabel required={fieldConfig.required} className="mb-2">
               {translatedLabel}
             </FormLabel>
-            {ownFormControl
-              ?
+            {ownFormControl ? (
               <>{renderField(field)}</>
-              :
+            ) : (
               <FormControl>{renderField(field)}</FormControl>
-            }
+            )}
           </div>
           <FormMessage />
         </FormItem>
@@ -271,38 +297,46 @@ function FormSelect({
   fieldConfig,
   label,
   ...field
-}: ControllerRenderProps<FieldValues, string> & { fieldConfig: FormFieldConfig, label?: string }) {
+}: ControllerRenderProps<FieldValues, string> & {
+  fieldConfig: FormFieldConfig;
+  label?: string;
+}) {
   const t = useTranslations();
-  return <Select
-    onValueChange={(value) => field.onChange(value == "_null" ? null : value)}
-    defaultValue={field.value}
-  >
-    <FormControl>
-      <SelectTrigger className="w-full">
-        <SelectValue
-          placeholder={label}
-        />
-      </SelectTrigger>
-    </FormControl>
-    <SelectContent >
-      {!fieldConfig.required && <SelectItem value="_null" className="opacity-50">{t('base.forms.selectEmpty')}</SelectItem>}
-      {fieldConfig.values && fieldConfig.values.map((item, i) => (
-        <SelectItem key={item.value} value={item.value}>
-          {translate(item.name, t)}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>;
+  return (
+    <Select
+      onValueChange={(value) => field.onChange(value == "_null" ? null : value)}
+      defaultValue={field.value}
+    >
+      <FormControl>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={label} />
+        </SelectTrigger>
+      </FormControl>
+      <SelectContent>
+        {!fieldConfig.required && (
+          <SelectItem value="_null" className="opacity-50">
+            {t("base.forms.selectEmpty")}
+          </SelectItem>
+        )}
+        {fieldConfig.values &&
+          fieldConfig.values.map((item, i) => (
+            <SelectItem key={item.value} value={item.value}>
+              {translate(item.name, t)}
+            </SelectItem>
+          ))}
+      </SelectContent>
+    </Select>
+  );
 }
 
 export {
-  useFormField,
+  AutoFormField,
   Form,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
-  FormMessage,
   FormField,
-  AutoFormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useFormField,
 };

@@ -1,16 +1,16 @@
+import ActionButton from "@/components/base/button-link";
+import ConfirmModal from "@/components/base/confirm-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { EventContact } from "@prisma/client";
-import UpdateContactForm from "./update-contact-form";
-import ActionButton from "@/components/button-link";
-import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
-import { useTranslations } from "next-intl";
 import { useTRPC } from "@/trpc/client";
+import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import ConfirmModal from "@/components/confirmModal";
-import { FaTrash } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { FaTrash } from "react-icons/fa";
+import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
+import { toast } from "sonner";
+import UpdateContactForm from "./update-contact-form";
 
 export default function ContactCard({
   contact,
@@ -48,7 +48,12 @@ export default function ContactCard({
     >
       <CardHeader className="flex items-center justify-between bg-muted py-4 px-8 border-dashed border-b-2 border-b-accent">
         <CardTitle>
-          <Image src={`/images/contact_types/${contact.type ? contact.type.toLowerCase() : 'other'}.png`} alt={contact.type ? eventT(contact.type) : t("other")} width={64} height={64} />
+          <Image
+            src={`/images/contact_types/${contact.type ? contact.type.toLowerCase() : "other"}.png`}
+            alt={contact.type ? eventT(contact.type) : t("other")}
+            width={64}
+            height={64}
+          />
         </CardTitle>
         <div className="flex gap-2">
           <UpdateContactForm contact={contact} />
@@ -74,7 +79,9 @@ export default function ContactCard({
               <div className="text-primary">
                 <detail.icon />
               </div>
-              <div className="whitespace-normal [overflow-wrap:anywhere]">{detail.text}</div>
+              <div className="whitespace-normal [overflow-wrap:anywhere]">
+                {detail.text}
+              </div>
             </div>
           );
         })}

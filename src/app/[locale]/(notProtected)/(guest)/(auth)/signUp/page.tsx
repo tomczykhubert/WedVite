@@ -1,8 +1,8 @@
 "use client";
 import GoogleLogin from "@/components/auth/google-login";
-import ActionButton from "@/components/button-link";
-import FormErrorMessage from "@/components/form-error-messege";
-import Loader from "@/components/loader";
+import ActionButton from "@/components/base/button-link";
+import FormErrorMessage from "@/components/base/form-error-messege";
+import Loader from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AutoFormField, Form } from "@/components/ui/form";

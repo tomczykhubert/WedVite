@@ -1,7 +1,7 @@
 "use client";
 
-import FormErrorMessage from "@/components/form-error-messege";
-import Loader, { BaseLoader } from "@/components/loader";
+import FormErrorMessage from "@/components/base/form-error-messege";
+import Loader, { BaseLoader } from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
 import { AutoFormField, Form } from "@/components/ui/form";
 import { useRouter } from "@/i18n/navigation";

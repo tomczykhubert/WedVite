@@ -28,7 +28,20 @@
     "region": "Region",
     "country": "Kraj",
     "name": "Nazwa",
-    "description": "Opis"
+    "description": "Opis",
+    "gender": "Płeć",
+    "genderTypes": {
+      "MALE": "Mężczyzna",
+      "FEMALE": "Kobieta",
+      "UNSPECIFIED": "Nieokreślono"
+    },
+    "unconfirmedChanges": {
+      "header": "Niezapisane zmiany",
+      "message": "Masz niezapisane zmiany. Czy na pewno chcesz zamknąć formularz? Wszystkie dane zostaną utracone.",
+      "confirm": "Zamknij mimo to",
+      "cancel": "Anuluj"
+    },
+    "delete": "Usuń"
   },
   "user": {
     "name": "Nazwa",
@@ -57,7 +70,10 @@
     "invalidPhoneNumber": "Proszę podać prawidłowy numer telefonu.",
     "invalidCountry": "Proszę podać prawidłowy kraj.",
     "invalidContactType": "Proszę wybrać prawidłowy typ kontaktu.",
+    "invalidGender": "Proszę wybrać płeć",
+    "invalidGuestType": "Proszę wybrać prawidłowy typ gościa",
     "selectValidDate": "Wybierz poprawną datę",
+    "minGuest": "Minimalna liczba gości w zaproszeniu ({min})",
     "auth": {
       "default": "Wystąpił błąd. Spróbuj ponownie.",
       "emailAlreadyTaken": "Podany email jest już zajęty.",
@@ -114,6 +130,21 @@
         "delete": {
           "header": "Usuń punkt planu",
           "message": "Czy jesteś pewien że chcesz usunąć ten punkt planu?"
+        }
+      },
+      "invitation": {
+        "name": "Nazwa zaproszenia",
+        "add": "Dodaj zaproszenie",
+        "new": "Nowe zaproszenie",
+        "addGuest": "Dodaj gościa",
+        "save": "Zapisz zaproszenie"
+      },
+      "guest": {
+        "type": "Typ gościa",
+        "guestTypes": {
+          "ADULT": "Dorosły",
+          "COMPANION": "Osoba towarzysząca",
+          "CHILD": "Dziecko"
         }
       }
     },

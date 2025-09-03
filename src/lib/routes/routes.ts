@@ -11,6 +11,7 @@ export const routes = {
     event: {
       byId: (eventId: ID) => `/dashboard/${eventId}`,
       settings: (eventId: ID) => `/dashboard/${eventId}/settings`,
+      guests: (eventId: ID) => `/dashboard/${eventId}/guests`,
     },
   },
   account: {

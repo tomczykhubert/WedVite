@@ -1,22 +1,18 @@
 "use client";
-import FormErrorMessage from "@/components/form-error-messege";
-import Loader from "@/components/loader";
+import Loader from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AutoFormField, Form } from "@/components/ui/form";
-import {
-  translateSchemaConfig,
-} from "@/lib/forms/schemaTranslator";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { addEventConfig } from "@/schemas/eventFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +32,7 @@ export default function AddEventForm() {
   const validationT = useTranslations("formValidation.forms");
   const baseT = useTranslations("base.forms");
   const t = useTranslations("dashboard.forms.event");
-  const [isOpen, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -54,8 +50,8 @@ export default function AddEventForm() {
       },
       onSettled: async () => {
         setLoading(false);
-      }
-    }),
+      },
+    })
   );
 
   const form = useForm<FormData>({
@@ -71,9 +67,9 @@ export default function AddEventForm() {
   };
 
   const openChange = (open: boolean) => {
-    setOpen(open)
-    form.reset()
-  }
+    setOpen(open);
+    form.reset();
+  };
 
   return (
     <>
@@ -82,9 +78,7 @@ export default function AddEventForm() {
           <Card className="h-full min-h-[300px] text-gray-400 hover:bg-muted hover:text-current transition-all duration-200 cursor-pointer">
             <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
               <LuCalendarPlus2 className="h-20 w-20" />
-              <span>
-                {t("add")}
-              </span>
+              <span>{t("add")}</span>
             </CardContent>
           </Card>
         </DialogTrigger>
@@ -111,7 +105,7 @@ export default function AddEventForm() {
           </Form>
         </DialogContent>
       </Dialog>
-      <Loader isLoading={loading}/>
+      <Loader isLoading={loading} />
     </>
   );
 }

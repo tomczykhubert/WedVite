@@ -1,27 +1,25 @@
 "use client";
-import {
-  translateSchemaConfig,
-} from "@/lib/forms/schemaTranslator";
+import ActionButton from "@/components/base/button-link";
+import Loader from "@/components/base/loader";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { baseContactConfig } from "@/schemas/contactFormConfig";
 import { useTRPC } from "@/trpc/client";
+import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { FaEdit } from "react-icons/fa";
 import { toast } from "sonner";
 import z from "zod";
 import ContactForm from "./contact-form";
-import { EventContact } from "@prisma/client";
-import ActionButton from "@/components/button-link";
-import { FaEdit } from "react-icons/fa";
-import { useState } from "react";
-import Loader from "@/components/loader";
 
 const formSchema = z.object(translateSchemaConfig(baseContactConfig));
 
 type FormData = z.infer<typeof formSchema>;
 
 type UpdateContactFormProps = {
-  contact: EventContact
-}
+  contact: EventContact;
+};
 
 export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
   const baseT = useTranslations("formValidation.forms");
@@ -42,8 +40,8 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
       },
       onSettled: async () => {
         setLoading(false);
-      }
-    }),
+      },
+    })
   );
 
   const onSubmit = (data: FormData) => {
@@ -58,14 +56,23 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
     lastName: contact.lastName,
     email: contact.email,
     phoneNumber: contact.phoneNumber,
-    contactType: contact.type
-  }
+    contactType: contact.type,
+  };
 
-  const trigger = (<ActionButton variant="default" size="icon" tooltip={t("update")} ><FaEdit /></ActionButton>);
+  const trigger = (
+    <ActionButton variant="default" size="icon" tooltip={t("update")}>
+      <FaEdit />
+    </ActionButton>
+  );
   return (
     <>
-      <Loader isLoading={loading}/>
-      <ContactForm title={t("update")} initialValues={initialValues} trigger={trigger} onSubmit={onSubmit}></ContactForm>
+      <Loader isLoading={loading} />
+      <ContactForm
+        title={t("update")}
+        initialValues={initialValues}
+        trigger={trigger}
+        onSubmit={onSubmit}
+      ></ContactForm>
     </>
   );
 }

@@ -1,18 +1,17 @@
+import ActionButton from "@/components/base/button-link";
+import ConfirmModal from "@/components/base/confirm-modal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { EventPlanItem } from "@prisma/client";
-import ActionButton from "@/components/button-link";
-import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
-import { IoTime, IoLocation } from "react-icons/io5";
-import { useTranslations, useFormatter } from "next-intl";
 import { useTRPC } from "@/trpc/client";
+import { EventPlanItem } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import ConfirmModal from "@/components/confirmModal";
-import { FaTrash, FaCity } from "react-icons/fa";
-import UpdatePlanItemForm from "./update-plan-item-form";
-import flags from "react-phone-number-input/flags";
+import { useFormatter, useTranslations } from "next-intl";
+import { FaTrash } from "react-icons/fa";
+import { IoLocation, IoTime } from "react-icons/io5";
 import * as RPNInput from "react-phone-number-input";
+import flags from "react-phone-number-input/flags";
+import { toast } from "sonner";
+import UpdatePlanItemForm from "./update-plan-item-form";
 
 export default function PlanItemCard({
   planItem,
@@ -30,8 +29,8 @@ export default function PlanItemCard({
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-    })
-  }
+    });
+  };
 
   return (
     <Card
@@ -40,7 +39,9 @@ export default function PlanItemCard({
     >
       <CardHeader className="flex justify-between bg-muted py-4 px-8 border-dashed border-b-2 border-b-accent">
         <CardTitle>
-          <h3 className="whitespace-normal [overflow-wrap:anywhere] mb-0">{planItem.name}</h3>
+          <h3 className="whitespace-normal [overflow-wrap:anywhere] mb-0">
+            {planItem.name}
+          </h3>
         </CardTitle>
         <div className="flex gap-2">
           <UpdatePlanItemForm planItem={planItem} />
@@ -48,38 +49,49 @@ export default function PlanItemCard({
         </div>
       </CardHeader>
       <CardContent>
-        {planItem.description &&
+        {planItem.description && (
           <div className="gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
             {planItem.description}
           </div>
-        }
+        )}
         <div className="flex items-center text-lg gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
-          <div className="text-primary"><IoTime /></div>
+          <div className="text-primary">
+            <IoTime />
+          </div>
           <div>
             <span>{FormatDate(planItem.startAt)}</span>
             {planItem.endAt && (
               <>
                 <span className="ml-3 mr-3">—</span>
-                <span className="text-nowrap">{FormatDate(planItem.endAt)}</span>
+                <span className="text-nowrap">
+                  {FormatDate(planItem.endAt)}
+                </span>
               </>
             )}
-
-
           </div>
         </div>
         <div className="flex items-center text-lg gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
-          <div className="text-primary"><IoLocation /></div>
+          <div className="text-primary">
+            <IoLocation />
+          </div>
           <div>
             <div>{planItem.addressLine1}</div>
             <div>{planItem.addressLine2}</div>
-            <div>{planItem.postalCode}, {planItem.city}</div>
+            <div>
+              {planItem.postalCode}, {planItem.city}
+            </div>
             <div className="flex items-center">
-              {planItem.country && <Flag country={planItem.country as unknown as RPNInput.Country}/>}
-              {planItem.region && <span className="ml-2">{planItem.region}</span>}
+              {planItem.country && (
+                <Flag
+                  country={planItem.country as unknown as RPNInput.Country}
+                />
+              )}
+              {planItem.region && (
+                <span className="ml-2">{planItem.region}</span>
+              )}
             </div>
           </div>
         </div>
-          
       </CardContent>
     </Card>
   );

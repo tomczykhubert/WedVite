@@ -1,0 +1,166 @@
+"use client";
+
+import UnsavedChangesModal from "@/components/base/unsaved-changes-modal";
+import { Button } from "@/components/ui/button";
+import {
+  AutoFormField,
+  Form,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import {
+  addGuestConfig,
+  addInvitationConfig,
+} from "@/schemas/invitationFormConfig";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Event, Gender, GuestType } from "@prisma/client";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const formSchema = z.object(translateSchemaConfig(addInvitationConfig));
+type FormData = z.infer<typeof formSchema>;
+
+export default function AddInvitationForm({ event }: { event: Event }) {
+  const [open, setOpen] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const invT = useTranslations("dashboard.forms.invitation");
+  const t = useTranslations("base");
+  const defaultGuestValues = {
+    name: "",
+    gender: Gender.UNSPECIFIED,
+    type: GuestType.ADULT,
+  };
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      guests: [defaultGuestValues],
+    },
+  });
+  form.formState.isDirty;
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "guests",
+  });
+
+  const onSubmit = (data: FormData) => {
+    console.log("✅ Zapisane zaproszenie:", data);
+  };
+
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen && form.formState.isDirty) {
+      setShowDialog(true);
+      return;
+    }
+    setOpen(isOpen);
+  };
+
+  return (
+    <>
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetTrigger asChild>
+          <Button>{invT("add")}</Button>
+        </SheetTrigger>
+        <SheetContent className="min-w-full sm:min-w-[600px]">
+          <SheetHeader>
+            <SheetTitle className="mb-0">{invT("new")}</SheetTitle>
+            <SheetDescription></SheetDescription>
+          </SheetHeader>
+          <div className="overflow-auto p-4">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                {addInvitationConfig.map((fieldConfig) => (
+                  <AutoFormField
+                    key={fieldConfig.name}
+                    control={form.control}
+                    fieldConfig={fieldConfig}
+                  />
+                ))}
+                <FormField
+                  control={form.control}
+                  name="guests"
+                  render={() => (
+                    <FormItem>
+                      <FormMessage />
+
+                      <div className="space-y-4">
+                        {fields.map((field, index) => (
+                          <div
+                            key={field.id}
+                            className="border p-3 rounded-lg space-y-3"
+                          >
+                            {addGuestConfig.map((fieldConfig) => (
+                              <AutoFormField
+                                key={fieldConfig.name}
+                                control={form.control}
+                                fieldConfig={fieldConfig}
+                                name={`guests.${index}.${fieldConfig.name}`}
+                              />
+                            ))}
+
+                            {fields.length > 1 && (
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => {
+                                  remove(index);
+                                  form.trigger("guests");
+                                }}
+                              >
+                                {t("delete")}
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => {
+                          append(defaultGuestValues);
+                          form.trigger("guests");
+                        }}
+                      >
+                        {invT("addGuest")}
+                      </Button>
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full">
+                  {invT("save")}
+                </Button>
+              </form>
+            </Form>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      <UnsavedChangesModal
+        onConfirm={() => {
+          setShowDialog(false);
+          setOpen(false);
+          form.reset();
+        }}
+        onCancel={() => setShowDialog(false)}
+        open={showDialog}
+      />
+    </>
+  );
+}

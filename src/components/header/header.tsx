@@ -24,11 +24,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes/routes";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
-import { ThemeSwitcher } from "../theme-switcher";
-import { LangSwitcher } from "../lang-switcher";
+import { LangSwitcher } from "../base/lang-switcher";
+import { ThemeSwitcher } from "../base/theme-switcher";
 import { UserActions } from "./user-actions";
 
 interface MenuItem {

@@ -1,11 +1,11 @@
+import { ThemeProvider } from "@/components/base/theme-provider";
+import { routing } from "@/i18n/routing";
+import { TRPCReactProvider } from "@/trpc/client";
 import { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
-import { ThemeProvider } from "@/components/theme-provider";
-import "../globals.css";
 import { Toaster } from "sonner";
-import { TRPCReactProvider } from "@/trpc/client";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "WedVite",
@@ -35,7 +35,7 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider>
             <TRPCReactProvider>
-              <Toaster duration={5000}/>
+              <Toaster duration={5000} />
               {children}
             </TRPCReactProvider>
           </NextIntlClientProvider>

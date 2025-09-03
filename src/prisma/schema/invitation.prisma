@@ -1,0 +1,64 @@
+model Invitation {
+  id           String           @id @default(cuid(2))
+  name         String
+  status       InvitationStatus
+  responseDate DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  eventId      String
+  event        Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  guests       Guest[]
+
+  @@map("invitation")
+}
+
+model Guest {
+  id           String           @id @default(cuid())
+  name         String
+  status       AttendanceStatus
+  gender       Gender
+  type         GuestType
+  // menuId       String
+  // menu         Menu
+  respondedAt  DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  invitationId String
+  invitation   Invitation       @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@map("guest")
+}
+
+// model Menu {
+//   id      String   @id @default(cuid())
+//   name    String
+//   icon    MenuIcon
+//   color   String
+//   guests  Guests[]
+//   eventId String
+//   event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+// }
+
+enum Gender {
+  MALE
+  FEMALE
+  UNSPECIFIED
+}
+
+enum GuestType {
+  ADULT
+  CHILD
+  COMPANION
+}
+
+enum InvitationStatus {
+  CREATED
+  DELIVERED
+  ANSWERED
+}
+
+enum AttendanceStatus {
+  PENDING
+  DECLINED
+  CONFIRMED
+}

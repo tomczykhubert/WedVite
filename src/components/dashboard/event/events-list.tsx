@@ -1,19 +1,19 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import EventCard from "./event-card";
-import { Button } from "@/components/ui/button";
-import React from "react";
 import { useTranslations } from "next-intl";
+import React from "react";
+import EventCard from "./event-card";
 
-export default function EventsList({ limit }: { limit: number }) {
-  const t = useTranslations('base')
+export default function EventsList() {
+  const t = useTranslations("base");
   const trpc = useTRPC();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery(
       trpc.event.get.infiniteQueryOptions(
-        { limit },
+        {},
         { getNextPageParam: (lastPage) => lastPage.nextCursor }
       )
     );
@@ -35,7 +35,7 @@ export default function EventsList({ limit }: { limit: number }) {
             disabled={isFetchingNextPage}
             variant="outline"
           >
-            {isFetchingNextPage ? t('loading') : t('loadMore')}
+            {isFetchingNextPage ? t("loading") : t("loadMore")}
           </Button>
         </div>
       )}

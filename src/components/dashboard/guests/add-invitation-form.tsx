@@ -18,12 +18,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import { showError } from "@/lib/utils";
 import {
   addGuestConfig,
   addInvitationConfig,
 } from "@/schemas/invitationFormConfig";
+import { useTRPC } from "@/trpc/client";
+import { TRPCResponse } from "@/trpc/routers/_app";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Event, Gender, GuestType } from "@prisma/client";
+import { Event, Gender, Guest, GuestType, Invitation } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -35,8 +39,10 @@ type FormData = z.infer<typeof formSchema>;
 export default function AddInvitationForm({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
   const invT = useTranslations("dashboard.forms.invitation");
   const t = useTranslations("base");
+  const validationT = useTranslations("formValidation");
   const defaultGuestValues = {
     name: "",
     gender: Gender.UNSPECIFIED,
@@ -56,8 +62,36 @@ export default function AddInvitationForm({ event }: { event: Event }) {
     name: "guests",
   });
 
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const createInvitation = useMutation(
+    trpc.invitation.add.mutationOptions({
+      onSuccess: async (
+        res: TRPCResponse<Invitation & { guests: Guest[] }>
+      ) => {
+        if (!res.success) {
+          return showError(validationT, res.error);
+        }
+        await queryClient.invalidateQueries(trpc.invitation.pathFilter());
+        setOpen(false);
+      },
+      onError: (err) => {
+        showError(validationT, { key: "forms.error" });
+      },
+      onMutate: async () => {
+        setLoading(true);
+      },
+      onSettled: async () => {
+        setLoading(false);
+      },
+    })
+  );
+
   const onSubmit = (data: FormData) => {
-    console.log("✅ Zapisane zaproszenie:", data);
+    createInvitation.mutate({
+      ...data,
+      eventId: event.id,
+    });
   };
 
   const onOpenChange = (isOpen: boolean) => {

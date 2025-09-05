@@ -1,11 +1,10 @@
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { assertOwnerOfEvent } from "@/lib/prisma/eventUtils";
-import {
-  addEventConfig,
-  updateEventConfig,
-} from "@/schemas/eventFormConfig";
+import { addEventConfig, updateEventConfig } from "@/schemas/eventFormConfig";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
+
+const EVENTS_PER_PAGE = 7;
 
 export const eventRouter = createTRPCRouter({
   add: protectedProcedure
@@ -31,7 +30,7 @@ export const eventRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
-      await assertOwnerOfEvent(user.id, input.id, db)
+      await assertOwnerOfEvent(user.id, input.id, db);
 
       const event = await db.event.findUnique({
         where: {
@@ -51,7 +50,7 @@ export const eventRouter = createTRPCRouter({
       z.object({ ...translateSchemaConfig(updateEventConfig), id: z.string() })
     )
     .mutation(async ({ ctx: { user, db }, input }) => {
-      await assertOwnerOfEvent(user.id, input.id, db)
+      await assertOwnerOfEvent(user.id, input.id, db);
 
       const event = await db.event.update({
         where: {
@@ -84,19 +83,17 @@ export const eventRouter = createTRPCRouter({
   get: protectedProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().nullish(),
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
-      const limit = input?.limit ?? 15;
       const cursor = input?.cursor;
 
       const events = await db.event.findMany({
         where: {
           userId: user.id,
         },
-        take: limit + 1, // take an extra item to determine if there are more items
+        take: EVENTS_PER_PAGE + 1, // take an extra item to determine if there are more items
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           updatedAt: "desc",
@@ -104,7 +101,7 @@ export const eventRouter = createTRPCRouter({
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
-      if (events.length > limit) {
+      if (events.length > EVENTS_PER_PAGE) {
         const nextItem = events.pop();
         nextCursor = nextItem!.id;
       }

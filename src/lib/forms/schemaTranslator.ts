@@ -39,6 +39,24 @@ export const translateSchemaConfig = <T extends FormConfig>(config: T) => {
   return result;
 };
 
+// export type FormConfig = readonly FormFieldConfig[];
+
+// export const translateSchemaConfig = <T extends readonly FormFieldConfig[]>(
+//   config: T
+// ) => {
+//   type SchemaType = {
+//     [K in T[number] as K["name"]]: K["validation"];
+//   };
+
+//   const result = {} as SchemaType;
+
+//   for (const item of config) {
+//     result[item.name as keyof SchemaType] = item.validation as any;
+//   }
+
+//   return result;
+// };
+
 export function getFieldsByName<
   Schema extends readonly FormFieldConfig[],
   N extends Schema[number]["name"],

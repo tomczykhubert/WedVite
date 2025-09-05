@@ -1,165 +1,113 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { useTRPC } from "@/trpc/client";
+import { Event } from "@prisma/client";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import React, { useState } from "react";
 
-// --- Walidacja z Zod ---
-const guestSchema = z.object({
-  name: z.string().min(10, "Podaj imię gościa"),
-  gender: z.enum(["male", "female"], { required_error: "Wybierz płeć" }),
-});
-
-const invitationSchema = z.object({
-  invitationName: z.string().min(1, "Podaj nazwę zaproszenia"),
-  guests: z.array(guestSchema).min(1, "Dodaj przynajmniej jednego gościa"),
-});
-
-type InvitationForm = z.infer<typeof invitationSchema>;
-
-export default function AddInvitation() {
-  const form = useForm<InvitationForm>({
-    resolver: zodResolver(invitationSchema),
-    defaultValues: {
-      invitationName: "",
-      guests: [{ name: "", gender: "male" }],
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "guests",
-  });
-
-  const onSubmit = (data: InvitationForm) => {
-    console.log("✅ Zapisane zaproszenie:", data);
-  };
+export default function InvitationTable({ event }: { event: Event }) {
+  const t = useTranslations("base");
+  const [nameFilter, setNameFilter] = useState(null);
+  const trpc = useTRPC();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useSuspenseInfiniteQuery(
+      trpc.invitation.get.infiniteQueryOptions(
+        { eventId: event.id, name: nameFilter },
+        { getNextPageParam: (lastPage) => lastPage.nextCursor }
+      )
+    );
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button>Dodaj zaproszenie</Button>
-      </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[600px]">
-        <SheetHeader>
-          <SheetTitle>Nowe zaproszenie</SheetTitle>
-        </SheetHeader>
+    <>
+      {/* <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Name</TableHead>
+            <TableHead>Gender</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.pages.map((page, i) => (
+            <React.Fragment key={i}>
+              {page.items.map((invitation) => (
+                <React.Fragment key={invitation.id}>
+                  <TableRow className="bg-primary">
+                    <TableCell className="font-medium" colSpan={4}>
+                      {invitation.name}
+                    </TableCell>
+                    <TableCell className="font-medium" colSpan={4}>
+                      {invitation.status}
+                    </TableCell>
+                  </TableRow>
+                  {invitation.guests.map((guest) => (
+                    <TableRow key={guest.id}>
+                      <TableCell className="font-medium">
+                        {guest.name}
+                      </TableCell>
+                      <TableCell>{guest.gender}</TableCell>
+                      <TableCell>{guest.status}</TableCell>
+                      <TableCell>{guest.type}</TableCell>
+                    </TableRow>
+                  ))}
+                </React.Fragment>
+              ))}
+            </React.Fragment>
+          ))}
+        </TableBody>
+      </Table> */}
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
-            {/* Nazwa zaproszenia */}
-            <FormField
-              control={form.control}
-              name="invitationName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nazwa zaproszenia</FormLabel>
-                  <FormControl>
-                    <Input placeholder="np. Rodzina Kowalskich" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Lista gości */}
-            <div className="space-y-4">
-              {fields.map((field, index) => (
-                <div key={field.id} className="border p-3 rounded-lg space-y-3">
-                  <FormField
-                    control={form.control}
-                    name={`guests.${index}.name`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Imię gościa {index + 1}</FormLabel>
-                        <FormControl>
-                          <Input placeholder="np. Jan" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`guests.${index}.gender`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Płeć</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Wybierz płeć" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="male">Mężczyzna</SelectItem>
-                              <SelectItem value="female">Kobieta</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => remove(index)}
-                  >
-                    Usuń
-                  </Button>
+      <div className="grid grid-cols-[auto_1fr_1fr_auto] bg-muted font-medium text-sm px-4 py-2">
+        <div>Name</div>
+        <div>Email</div>
+        <div>Status</div>
+        <div>Actions</div>
+      </div>
+      {data.pages.map((page, i) => (
+        <React.Fragment key={i}>
+          {page.items.map((invitation) => (
+            <React.Fragment key={invitation.id}>
+              <div className="grid grid-cols-[auto_1fr_1fr_auto] px-4 py-2 text-sm border-t hover:bg-muted/50">
+                <div>{invitation.name}</div>
+                {/* <div>{invitation.email}</div> */}
+                <div>{invitation.status}</div>
+                <div>{invitation.status}</div>
+                <div>
+                  <button className="text-primary">Edit</button>
+                </div>
+              </div>
+              {invitation.guests.map((guest) => (
+                <div
+                  key={guest.id}
+                  className="grid grid-cols-[auto_1fr_1fr_auto] px-4 py-2 text-sm border-t hover:bg-muted/50"
+                >
+                  <div>{guest.name}</div>
+                  <div>{guest.gender}</div>
+                  <div>{guest.status}</div>
+                  <div>
+                    <button className="text-primary">Edit</button>
+                  </div>
                 </div>
               ))}
-            </div>
+            </React.Fragment>
+          ))}
+        </React.Fragment>
+      ))}
 
-            {/* Dodawanie gościa */}
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => append({ name: "", gender: "male" })}
-            >
-              Dodaj gościa
-            </Button>
-
-            {/* Zapis */}
-            <Button type="submit" className="w-full">
-              Zapisz zaproszenie
-            </Button>
-          </form>
-        </Form>
-      </SheetContent>
-    </Sheet>
+      {hasNextPage && (
+        <div className="col-span-full flex justify-center m-4">
+          <Button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            variant="outline"
+          >
+            {isFetchingNextPage ? t("loading") : t("loadMore")}
+          </Button>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,26 +1,31 @@
-"use client";
-
-import { BaseLoader } from "@/components/base/loader";
+import { EventCardSkeleton } from "@/components/dashboard/event/event-card";
 import AddInvitationForm from "@/components/dashboard/guests/add-invitation-form";
-import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
-import { notFound, useParams } from "next/navigation";
+import InvitationTable from "@/components/dashboard/guests/invitation-table";
+import { caller, prefetch, trpc } from "@/trpc/server";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
-export default function Guests() {
-  const { id } = useParams();
+export default async function Guests({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const event = await caller.event.getById({ id });
+  if (!event) {
+    return notFound();
+  }
 
-  const trpc = useTRPC();
-  const { data: event, isPending } = useQuery(
-    trpc.event.getById.queryOptions({
-      id: id as string,
-    })
-  );
-  if (isPending) return <BaseLoader isLoading={isPending}></BaseLoader>;
-  if (!event) return notFound();
-
+  prefetch(trpc.invitation.get.queryOptions({ eventId: event.id }));
   return (
     <div>
       <AddInvitationForm event={event} />
+      <ErrorBoundary fallback={<div>Something went wrong</div>}>
+        <Suspense fallback={<EventCardSkeleton />}>
+          <InvitationTable event={event} />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

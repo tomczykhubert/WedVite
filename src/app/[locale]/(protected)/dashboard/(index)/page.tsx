@@ -1,13 +1,12 @@
 import AddEventForm from "@/components/dashboard/event/add-event-form";
-import { ErrorBoundary } from "react-error-boundary";
 import { EventCardSkeleton } from "@/components/dashboard/event/event-card";
 import EventsList from "@/components/dashboard/event/events-list";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default async function Dashboard() {
-  const limit = 3;
-  prefetch(trpc.event.get.infiniteQueryOptions({ limit }));
+  prefetch(trpc.event.get.infiniteQueryOptions({}));
 
   return (
     <HydrateClient>
@@ -15,7 +14,7 @@ export default async function Dashboard() {
         <AddEventForm />
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
           <Suspense fallback={<EventCardSkeleton />}>
-            <EventsList limit={limit} />
+            <EventsList />
           </Suspense>
         </ErrorBoundary>
       </div>

@@ -41,7 +41,10 @@
       "confirm": "Zamknij mimo to",
       "cancel": "Anuluj"
     },
-    "delete": "Usuń"
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "status": "Status",
+    "actions": "Akcje"
   },
   "user": {
     "name": "Nazwa",
@@ -72,6 +75,7 @@
     "invalidContactType": "Proszę wybrać prawidłowy typ kontaktu.",
     "invalidGender": "Proszę wybrać płeć",
     "invalidGuestType": "Proszę wybrać prawidłowy typ gościa",
+    "invalidAttendanceStatus": "Prosze wybrać poprawny status obecności",
     "selectValidDate": "Wybierz poprawną datę",
     "minGuest": "Minimalna liczba gości w zaproszeniu ({min})",
     "auth": {
@@ -152,7 +156,6 @@
     "goToDashboard": "Przejdź do wydarzeń",
     "event": {
       "settings": "Ustawienia",
-      "guestsList": "Lista gości",
       "overview": "Przegląd",
       "contactType": "Typ kontaktu",
       "MAID_OF_HONOR": "Świadkowa",
@@ -162,7 +165,38 @@
       "planItems": "Plan wydarzenia",
       "planItemsDescription": "W tej sekcji możesz dodać poszczególne elementy planu wydarzenia, takie jak ślub czy wesele. Podaj szczegóły dotyczące daty, godziny i miejsca każdej części uroczstości, aby mieć pełny harmonogram. Informacje te będą później widoczne dla gości, którzy potwierdzają swoją obecność, co ułatwi im orientację w planie całego wydarzenia.",
       "contacts": "Kontakty",
-      "contactsDescription": "W tej sekcji dodaj kontakty kluczowych osób związanych z wydarzeniem. Informacje te będą widoczne dla gości podczas potwierdzania obecności, dlatego upewnij się, że dane są aktualne i kompletne. Możesz łatwo przeglądać, edytować lub dodawać nowe kontakty, aby organizacja wydarzenia przebiegała sprawnie."
+      "contactsDescription": "W tej sekcji dodaj kontakty kluczowych osób związanych z wydarzeniem. Informacje te będą widoczne dla gości podczas potwierdzania obecności, dlatego upewnij się, że dane są aktualne i kompletne. Możesz łatwo przeglądać, edytować lub dodawać nowe kontakty, aby organizacja wydarzenia przebiegała sprawnie.",
+      "invitations": {
+        "invitationStatus": "Status zaproszenia",
+        "status": {
+          "created": "Utworzono",
+          "delivered": "Dostarczono",
+          "answered": "Odpowiedziano"
+        }
+      },
+      "guests": {
+        "guestsList": "Lista gości",
+        "noGuestsFound": "Nie znaleziono gości. Zacznij od dodania nowego zaproszenia.",
+        "noGuestsFoundForFilter": "Nie znaleziono gości dla podanych filtrów",
+        "typeAlt": {
+          "male": "Mężczyzna",
+          "female": "Kobieta",
+          "boy": "Chłopiec",
+          "girl": "Dziewczynka",
+          "unspecified": "Nieokreślono"
+        },
+        "attendanceStatus": "Status obecności",
+        "status": {
+          "pending": "Oczekujące",
+          "declined": "Odrzucone",
+          "confirmed": "Potwierdzone"
+        },
+        "delete": {
+          "header": "Usuń gościa",
+          "message": "Czy jesteś pewien że chcesz usunąć tego gościa?"
+        },
+        "search": "Wyszukaj gościa lub zaproszenie" 
+      }
     }
   }
 }

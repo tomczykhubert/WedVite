@@ -71,7 +71,7 @@ export const buildEventSidebarItems = async (
         },
         {
           link: routes.dashboard.event.guests(event.id),
-          name: t("guestsList"),
+          name: t("guests.guestsList"),
           icon: FaUsers,
         },
       ],

@@ -41,7 +41,10 @@
       "confirm": "Close anyway",
       "cancel": "Cancel"
     },
-    "delete": "Delete"
+    "delete": "Delete",
+    "edit": "Edit",
+    "status": "Status",
+    "actions": "Actions"
   },
   "user": {
     "name": "Name",
@@ -72,6 +75,7 @@
     "invalidContactType": "Please select a valid contact type.",
     "invalidGender": "Please select gender",
     "invalidGuestType": "Please select a valid guest type",
+    "invalidAttendanceStatus": "Please select a valid sttendance status",
     "selectValidDate": "Select valid date",
     "minGuest": "Minimum number of guests in the invitation ({min})",
     "auth": {
@@ -152,7 +156,6 @@
     "goToDashboard": "Go to dashboard",
     "event": {
       "settings": "Settings",
-      "guestsList": "Guests list",
       "overview": "Overview",
       "contactType": "Contact type",
       "MAID_OF_HONOR": "Maid of honor",
@@ -162,7 +165,38 @@
       "planItems": "Event plan",
       "planItemsDescription": "In this section, you can add individual elements of the event schedule, such as the wedding ceremony or the reception. Provide details about the date, time, and location of each part of the celebration to have a complete timetable. This information will later be visible to guests confirming their attendance, helping them navigate the overall event plan.",
       "contacts": "Contacts",
-      "contactsDescription": "In this section, add the contacts of key people related to the event. This information will be visible to guests when confirming their attendance, so make sure the details are up-to-date and complete. You can easily view, edit, or add new contacts to ensure smooth event organization."
+      "contactsDescription": "In this section, add the contacts of key people related to the event. This information will be visible to guests when confirming their attendance, so make sure the details are up-to-date and complete. You can easily view, edit, or add new contacts to ensure smooth event organization.",
+      "invitations": {
+        "invitationStatus": "Invitation status",
+        "status": {
+          "created": "Created",
+          "delivered": "Delivered",
+          "answered": "Answered"
+        }
+      },
+      "guests": {
+        "guestsList": "Guests list",
+        "noGuestsFound": "No guests found. Start by adding a new invitation.",
+        "noGuestsFoundForFilter": "No guests found for given filters",
+        "typeAlt": {
+          "male": "Male",
+          "female": "Female",
+          "boy": "Boy",
+          "girl": "Girl",
+          "unspecified": "Unspecified"
+        },
+        "attendanceStatus": "Attendance status",
+        "status": {
+          "pending": "Pending",
+          "declined": "Declined",
+          "confirmed": "Confirmed"
+        },
+        "delete": {
+          "header": "Delete guest",
+          "message": "Are you sure you want to delete this guest?"
+        },
+        "search": "Search guest or invitation" 
+      }
     }
   }
 }

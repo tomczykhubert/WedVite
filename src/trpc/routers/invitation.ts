@@ -11,8 +11,9 @@ import {
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { TRPCResponse } from "./_app";
+import { stc } from "@/i18n/utils";
 
-const INVITATIONS_PER_PAGE = 3;
+const INVITATIONS_PER_PAGE = 15;
 
 export const invitationRouter = createTRPCRouter({
   add: protectedProcedure
@@ -116,6 +117,8 @@ export const invitationRouter = createTRPCRouter({
         cursor: z.string().nullish(),
         eventId: z.string(),
         name: z.string().nullish(),
+        attendanceStatus: z.nativeEnum(AttendanceStatus, { message: stc("invalidAttendanceStatus") }).nullish(),
+        invitationStatus: z.nativeEnum(InvitationStatus, { message: stc("invalidInvitationStatus") }).nullish()
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
@@ -124,6 +127,17 @@ export const invitationRouter = createTRPCRouter({
       const invitations = await db.invitation.findMany({
         where: {
           eventId: input.eventId,
+
+          ...(input.invitationStatus && {
+            status: input.invitationStatus
+          }),
+          ...(input.attendanceStatus && {
+            guests: {
+              some: {
+                status: input.attendanceStatus,
+              }
+            }
+          }),
           ...(input.name && {
             OR: [
               {

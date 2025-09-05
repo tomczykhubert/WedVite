@@ -45,7 +45,7 @@ export const buildGuestsBreadcrumbs = async (
   return [
     ...(await buildEventBreadcrumbs(event, true)),
     {
-      name: t("guestsList"),
+      name: t("guests.guestsList"),
       link: addLink ? routes.dashboard.event.guests(event.id) : undefined,
     },
   ];

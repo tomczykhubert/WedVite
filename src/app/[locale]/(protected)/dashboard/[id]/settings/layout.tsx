@@ -8,7 +8,6 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Event } from "@prisma/client";
 import { buildEventBreadcrumbs, buildEventSidebarItems } from "../(index)/layout";
-// import { useEvent } from "@/contexts/EventContext";
 
 export default async function EventSettingsLayout({
   params,
@@ -23,7 +22,6 @@ export default async function EventSettingsLayout({
   if (!event) {
     return notFound();
   }
-  // const { event } = useEvent()
 
   const breadcrumbs = await buildEventSettingsBreadcrumbs(event, false)
 

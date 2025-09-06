@@ -22,7 +22,7 @@ export default async function Layout({
     <>
       <SidebarProvider defaultOpen={defaultOpen}>
         <AppSidebar sidebarItems={sidebarItems}/>
-        <SidebarInset>
+        <SidebarInset className="overflow-hidden">
           <AppHeader breadcrumbs={breadcrumbs}/>
           <div className="flex flex-1 flex-col p-4 lg:p-8 relative">
             {children}

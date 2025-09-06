@@ -1,7 +1,7 @@
 "use client";
 
 import FormErrorMessage from "@/components/base/form-error-messege";
-import Loader, { BaseLoader } from "@/components/base/loader";
+import Loader from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
 import { AutoFormField, Form } from "@/components/ui/form";
 import { useRouter } from "@/i18n/navigation";
@@ -32,7 +32,7 @@ export default function EventSettings() {
     })
   );
 
-  if (isPending) return <BaseLoader isLoading={isPending}></BaseLoader>;
+  if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   if (!event) return notFound();
 

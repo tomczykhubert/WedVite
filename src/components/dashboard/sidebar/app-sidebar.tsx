@@ -24,6 +24,7 @@ export function AppSidebar({sidebarItems}: {sidebarItems: SidebarGroupType[]}) {
                   width={32}
                   height={32}
                   className="shrink-0"
+                  priority={true}
                 />
               <span className="text-lg font-semibold tracking-tighter">
                 WedVite

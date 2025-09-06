@@ -7,6 +7,7 @@ import {
   Guest,
   Invitation,
   InvitationStatus,
+  Prisma,
 } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
@@ -124,41 +125,45 @@ export const invitationRouter = createTRPCRouter({
     .query(async ({ ctx: { user, db }, input }) => {
       await assertOwnerOfEvent(user.id, input.eventId, db);
       const cursor = input?.cursor;
-      const invitations = await db.invitation.findMany({
-        where: {
-          eventId: input.eventId,
 
-          ...(input.invitationStatus && {
-            status: input.invitationStatus
-          }),
-          ...(input.attendanceStatus && {
+      const where: Prisma.InvitationWhereInput = {
+        eventId: input.eventId,
+        ...(input.invitationStatus && {
+          status: input.invitationStatus,
+        }),
+      };
+
+      if (input.name) {
+        where.OR = [
+          {
+            name: {
+              contains: input.name,
+              mode: "insensitive",
+            },
+          },
+          {
             guests: {
               some: {
-                status: input.attendanceStatus,
-              }
-            }
-          }),
-          ...(input.name && {
-            OR: [
-              {
                 name: {
                   contains: input.name,
                   mode: "insensitive",
                 },
+                ...(input.attendanceStatus && {
+                  status: input.attendanceStatus,
+                }),
               },
-              {
-                guests: {
-                  some: {
-                    name: {
-                      contains: input.name,
-                      mode: "insensitive",
-                    },
-                  },
-                },
-              },
-            ],
-          }),
-        },
+            },
+          },
+        ];
+      } else if (input.attendanceStatus) {
+        where.guests = {
+          some: {
+            status: input.attendanceStatus,
+          },
+        };
+      }
+      const invitations = await db.invitation.findMany({
+        where: where,
         include: {
           guests: true,
         },

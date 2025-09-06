@@ -1,5 +1,6 @@
 import AddInvitationForm from "@/components/dashboard/guests/add-invitation-form";
-import InvitationTable, { InvitationTableSkeleton } from "@/components/dashboard/guests/invitation-table";
+import Invitations from "@/components/dashboard/guests/invitations";
+import { InvitationsTableSkeleton } from "@/components/dashboard/guests/invitations-table";
 import { caller, HydrateClient, prefetch, trpc } from "@/trpc/server";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -19,7 +20,7 @@ export default async function Guests({
     return notFound();
   }
 
-  prefetch(trpc.invitation.get.infiniteQueryOptions({ eventId: event.id }));
+  // prefetch(trpc.invitation.get.infiniteQueryOptions({ eventId: event.id }));
   return (
     <HydrateClient>
       <div>
@@ -28,9 +29,7 @@ export default async function Guests({
           <AddInvitationForm event={event} />
         </div>
       <ErrorBoundary fallback={<div>Something went wrong</div>}>
-        <Suspense fallback={<InvitationTableSkeleton />}>
-          <InvitationTable event={event} />
-        </Suspense>
+          <Invitations event={event} />
       </ErrorBoundary>
       </div>
     </HydrateClient>

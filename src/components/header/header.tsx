@@ -115,6 +115,7 @@ const Header = ({
               alt={logo.alt}
               width={logoSize}
               height={logoSize}
+              priority={true}
             />
             <span className="text-lg font-semibold tracking-tighter">
               {logo.title}

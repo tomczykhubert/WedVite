@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import z from "zod";
 import ContactForm from "./contact-form";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object(translateSchemaConfig(baseContactConfig));
 
 type FormData = z.infer<typeof formSchema>;
@@ -32,7 +33,7 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.contact.pathFilter());
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(baseT("error"));
       },
       onMutate: async () => {

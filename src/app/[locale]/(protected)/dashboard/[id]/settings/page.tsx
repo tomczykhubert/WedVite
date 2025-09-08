@@ -71,12 +71,12 @@ const EventSettingsForm = ({
 
   const updateEvent = useMutation(
     trpc.event.update.mutationOptions({
-      onSuccess: async (response) => {
+      onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.event.pathFilter());
         toast.success(formT("success"));
         router.refresh();
       },
-      onError: (err) => {
+      onError: () => {
         setFormErrorMessage("forms.error");
       },
       onMutate: () => {

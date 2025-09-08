@@ -1,9 +1,10 @@
+import ID from "@/types/id";
 import { PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const assertOwnerOfEvent = async (
-  userId: string,
-  eventId: string,
+  userId: ID,
+  eventId: ID,
   db: PrismaClient
 ) => {
   const count = await db.event.count({
@@ -17,8 +18,8 @@ export const assertOwnerOfEvent = async (
 };
 
 export const assertOwnerOfContact = async (
-  userId: string,
-  contactId: string,
+  userId: ID,
+  contactId: ID,
   db: PrismaClient
 ) => {
   const count = await db.eventContact.count({
@@ -34,8 +35,8 @@ export const assertOwnerOfContact = async (
 };
 
 export const assertOwnerOfPlanItem = async (
-  userId: string,
-  planItemId: string,
+  userId: ID,
+  planItemId: ID,
   db: PrismaClient
 ) => {
   const count = await db.eventPlanItem.count({
@@ -51,8 +52,8 @@ export const assertOwnerOfPlanItem = async (
 };
 
 export const assertOwnerOfInvitation = async (
-  userId: string,
-  invitationId: string,
+  userId: ID,
+  invitationId: ID,
   db: PrismaClient
 ) => {
   const count = await db.invitation.count({
@@ -68,8 +69,8 @@ export const assertOwnerOfInvitation = async (
 };
 
 export const assertOwnerOfGuest = async (
-  userId: string,
-  guestId: string,
+  userId: ID,
+  guestId: ID,
   db: PrismaClient
 ) => {
   const count = await db.guest.count({

@@ -59,7 +59,7 @@ export default function UpdateGuestForm({
       type: guest.type,
       status: guest.status,
     });
-  }, [guest]);
+  }, [guest, form]);
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -69,7 +69,7 @@ export default function UpdateGuestForm({
         await queryClient.invalidateQueries(trpc.invitation.pathFilter());
         setOpen(false);
       },
-      onError: (err) => {
+      onError: () => {
         showError(validationT, { key: "forms.error" });
       },
       onMutate: async () => {
@@ -88,7 +88,9 @@ export default function UpdateGuestForm({
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   form.formState.isDirty;
+
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen && form.formState.isDirty) {
       setShowDialog(true);

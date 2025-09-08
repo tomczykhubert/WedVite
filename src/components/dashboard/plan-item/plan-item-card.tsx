@@ -19,7 +19,6 @@ export default function PlanItemCard({
   planItem: EventPlanItem;
 }) {
   const format = useFormatter();
-  const t = useTranslations("base");
 
   const FormatDate = (date: Date) => {
     return format.dateTime(date, {
@@ -109,7 +108,7 @@ function DeletePlanItem({ planItem }: { planItem: EventPlanItem }) {
         await queryClient.invalidateQueries(trpc.planItem.pathFilter());
         toast.success(formsT("success"));
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(formsT("error"));
       },
     })

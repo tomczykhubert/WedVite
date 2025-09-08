@@ -14,7 +14,6 @@ export default function GuestRow({
   invitation: InvitationWithGuests;
 }) {
   const { filters } = useInvitations();
-  const baseT = useTranslations("base");
   const t = useTranslations("dashboard.event.guests");
   const isGuestSearched = (invitation: Invitation, guest: Guest) => {
     const nameFilter = filters.name?.toLowerCase();

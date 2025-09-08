@@ -1,8 +1,8 @@
-import * as React from "react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
-import pl from 'react-phone-number-input/locale/pl';
+import pl from "react-phone-number-input/locale/pl";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,9 @@ type PhoneInputProps = Omit<
 
 const loadTranslations = async (locale: string) => {
   try {
-    return await import(`/node_modules/react-phone-number-input/locale/${locale}.json`)
+    return await import(
+      `/node_modules/react-phone-number-input/locale/${locale}.json`
+    );
   } catch (error) {
     console.error(`Failed to load translations for locale: ${locale}`, error);
     return pl;
@@ -43,7 +45,7 @@ const loadTranslations = async (locale: string) => {
 const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
   React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
     ({ className, onChange, value, ...props }, ref) => {
-      const locale = useLocale()
+      const locale = useLocale();
       const [labels, setLabels] = React.useState(pl);
 
       React.useEffect(() => {
@@ -52,7 +54,10 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
             const result = await loadTranslations(locale);
             setLabels(result);
           } catch (error) {
-            console.error(`Failed to load dictionary for locale: ${locale}`, error);
+            console.error(
+              `Failed to load dictionary for locale: ${locale}`,
+              error
+            );
           }
         };
 
@@ -69,7 +74,6 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
           smartCaret={false}
           value={value || undefined}
           labels={labels}
-
           /**
            * Handles the onChange event.
            *
@@ -83,7 +87,7 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
           {...props}
         />
       );
-    },
+    }
   );
 PhoneInput.displayName = "PhoneInput";
 
@@ -117,7 +121,7 @@ const CountrySelect = ({
   const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const [searchValue, setSearchValue] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
-  const t = useTranslations('base.forms')
+  const t = useTranslations("base.forms");
 
   return (
     <Popover
@@ -125,7 +129,7 @@ const CountrySelect = ({
       modal
       onOpenChange={(open) => {
         setIsOpen(open);
-        open && setSearchValue("");
+        if (open) setSearchValue("");
       }}
     >
       <PopoverTrigger asChild>
@@ -142,7 +146,7 @@ const CountrySelect = ({
           <ChevronsUpDown
             className={cn(
               "-mr-2 size-4 opacity-50",
-              disabled ? "hidden" : "opacity-100",
+              disabled ? "hidden" : "opacity-100"
             )}
           />
         </Button>
@@ -156,7 +160,7 @@ const CountrySelect = ({
               setTimeout(() => {
                 if (scrollAreaRef.current) {
                   const viewportElement = scrollAreaRef.current.querySelector(
-                    "[data-radix-scroll-area-viewport]",
+                    "[data-radix-scroll-area-viewport]"
                   );
                   if (viewportElement) {
                     viewportElement.scrollTop = 0;
@@ -180,7 +184,7 @@ const CountrySelect = ({
                       onChange={onChange}
                       onSelectComplete={() => setIsOpen(false)}
                     />
-                  ) : null,
+                  ) : null
                 )}
               </CommandGroup>
             </ScrollArea>

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
 import { useTRPC } from "@/trpc/client";
+import ID from "@/types/id";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -12,12 +13,13 @@ import { toast } from "sonner";
 import z from "zod";
 import PlanItemForm from "./plan-item-form";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
 
 type FormData = z.infer<typeof formSchema>;
 
 type AddPlanItemFormProps = {
-  eventId: string;
+  eventId: ID;
 };
 
 export default function AddPlanItemForm({ eventId }: AddPlanItemFormProps) {
@@ -31,7 +33,7 @@ export default function AddPlanItemForm({ eventId }: AddPlanItemFormProps) {
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.planItem.pathFilter());
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(validationT("forms.error"));
       },
       onMutate: async () => {

@@ -1,13 +1,12 @@
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import {
   assertOwnerOfEvent,
   assertOwnerOfPlanItem,
 } from "@/lib/prisma/eventUtils";
-import { createTRPCRouter, protectedProcedure } from "../init";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import z from "zod";
 import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
-import { stc } from "@/i18n/utils";
 import { EventPlanItem } from "@prisma/client";
+import z from "zod";
+import { createTRPCRouter, protectedProcedure } from "../init";
 import { TRPCResponse } from "./_app";
 
 const MAX_PLAN_ITEMS = 8;
@@ -20,40 +19,47 @@ export const planItemRouter = createTRPCRouter({
         eventId: z.string(),
       })
     )
-    .mutation(async ({ ctx: { user, db }, input }): Promise<TRPCResponse<EventPlanItem>> => {
-      await assertOwnerOfEvent(user.id, input.eventId, db);
+    .mutation(
+      async ({
+        ctx: { user, db },
+        input,
+      }): Promise<TRPCResponse<EventPlanItem>> => {
+        await assertOwnerOfEvent(user.id, input.eventId, db);
 
-      const count = await db.eventPlanItem.count({
+        const count = await db.eventPlanItem.count({
           where: {
             eventId: input.eventId,
-          }
-      })
-      
-      if (count >= MAX_PLAN_ITEMS) return {
-        success: false, error: {
-          key: "trpcError.maxPlanItemsReached",
-          values: { max: MAX_PLAN_ITEMS }
-        }
-      };
+          },
+        });
 
-      const planItem = await db.eventPlanItem.create({
-        data: {
-          name: input.name,
-          description: input.description,
-          details: input.details,
-          startAt: input.startAt.toISOString(),
-          endAt:  input.endAt ? input.endAt.toISOString() : null,
-          addressLine1: input.addressLine1,
-          addressLine2: input.addressLine2,
-          city: input.city,
-          postalCode: input.postalCode, 
-          region: input.region,
-          country: input.country,
-          eventId: input.eventId,
-        },
-      });
-      return { success: true, data: planItem };
-    }),
+        if (count >= MAX_PLAN_ITEMS)
+          return {
+            success: false,
+            error: {
+              key: "trpcError.maxPlanItemsReached",
+              values: { max: MAX_PLAN_ITEMS },
+            },
+          };
+
+        const planItem = await db.eventPlanItem.create({
+          data: {
+            name: input.name,
+            description: input.description,
+            details: input.details,
+            startAt: input.startAt.toISOString(),
+            endAt: input.endAt ? input.endAt.toISOString() : null,
+            addressLine1: input.addressLine1,
+            addressLine2: input.addressLine2,
+            city: input.city,
+            postalCode: input.postalCode,
+            region: input.region,
+            country: input.country,
+            eventId: input.eventId,
+          },
+        });
+        return { success: true, data: planItem };
+      }
+    ),
   update: protectedProcedure
     .input(
       z.object({ ...translateSchemaConfig(basePlanItemConfig), id: z.string() })
@@ -74,7 +80,7 @@ export const planItemRouter = createTRPCRouter({
           addressLine1: input.addressLine1,
           addressLine2: input.addressLine2,
           city: input.city,
-          postalCode: input.postalCode, 
+          postalCode: input.postalCode,
           region: input.region,
           country: input.country,
         },

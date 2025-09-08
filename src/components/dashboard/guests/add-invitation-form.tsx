@@ -57,6 +57,8 @@ export default function AddInvitationForm({ event }: { event: Event }) {
       guests: [defaultGuestValues],
     },
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   form.formState.isDirty;
 
   const { fields, append, remove } = useFieldArray({
@@ -79,7 +81,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
         form.reset();
         setOpen(false);
       },
-      onError: (err) => {
+      onError: () => {
         showError(validationT, { key: "forms.error" });
       },
       onMutate: async () => {

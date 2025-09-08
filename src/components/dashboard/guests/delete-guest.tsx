@@ -1,5 +1,6 @@
 import ConfirmModal from "@/components/base/confirm-modal";
 import { useTRPC } from "@/trpc/client";
+import ID from "@/types/id";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -9,7 +10,7 @@ export default function DeleteGuest({
   open,
   setOpen,
 }: {
-  guestId: string;
+  guestId: ID;
   open: boolean;
   setOpen: (value: boolean) => void;
 }) {
@@ -23,7 +24,7 @@ export default function DeleteGuest({
         await queryClient.invalidateQueries(trpc.invitation.pathFilter());
         toast.success(formsT("success"));
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(formsT("error"));
       },
     })

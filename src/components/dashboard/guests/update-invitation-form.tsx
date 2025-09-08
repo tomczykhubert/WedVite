@@ -55,7 +55,7 @@ export default function UpdateInvitationForm({
       name: invitation.name,
       status: invitation.status,
     });
-  }, [invitation]);
+  }, [invitation, form]);
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -65,7 +65,7 @@ export default function UpdateInvitationForm({
         await queryClient.invalidateQueries(trpc.invitation.pathFilter());
         setOpen(false);
       },
-      onError: (err) => {
+      onError: () => {
         showError(validationT, { key: "forms.error" });
       },
       onMutate: async () => {
@@ -84,7 +84,9 @@ export default function UpdateInvitationForm({
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   form.formState.isDirty;
+
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen && form.formState.isDirty) {
       setShowDialog(true);

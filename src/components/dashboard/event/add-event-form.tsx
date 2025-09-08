@@ -42,7 +42,7 @@ export default function AddEventForm() {
         form.reset();
         await queryClient.invalidateQueries(trpc.event.pathFilter());
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(validationT("error"));
       },
       onMutate: async () => {

@@ -14,6 +14,7 @@ import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { showError } from "@/lib/utils";
 import { addGuestConfig } from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
+import ID from "@/types/id";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Gender, GuestType } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -30,7 +31,7 @@ export default function AddGuestForm({
   open,
   setOpen,
 }: {
-  invitationId: string;
+  invitationId: ID;
   open: boolean;
   setOpen: (value: boolean) => void;
 }) {
@@ -59,7 +60,7 @@ export default function AddGuestForm({
         await queryClient.invalidateQueries(trpc.invitation.pathFilter());
         setOpen(false);
       },
-      onError: (err) => {
+      onError: () => {
         showError(validationT, { key: "forms.error" });
       },
       onMutate: async () => {
@@ -78,7 +79,9 @@ export default function AddGuestForm({
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   form.formState.isDirty;
+
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen && form.formState.isDirty) {
       setShowDialog(true);

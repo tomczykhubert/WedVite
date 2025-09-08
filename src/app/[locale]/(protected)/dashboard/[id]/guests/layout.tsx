@@ -1,22 +1,17 @@
-// "use client"
 import Layout from "@/components/dashboard/layout";
-import { BreadcrumbsItemType } from "@/components/dashboard/sidebar/breadcrumbs";
-import { SidebarGroupType } from "@/components/dashboard/sidebar/navigation";
-import { routes } from "@/lib/routes/routes";
-import { caller } from "@/trpc/server";
-import { Event } from "@prisma/client";
-import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
 import {
-  buildEventBreadcrumbs,
-  buildEventSidebarItems,
-} from "../(index)/layout";
+  buildGuestsBreadcrumbs,
+  buildGuestsSidebarItems,
+} from "@/lib/breadcrumbs/guest";
+import { caller } from "@/trpc/server";
+import ID from "@/types/id";
+import { notFound } from "next/navigation";
 
 export default async function GuestsLayout({
   params,
   children,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: ID }>;
   children: React.ReactNode;
 }) {
   const { id } = await params;
@@ -36,23 +31,3 @@ export default async function GuestsLayout({
     </Layout>
   );
 }
-
-export const buildGuestsBreadcrumbs = async (
-  event: Event,
-  addLink: boolean
-): Promise<BreadcrumbsItemType[]> => {
-  const t = await getTranslations("dashboard.event");
-  return [
-    ...(await buildEventBreadcrumbs(event, true)),
-    {
-      name: t("guests.guestsList"),
-      link: addLink ? routes.dashboard.event.guests(event.id) : undefined,
-    },
-  ];
-};
-
-export const buildGuestsSidebarItems = async (
-  event: Event
-): Promise<SidebarGroupType[]> => {
-  return [...(await buildEventSidebarItems(event))];
-};

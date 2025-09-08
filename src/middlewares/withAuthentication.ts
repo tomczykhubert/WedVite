@@ -1,13 +1,18 @@
-import { NextFetchEvent, NextMiddleware, NextRequest, NextResponse, URLPattern } from "next/server";
-import { betterFetch } from "@better-fetch/fetch";
-import { Session } from "better-auth";
-import { MiddlewareFactory } from "./middlewareFactory";
-import PUBLIC_ROUTES from "@/lib/routes/publicRoutes";
+import { apiRoutes } from "@/lib/routes/apiRoutes";
 import GUEST_ROUTES from "@/lib/routes/guestRoutes";
 import { PathEntry } from "@/lib/routes/PathEntry";
+import PUBLIC_ROUTES from "@/lib/routes/publicRoutes";
 import { routes } from "@/lib/routes/routes";
-import { routing } from "@/i18n/routing";
-import { apiRoutes } from "@/lib/routes/apiRoutes";
+import { betterFetch } from "@better-fetch/fetch";
+import { Session } from "better-auth";
+import {
+  NextFetchEvent,
+  NextMiddleware,
+  NextRequest,
+  NextResponse,
+  URLPattern,
+} from "next/server";
+import { MiddlewareFactory } from "./middlewareFactory";
 import { removeLocalePrefix } from "./withLocale";
 
 type AuthMiddlewareParams = {
@@ -15,7 +20,7 @@ type AuthMiddlewareParams = {
   next: NextMiddleware;
   _next: NextFetchEvent;
   session: Session | null;
-}
+};
 
 export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
@@ -44,14 +49,14 @@ export const withAuthentication: MiddlewareFactory = (next: NextMiddleware) => {
       next,
       _next,
       session,
-    }
+    };
 
     if (isGuest) {
       return handleGuest(middlewareParams);
     }
     return handleProtected(middlewareParams);
-  }
-}
+  };
+};
 
 function checkPaths(paths: PathEntry[], pathname: string): boolean {
   return paths.some((path) => {
@@ -59,7 +64,9 @@ function checkPaths(paths: PathEntry[], pathname: string): boolean {
       path = path.endsWith("/") ? path.slice(0, -1) : path;
       return pathname === path;
     } else if (typeof path === "function") {
-      const pattern = new URLPattern({ pathname: path(":param1", ":param2", ":param3", ":param4") });
+      const pattern = new URLPattern({
+        pathname: path(":param1", ":param2", ":param3", ":param4"),
+      });
       return pattern.test({ pathname });
     }
     return false;
@@ -78,7 +85,10 @@ function handleGuest(params: AuthMiddlewareParams) {
     : params.next(params.request, params._next);
 }
 
-function handleAuthenticationRedirect(params: AuthMiddlewareParams, redirectUrl: string) {
+function handleAuthenticationRedirect(
+  params: AuthMiddlewareParams,
+  redirectUrl: string
+) {
   return params.request.nextUrl.pathname.startsWith("/api")
     ? NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     : NextResponse.redirect(new URL(redirectUrl, params.request.url));

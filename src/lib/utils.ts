@@ -1,14 +1,13 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { parsePhoneNumberFromString, isValidPhoneNumber } from "libphonenumber-js";
-import { toast } from "sonner";
-import { useTranslations } from "next-intl";
 import { TRPCErrorResponseConfig } from "@/trpc/routers/_app";
+import { clsx, type ClassValue } from "clsx";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
-
 
 /**
  * Waliduje numer telefonu.
@@ -44,12 +43,15 @@ export const normalizePhoneNumber = (phone?: string): string => {
 };
 
 export const getEnumKeys = <
-    T extends string,
-    TEnumValue extends string | number,
+  T extends string,
+  TEnumValue extends string | number,
 >(enumVariable: { [key in T]: TEnumValue }) => {
-    return Object.keys(enumVariable) as Array<T>;
-}
+  return Object.keys(enumVariable) as Array<T>;
+};
 
-export const showError = async (t: ReturnType<typeof useTranslations>, error: TRPCErrorResponseConfig) => { 
+export const showError = async (
+  t: ReturnType<typeof useTranslations>,
+  error: TRPCErrorResponseConfig
+) => {
   toast.error(t(error.key, error.values));
-}
+};

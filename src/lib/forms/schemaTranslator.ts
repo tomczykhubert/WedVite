@@ -61,5 +61,6 @@ export function getFieldsByName<
   Schema extends readonly FormFieldConfig[],
   N extends Schema[number]["name"],
 >(schema: Schema, ...names: N[]): Extract<Schema[number], { name: N }>[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return schema.filter((field) => names.includes(field.name as N)) as any;
 }

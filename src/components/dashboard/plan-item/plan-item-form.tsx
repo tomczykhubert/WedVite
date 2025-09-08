@@ -1,20 +1,16 @@
 "use client";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AutoFormField, Form } from "@/components/ui/form";
-import {
-  translateSchemaConfig,
-} from "@/lib/forms/schemaTranslator";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -32,7 +28,7 @@ type PlanItemFormProps = {
   title: string;
   trigger: React.ReactElement;
   event?: Event;
-}
+};
 
 export default function PlanItemForm({
   initialValues,
@@ -41,11 +37,11 @@ export default function PlanItemForm({
   trigger,
 }: PlanItemFormProps) {
   const t = useTranslations("base.forms");
-  const [isOpen, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialValues
+    defaultValues: initialValues,
   });
 
   const handleSubmit = (data: FormData) => {
@@ -54,21 +50,22 @@ export default function PlanItemForm({
   };
 
   const openChange = (open: boolean) => {
-    setOpen(open)
-    form.reset(initialValues)
-  }
+    setOpen(open);
+    form.reset(initialValues);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={openChange}>
-      <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] overflow-y-scroll max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             {basePlanItemConfig.map((fieldConfig) => (
               <AutoFormField
                 key={fieldConfig.name}

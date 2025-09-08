@@ -1,6 +1,7 @@
 "use client";
 
 import { useTRPC } from "@/trpc/client";
+import ID from "@/types/id";
 import {
   AttendanceStatus,
   Guest,
@@ -51,7 +52,7 @@ export const InvitationsProvider = ({
   eventId,
 }: {
   children: React.ReactNode;
-  eventId: string;
+  eventId: ID;
 }) => {
   const [filters, setFilters] = useState<InvitationsState>(defaultState);
   const [invitations, setInvitations] = useState<InvitationWithGuests[]>([]);

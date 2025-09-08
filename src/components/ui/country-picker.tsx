@@ -1,5 +1,3 @@
-import * as React from "react";
-import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -9,21 +7,29 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FormFieldConfig } from "@/lib/forms/schemaTranslator";
 import { cn } from "@/lib/utils";
+import { countries } from "country-data-list";
+import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import * as React from "react";
+import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
 import pl from "react-phone-number-input/locale/pl";
-import { FormFieldConfig } from "@/lib/forms/schemaTranslator";
-import * as RPNInput from "react-phone-number-input";
-import { countries } from "country-data-list";
 
 type Labels = Record<string, string>;
 
 const loadTranslations = async (locale: string) => {
   try {
-    return await import(`/node_modules/react-phone-number-input/locale/${locale}.json`)
+    return await import(
+      `/node_modules/react-phone-number-input/locale/${locale}.json`
+    );
   } catch (error) {
     console.error(`Failed to load translations for locale: ${locale}`, error);
     return pl;
@@ -34,12 +40,12 @@ export const CountryPicker = ({
   disabled,
   value: selectedCountry,
   onChange,
-  fieldConfig
+  fieldConfig,
 }: {
   disabled?: boolean;
   value: RPNInput.Country;
   onChange: (country: RPNInput.Country | null) => void;
-  fieldConfig: FormFieldConfig
+  fieldConfig: FormFieldConfig;
 }) => {
   const locale = useLocale();
   const t = useTranslations("base.forms");
@@ -63,11 +69,15 @@ export const CountryPicker = ({
 
   const countryList = Object.entries(labels)
     .map(([code, name]) => ({ value: code, label: name }))
-    .filter(item => item.value.length == 2 && availableCountries.includes(item.value))
-    .filter((item): item is { value: RPNInput.Country; label: string } => isCountry(item.value))
+    .filter(
+      (item) =>
+        item.value.length == 2 && availableCountries.includes(item.value)
+    )
+    .filter((item): item is { value: RPNInput.Country; label: string } =>
+      isCountry(item.value)
+    )
     .filter(({ value }) => value)
     .sort((a, b) => a.label.localeCompare(b.label));
-
 
   const filteredOptions = countryList.filter(({ label }) =>
     label.toLowerCase().includes(searchValue.toLowerCase())
@@ -81,7 +91,7 @@ export const CountryPicker = ({
       modal
       onOpenChange={(open) => {
         setIsOpen(open);
-        open && setSearchValue("");
+        if (open) setSearchValue("");
       }}
     >
       <PopoverTrigger asChild>
@@ -93,7 +103,9 @@ export const CountryPicker = ({
         >
           <div className="flex items-center gap-2">
             {selectedCountry && <Flag country={selectedCountry} />}
-            <span className="text-sm">{selectedLabel || t("selectCountry")}</span>
+            <span className="text-sm">
+              {selectedLabel || t("selectCountry")}
+            </span>
           </div>
           <ChevronsUpDown className="size-4 opacity-50" />
         </Button>
@@ -106,7 +118,9 @@ export const CountryPicker = ({
             onValueChange={(value) => {
               setSearchValue(value);
               setTimeout(() => {
-                const viewport = scrollAreaRef.current?.querySelector("[data-radix-scroll-area-viewport]");
+                const viewport = scrollAreaRef.current?.querySelector(
+                  "[data-radix-scroll-area-viewport]"
+                );
                 if (viewport) viewport.scrollTop = 0;
               }, 0);
             }}
@@ -115,23 +129,24 @@ export const CountryPicker = ({
             <ScrollArea ref={scrollAreaRef} className="h-72">
               <CommandEmpty>{t("noCountryFound")}</CommandEmpty>
               <CommandGroup>
-                {!fieldConfig.required && <CommandItem
-                  className="gap-2"
-                  onSelect={() => {
-                    onChange(null);
-                    setIsOpen(false);
-                  }}
-                >
-                  <span className="w-6"></span>
-                  <span className="flex-1 text-sm">{t("selectNone")}</span>
-                  <CheckIcon
-                    className={cn(
-                      "ml-auto size-4",
-                      null === selectedCountry ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-                }
+                {!fieldConfig.required && (
+                  <CommandItem
+                    className="gap-2"
+                    onSelect={() => {
+                      onChange(null);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <span className="w-6"></span>
+                    <span className="flex-1 text-sm">{t("selectNone")}</span>
+                    <CheckIcon
+                      className={cn(
+                        "ml-auto size-4",
+                        null === selectedCountry ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                )}
                 {filteredOptions.map(({ value, label }) => (
                   <CommandItem
                     key={value}
@@ -169,8 +184,11 @@ const Flag = ({ country }: { country: RPNInput.Country }) => {
   );
 };
 
-export const availableCountries = Object.values(countries.all).map(c => c.alpha2);
+export const availableCountries = Object.values(countries.all).map(
+  (c) => c.alpha2
+);
 
 function isCountry(value: unknown): value is RPNInput.Country {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return typeof value === "string" && availableCountries.includes(value as any);
 }

@@ -48,7 +48,7 @@ export default async function UserMenuItems({
   const t = await getTranslations("user");
 
   const renderItems = (items: UserMenuItemsConfig): ReactNode => {
-    return items.map((item, index) => {
+    return items.map((item) => {
       if (Array.isArray(item)) {
         return (
           <DropdownMenuGroup key={item[0].title}>

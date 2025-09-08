@@ -27,25 +27,15 @@ export default function InvitationsTableFilters() {
           updateFilter("attendanceStatus", value);
         }}
       />
-      <SearchBox
-        onSearch={(query) => updateFilter("name", query)}
-        className="max-w-[500px] grow"
-      />
+      <SearchBox className="max-w-[500px] grow" />
     </div>
   );
 }
 
-interface SearchBoxProps extends React.HTMLAttributes<HTMLDivElement> {
-  placeholder?: string;
-  onSearch: (query: string) => void;
-}
-
 function SearchBox({
-  placeholder,
-  onSearch,
   className,
   ...props
-}: SearchBoxProps) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   const { filters, updateFilter } = useInvitations();
   const [query, setQuery] = useState(filters.name ?? "");
   const t = useTranslations("dashboard.event.guests");

@@ -1,7 +1,7 @@
-import type { NextRequest } from "next/server";
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { appRouter } from "@/trpc/routers/_app";
 import { createContext } from "@/trpc/context";
+import { appRouter } from "@/trpc/routers/_app";
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import type { NextRequest } from "next/server";
 /**
  * Configure basic CORS headers
  * You should extend this to match your needs
@@ -28,7 +28,7 @@ const handler = async (req: NextRequest) => {
     req,
     createContext: createContext,
     onError({ error, path }) {
-      // console.error(`>>> tRPC Error on '${path}'`, error);
+      console.error(`>>> tRPC Error on '${path}'`, error);
     },
   });
 

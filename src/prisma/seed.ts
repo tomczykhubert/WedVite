@@ -31,6 +31,7 @@ async function main() {
       preferredLocale: "en",
     },
   });
+
   await prisma.user.update({
     where: {
       id: testUser1.id,

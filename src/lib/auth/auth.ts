@@ -26,26 +26,26 @@ export const auth = betterAuth({
     sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      try {
-        const cookieStore = await cookies();
-        let locale =
-          cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
-        if (!hasLocale(routing.locales, locale)) {
-          locale = routing.defaultLocale;
-        }
-        const t = await getTranslations({
-          locale: locale,
-          namespace: "emails",
-        });
-        await resend.emails.send({
-          from: process.env.RESEND_FROM as string,
-          to: user.email,
-          subject: t("verification.subject"),
-          react: EmailVerification(url, user.email, locale as Locale),
-        });
-      } catch {
-        // Running outside a request scope (e.g., seed script) – fallback to default locale
+      // skip sending email during seeding
+      if (process.env.npm_lifecycle_event === "seed") {
+        return;
       }
+      const cookieStore = await cookies();
+      let locale =
+        cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
+      if (!hasLocale(routing.locales, locale)) {
+        locale = routing.defaultLocale;
+      }
+      const t = await getTranslations({
+        locale: locale,
+        namespace: "emails",
+      });
+      await resend.emails.send({
+        from: process.env.RESEND_FROM as string,
+        to: user.email,
+        subject: t("verification.subject"),
+        react: EmailVerification(url, user.email, locale as Locale),
+      });
     },
   },
   user: {

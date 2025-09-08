@@ -6,6 +6,7 @@ import { showError } from "@/lib/utils";
 import { baseContactConfig } from "@/schemas/contactFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { TRPCResponse } from "@/trpc/routers/_app";
+import ID from "@/types/id";
 import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -14,12 +15,13 @@ import { FaAddressBook } from "react-icons/fa";
 import z from "zod";
 import ContactForm from "./contact-form";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object(translateSchemaConfig(baseContactConfig));
 
 type FormData = z.infer<typeof formSchema>;
 
 type AddContactFormProps = {
-  eventId: string;
+  eventId: ID;
 };
 
 export default function AddContactForm({ eventId }: AddContactFormProps) {
@@ -37,7 +39,7 @@ export default function AddContactForm({ eventId }: AddContactFormProps) {
         }
         showError(validationT, res.error);
       },
-      onError: (err) => {
+      onError: () => {
         showError(validationT, { key: "forms.error" });
       },
       onMutate: async () => {

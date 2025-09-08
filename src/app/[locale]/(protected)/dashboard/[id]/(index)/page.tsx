@@ -4,6 +4,7 @@ import { EventCardSkeleton } from "@/components/dashboard/event/event-card";
 import AddPlanItemForm from "@/components/dashboard/plan-item/add-plan-item-form";
 import PlanItemList from "@/components/dashboard/plan-item/plan-item-list";
 import { caller, HydrateClient, prefetch, trpc } from "@/trpc/server";
+import ID from "@/types/id";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -12,7 +13,7 @@ import { ErrorBoundary } from "react-error-boundary";
 export default async function EventPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: ID }>;
 }) {
   const { id } = await params;
   const event = await caller.event.getById({ id });
@@ -56,5 +57,5 @@ export default async function EventPage({
         </section>
       </div>
     </HydrateClient>
-  )
+  );
 }

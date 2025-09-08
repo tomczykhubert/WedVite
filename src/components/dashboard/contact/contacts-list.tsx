@@ -1,17 +1,17 @@
 "use client";
 
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import ContactCard from "./contact-card";
-import { Event } from "@prisma/client";
 import {
-  DndContext,
   closestCenter,
+  DndContext,
   DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
   TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -19,12 +19,17 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { restrictToWindowEdges } from "@dnd-kit/modifiers";
+import { Event, EventContact } from "@prisma/client";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import ContactCard from "./contact-card";
 
 export default function ContactsList({ event }: { event: Event }) {
-  const t = useTranslations("base");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -40,15 +45,16 @@ export default function ContactsList({ event }: { event: Event }) {
     }
   }, [fetchedContacts]);
 
-
-  const updateOrderMutation = useMutation(trpc.contact.updateOrder.mutationOptions({
-    onSuccess: async () => {
-      queryClient.invalidateQueries(trpc.contact.pathFilter())
-    },
-    onError: () => {
-      toast.error("Error updating order");
-    },
-  }));
+  const updateOrderMutation = useMutation(
+    trpc.contact.updateOrder.mutationOptions({
+      onSuccess: async () => {
+        queryClient.invalidateQueries(trpc.contact.pathFilter());
+      },
+      onError: () => {
+        toast.error("Error updating order");
+      },
+    })
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -62,7 +68,9 @@ export default function ContactsList({ event }: { event: Event }) {
     const { active, over } = dragEvent;
 
     if (active.id !== over?.id) {
-      const oldIndex = contacts.findIndex((contact) => contact.id === active.id);
+      const oldIndex = contacts.findIndex(
+        (contact) => contact.id === active.id
+      );
       const newIndex = contacts.findIndex((contact) => contact.id === over?.id);
 
       const newOrder = arrayMove(contacts, oldIndex, newIndex);
@@ -96,8 +104,16 @@ export default function ContactsList({ event }: { event: Event }) {
   );
 }
 
-function SortableContactCard({ contact }: { contact: any }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging, isSorting } = useSortable({
+function SortableContactCard({ contact }: { contact: EventContact }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+    isSorting,
+  } = useSortable({
     id: contact.id,
   });
 
@@ -107,11 +123,15 @@ function SortableContactCard({ contact }: { contact: any }) {
     zIndex: isSorting ? (isDragging ? 2 : 1) : "auto",
   };
 
-  const dragAttributes = { ...attributes, style: { cursor: 'grab' } };
+  const dragAttributes = { ...attributes, style: { cursor: "grab" } };
 
   return (
     <div ref={setNodeRef} style={style}>
-      <ContactCard contact={contact} dragListeners={listeners} dragAttributes={dragAttributes} />
+      <ContactCard
+        contact={contact}
+        dragListeners={listeners}
+        dragAttributes={dragAttributes}
+      />
     </div>
   );
 }

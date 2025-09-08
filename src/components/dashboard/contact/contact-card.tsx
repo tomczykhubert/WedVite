@@ -102,7 +102,7 @@ function DeleteContact({ contact }: { contact: EventContact }) {
         await queryClient.invalidateQueries(trpc.contact.pathFilter());
         toast.success(formsT("success"));
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(formsT("error"));
       },
     })

@@ -179,7 +179,7 @@ function FormMessage({
     if (isSerialized) {
       translatedMessage = deserializeTranslationCall(message, t);
     }
-  } catch (e) {
+  } catch {
     translatedMessage = error?.message || children;
   }
   const body = translatedMessage;
@@ -259,6 +259,7 @@ function AutoFormField({
       case "custom":
         return <></>;
       default:
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _exhaustiveCheck: never = fieldConfig.type;
         throw Error(
           `Field type ${fieldConfig.type} is not supported in AutoFormField`
@@ -319,7 +320,7 @@ function FormSelect({
           </SelectItem>
         )}
         {fieldConfig.values &&
-          fieldConfig.values.map((item, i) => (
+          fieldConfig.values.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               {translate(item.name, t)}
             </SelectItem>

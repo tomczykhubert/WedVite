@@ -23,5 +23,6 @@ export type TRPCResponse<T> =
 
 export type TRPCErrorResponseConfig = {
   key: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values?: Record<string, any>;
 };

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import z from "zod";
 import PlanItemForm from "./plan-item-form";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
 
 type FormData = z.infer<typeof formSchema>;
@@ -34,7 +35,7 @@ export default function UpdatePlanItemForm({
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.planItem.pathFilter());
       },
-      onError: (err) => {
+      onError: () => {
         toast.error(validationT("error"));
       },
       onMutate: async () => {

@@ -1,5 +1,3 @@
-
-import * as React from "react";
 import {
   Menubar,
   MenubarContent,
@@ -9,20 +7,18 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import {
-  availableLocales,
-} from "@/i18n/routing";
-import { LuGlobe } from "react-icons/lu";
-import Image from "next/image";
-import { Link} from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
+import { availableLocales } from "@/i18n/routing";
 import { getLocale } from "next-intl/server";
 import { headers } from "next/headers";
+import Image from "next/image";
+import { LuGlobe } from "react-icons/lu";
 
 export async function LangSwitcher() {
-  let locale  = await getLocale();
+  const locale = await getLocale();
   const headersList = await headers();
-  const pathname = headersList.get("x-current-path") ?? '/';
-  
+  const pathname = headersList.get("x-current-path") ?? "/";
+
   return (
     <Menubar className="p-0 h-9 w-9 border transition-all hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
       <MenubarMenu>

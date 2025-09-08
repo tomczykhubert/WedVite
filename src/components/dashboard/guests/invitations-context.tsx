@@ -28,8 +28,6 @@ interface InvitationsContextType {
   resetFilters: () => void;
 
   invitations: InvitationWithGuests[];
-  setInvitations: React.Dispatch<React.SetStateAction<InvitationWithGuests[]>>;
-  updateInvitation: (inv: InvitationWithGuests) => void;
 
   fetchNextPage: () => void;
   hasNextPage: boolean;
@@ -106,10 +104,6 @@ export const InvitationsProvider = ({
     setFilters(defaultState);
   };
 
-  const updateInvitation = (inv: InvitationWithGuests) => {
-    setInvitations((prev) => prev.map((i) => (i.id === inv.id ? inv : i)));
-  };
-
   return (
     <InvitationsContext.Provider
       value={{
@@ -120,8 +114,6 @@ export const InvitationsProvider = ({
         resetFilters,
 
         invitations,
-        setInvitations,
-        updateInvitation,
 
         fetchNextPage,
         hasNextPage,

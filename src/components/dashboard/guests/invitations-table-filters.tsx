@@ -1,23 +1,37 @@
-import { KeyboardEvent, ReactElement, useState } from "react";
-import { cn, getEnumKeys } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { LucideSearch } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { cn, getEnumKeys } from "@/lib/utils";
 import { AttendanceStatus, InvitationStatus } from "@prisma/client";
-import { AttendanceStatusBadge, InvitationStatusBadge } from "./invitations-badges";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import {
+  AttendanceStatusBadge,
+  InvitationStatusBadge,
+} from "./invitations-badges";
 import { useInvitations } from "./invitations-context";
-import { useDebouncedCallback } from 'use-debounce';
 
 export default function InvitationsTableFilters() {
-  const { filters, updateFilter } = useInvitations()
+  const { filters, updateFilter } = useInvitations();
 
   return (
     <div className="flex justify-end gap-3 items-end mb-4 flex-wrap">
-      <InvitationStatusFilter value={filters.invitationStatus} setValue={(value) => { updateFilter("invitationStatus", value) }} />
-      <AttendanceStatusFilter value={filters.attendanceStatus} setValue={(value) => { updateFilter("attendanceStatus", value) }} />
-      <SearchBox onSearch={(query) => updateFilter("name", query)} className="max-w-[500px] grow" />
-    </div >
+      <InvitationStatusFilter
+        value={filters.invitationStatus}
+        setValue={(value) => {
+          updateFilter("invitationStatus", value);
+        }}
+      />
+      <AttendanceStatusFilter
+        value={filters.attendanceStatus}
+        setValue={(value) => {
+          updateFilter("attendanceStatus", value);
+        }}
+      />
+      <SearchBox
+        onSearch={(query) => updateFilter("name", query)}
+        className="max-w-[500px] grow"
+      />
+    </div>
   );
 }
 
@@ -32,17 +46,17 @@ function SearchBox({
   className,
   ...props
 }: SearchBoxProps) {
-  const {filters, updateFilter} = useInvitations()
-  const [query, setQuery] = useState(filters.name ?? "")
-  const t = useTranslations("dashboard.event.guests")
+  const { filters, updateFilter } = useInvitations();
+  const [query, setQuery] = useState(filters.name ?? "");
+  const t = useTranslations("dashboard.event.guests");
   const handleSearch = useDebouncedCallback((search: string) => {
-    updateFilter("name", search)
+    updateFilter("name", search);
   }, 1000);
 
   const handleInput = (value: string) => {
-    setQuery(value)
-    handleSearch(value)
-  }
+    setQuery(value);
+    handleSearch(value);
+  };
 
   return (
     <div className={cn("flex items-center space-x-2", className)} {...props}>
@@ -57,34 +71,33 @@ function SearchBox({
 }
 
 type InvitationStatusFilterProps = {
-  value?: InvitationStatus,
-  setValue: (value?: InvitationStatus) => void
-}
+  value?: InvitationStatus;
+  setValue: (value?: InvitationStatus) => void;
+};
 
 function InvitationStatusFilter({
   value,
   setValue,
 }: InvitationStatusFilterProps) {
-  const t = useTranslations('dashboard.event.invitations')
+  const t = useTranslations("dashboard.event.invitations");
 
   return (
     <div>
-      <p className="text-sm">{t('invitationStatus')}:</p>
+      <p className="text-sm">{t("invitationStatus")}:</p>
       <div className="flex items-center gap-2">
-        {getEnumKeys(InvitationStatus).map(status => (
-          <InvitationStatusBadge status={status}
-            className={cn(
-              "cursor-pointer",
-              value != status && "opacity-50"
-            )}
+        {getEnumKeys(InvitationStatus).map((status) => (
+          <InvitationStatusBadge
+            status={status}
+            className={cn("cursor-pointer", value != status && "opacity-50")}
             onClick={() => {
               if (value == status) {
-                setValue(undefined)
+                setValue(undefined);
               } else {
-                setValue(status)
+                setValue(status);
               }
-            }
-            } key={status} />
+            }}
+            key={status}
+          />
         ))}
       </div>
     </div>
@@ -92,34 +105,33 @@ function InvitationStatusFilter({
 }
 
 type AttendanceStatusFilterProps = {
-  value?: AttendanceStatus,
-  setValue: (value?: AttendanceStatus) => void
-}
+  value?: AttendanceStatus;
+  setValue: (value?: AttendanceStatus) => void;
+};
 
 function AttendanceStatusFilter({
   value,
   setValue,
 }: AttendanceStatusFilterProps) {
-  const t = useTranslations('dashboard.event.guests')
+  const t = useTranslations("dashboard.event.guests");
 
   return (
     <div>
-      <p className="text-sm">{t('attendanceStatus')}:</p>
+      <p className="text-sm">{t("attendanceStatus")}:</p>
       <div className="flex items-center gap-2">
-        {getEnumKeys(AttendanceStatus).map(status => (
-          <AttendanceStatusBadge status={status}
-            className={cn(
-              "cursor-pointer",
-              value != status && "opacity-50"
-            )}
+        {getEnumKeys(AttendanceStatus).map((status) => (
+          <AttendanceStatusBadge
+            status={status}
+            className={cn("cursor-pointer", value != status && "opacity-50")}
             onClick={() => {
               if (value == status) {
-                setValue(undefined)
+                setValue(undefined);
               } else {
-                setValue(status)
+                setValue(status);
               }
-            }
-            } key={status} />
+            }}
+            key={status}
+          />
         ))}
       </div>
     </div>

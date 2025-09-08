@@ -33,6 +33,7 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { z } from "zod";
+import { useInvitations } from "./invitations-context";
 
 const formSchema = z.object(translateSchemaConfig(addInvitationConfig));
 type FormData = z.infer<typeof formSchema>;
@@ -41,7 +42,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const invT = useTranslations("dashboard.forms.invitation");
+  const invT = useTranslations("dashboard.event.invitations");
   const t = useTranslations("base");
   const validationT = useTranslations("formValidation");
   const defaultGuestValues = {
@@ -62,7 +63,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
     control: form.control,
     name: "guests",
   });
-
+  const { resetFilters } = useInvitations();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const createInvitation = useMutation(
@@ -74,6 +75,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
           return showError(validationT, res.error);
         }
         await queryClient.invalidateQueries(trpc.invitation.pathFilter());
+        resetFilters();
         form.reset();
         setOpen(false);
       },
@@ -112,7 +114,9 @@ export default function AddInvitationForm({ event }: { event: Event }) {
         </SheetTrigger>
         <SheetContent className="min-w-full sm:min-w-[600px] gap-0">
           <SheetHeader className="bg-muted gap-0 border-b">
-            <SheetTitle className="mb-0 font-bold text-2xl">{invT("new")}</SheetTitle>
+            <SheetTitle className="mb-0 font-bold text-2xl">
+              {invT("new")}
+            </SheetTitle>
             <SheetDescription></SheetDescription>
           </SheetHeader>
           <div className="overflow-auto p-4 h-full">
@@ -181,7 +185,11 @@ export default function AddInvitationForm({ event }: { event: Event }) {
                     )}
                   />
                 </div>
-                <Button type="submit" className="w-full justify-self-end" disabled={loading}>
+                <Button
+                  type="submit"
+                  className="w-full justify-self-end"
+                  disabled={loading}
+                >
                   {loading ? t("loading") : invT("save")}
                 </Button>
               </form>

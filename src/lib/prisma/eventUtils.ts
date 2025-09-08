@@ -67,6 +67,25 @@ export const assertOwnerOfInvitation = async (
   assertOwnership(count);
 };
 
+export const assertOwnerOfGuest = async (
+  userId: string,
+  guestId: string,
+  db: PrismaClient
+) => {
+  const count = await db.guest.count({
+    where: {
+      id: guestId,
+      invitation: {
+        event: {
+          userId: userId,
+        },
+      },
+    },
+  });
+
+  assertOwnership(count);
+};
+
 const assertOwnership = (count: number) => {
   if (count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
 };

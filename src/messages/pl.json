@@ -44,7 +44,8 @@
     "edit": "Edytuj",
     "delete": "Usuń",
     "status": "Status",
-    "actions": "Akcje"
+    "actions": "Akcje",
+    "openMenu": "Otwórz menu"
   },
   "user": {
     "name": "Nazwa",
@@ -135,21 +136,6 @@
           "header": "Usuń punkt planu",
           "message": "Czy jesteś pewien że chcesz usunąć ten punkt planu?"
         }
-      },
-      "invitation": {
-        "name": "Nazwa zaproszenia",
-        "add": "Dodaj zaproszenie",
-        "new": "Nowe zaproszenie",
-        "addGuest": "Dodaj gościa",
-        "save": "Zapisz zaproszenie"
-      },
-      "guest": {
-        "type": "Typ gościa",
-        "guestTypes": {
-          "ADULT": "Dorosły",
-          "COMPANION": "Osoba towarzysząca",
-          "CHILD": "Dziecko"
-        }
       }
     },
     "notFound": "Nie znaleziono strony",
@@ -167,12 +153,22 @@
       "contacts": "Kontakty",
       "contactsDescription": "W tej sekcji dodaj kontakty kluczowych osób związanych z wydarzeniem. Informacje te będą widoczne dla gości podczas potwierdzania obecności, dlatego upewnij się, że dane są aktualne i kompletne. Możesz łatwo przeglądać, edytować lub dodawać nowe kontakty, aby organizacja wydarzenia przebiegała sprawnie.",
       "invitations": {
+        "name": "Nazwa zaproszenia",
         "invitationStatus": "Status zaproszenia",
         "status": {
-          "created": "Utworzono",
-          "delivered": "Dostarczono",
-          "answered": "Odpowiedziano"
-        }
+          "CREATED": "Utworzono",
+          "DELIVERED": "Dostarczono",
+          "ANSWERED": "Odpowiedziano"
+        },
+        "delete": {
+          "header": "Usuń zaproszenie",
+          "message": "Czy jesteś pewien że chcesz usunąć to zaproszenie?"
+        },
+        "addGuest": "Dodaj kolejnego gościa",
+        "edit": "Edytuj zaproszenie",
+        "save": "Zapisz zaproszenie",
+        "add": "Dodaj zaproszenie",
+        "new": "Nowe zaproszenie"
       },
       "guests": {
         "guestsList": "Lista gości",
@@ -187,15 +183,24 @@
         },
         "attendanceStatus": "Status obecności",
         "status": {
-          "pending": "Oczekujące",
-          "declined": "Odrzucone",
-          "confirmed": "Potwierdzone"
+          "PENDING": "Oczekujące",
+          "DECLINED": "Odrzucone",
+          "CONFIRMED": "Potwierdzone"
+        },
+        "type": "Typ gościa",
+        "guestTypes": {
+          "ADULT": "Dorosły",
+          "COMPANION": "Osoba towarzysząca",
+          "CHILD": "Dziecko"
         },
         "delete": {
           "header": "Usuń gościa",
           "message": "Czy jesteś pewien że chcesz usunąć tego gościa?"
         },
-        "search": "Wyszukaj gościa lub zaproszenie" 
+        "add": "Dodaj gościa",
+        "edit": "Edytuj gościa",
+        "search": "Wyszukaj gościa lub zaproszenie",
+        "save": "Zapisz gościa"
       }
     }
   }

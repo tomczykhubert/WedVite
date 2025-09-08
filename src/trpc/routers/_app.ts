@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "../init";
 import { contactRouter } from "./contact";
 import { eventRouter } from "./event";
+import { guestRouter } from "./guest";
 import { invitationRouter } from "./invitation";
 import { planItemRouter } from "./planItem";
 import { userRouter } from "./user";
@@ -10,6 +11,7 @@ export const appRouter = createTRPCRouter({
   contact: contactRouter,
   planItem: planItemRouter,
   invitation: invitationRouter,
+  guest: guestRouter,
   user: userRouter,
 });
 

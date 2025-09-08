@@ -1,5 +1,9 @@
 import { routes } from "@/lib/routes/routes";
-import React, { ReactNode } from "react";
+import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
+import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { ReactNode } from "react";
+import { IconType } from "react-icons/lib";
 import {
   LuBell,
   LuCircleUser,
@@ -10,12 +14,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../../ui/dropdown-menu";
-import Link from "next/link";
-import { IconType } from "react-icons/lib";
-import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import UserSignOut from "./user-sign-out";
-import { getTranslations } from "next-intl/server";
 
+//TODO: Update items content
 export default async function UserMenuItems({
   userMenuItemsConfig = [
     {
@@ -73,7 +74,6 @@ export default async function UserMenuItems({
 
   return (
     <>
-      <UserMenuSeparator />
       {renderItems(userMenuItemsConfig)}
       <UserMenuSeparator />
       <UserSignOut />

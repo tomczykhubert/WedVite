@@ -1,10 +1,6 @@
-import AddInvitationForm from "@/components/dashboard/guests/add-invitation-form";
 import Invitations from "@/components/dashboard/guests/invitations";
-import { InvitationsTableSkeleton } from "@/components/dashboard/guests/invitations-table";
-import { caller, HydrateClient, prefetch, trpc } from "@/trpc/server";
-import { getTranslations } from "next-intl/server";
+import { caller, HydrateClient } from "@/trpc/server";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 export default async function Guests({
@@ -14,7 +10,7 @@ export default async function Guests({
 }) {
   const { id } = await params;
   const event = await caller.event.getById({ id });
-  const t = await getTranslations("dashboard.event")
+  // const t = await getTranslations("dashboard.event");
 
   if (!event) {
     return notFound();
@@ -23,15 +19,9 @@ export default async function Guests({
   // prefetch(trpc.invitation.get.infiniteQueryOptions({ eventId: event.id }));
   return (
     <HydrateClient>
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h1>{t("guests.guestsList")}</h1>
-          <AddInvitationForm event={event} />
-        </div>
       <ErrorBoundary fallback={<div>Something went wrong</div>}>
-          <Invitations event={event} />
+        <Invitations event={event} />
       </ErrorBoundary>
-      </div>
     </HydrateClient>
   );
 }

@@ -1,11 +1,15 @@
 "use client";
 
-import Loader from "@/components/base/loader";
 import { useTRPC } from "@/trpc/client";
-import { AttendanceStatus, Guest, Invitation, InvitationStatus } from "@prisma/client";
+import {
+  AttendanceStatus,
+  Guest,
+  Invitation,
+  InvitationStatus,
+} from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { createContext, useContext, useEffect, useState } from "react";
-export type InvitationWithGuests = Invitation & { guests: Guest[]}
+export type InvitationWithGuests = Invitation & { guests: Guest[] };
 
 interface InvitationsState {
   name?: string;
@@ -16,14 +20,16 @@ interface InvitationsState {
 interface InvitationsContextType {
   filters: InvitationsState;
   setFilters: React.Dispatch<React.SetStateAction<InvitationsState>>;
-  updateFilter: <K extends keyof InvitationsState>(key: K, value: InvitationsState[K]) => void;
+  updateFilter: <K extends keyof InvitationsState>(
+    key: K,
+    value: InvitationsState[K]
+  ) => void;
   hasActiveFilters: () => boolean;
   resetFilters: () => void;
 
   invitations: InvitationWithGuests[];
   setInvitations: React.Dispatch<React.SetStateAction<InvitationWithGuests[]>>;
   updateInvitation: (inv: InvitationWithGuests) => void;
-  removeInvitation: (id: string) => void;
 
   fetchNextPage: () => void;
   hasNextPage: boolean;
@@ -38,31 +44,47 @@ const defaultState: InvitationsState = {
   invitationStatus: undefined,
 };
 
-const InvitationsContext = createContext<InvitationsContextType | undefined>(undefined);
+const InvitationsContext = createContext<InvitationsContextType | undefined>(
+  undefined
+);
 
-export const InvitationsProvider = ({ children, eventId }: { children: React.ReactNode, eventId: string }) => {
+export const InvitationsProvider = ({
+  children,
+  eventId,
+}: {
+  children: React.ReactNode;
+  eventId: string;
+}) => {
   const [filters, setFilters] = useState<InvitationsState>(defaultState);
   const [invitations, setInvitations] = useState<InvitationWithGuests[]>([]);
   const trpc = useTRPC();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isFetching } =
-    useInfiniteQuery(
-      trpc.invitation.get.infiniteQueryOptions(
-        {
-          eventId: eventId,
-          ...filters
-        },
-        { getNextPageParam: (lastPage) => lastPage.nextCursor }
-      )
-    );
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+    isFetching,
+  } = useInfiniteQuery(
+    trpc.invitation.get.infiniteQueryOptions(
+      {
+        eventId: eventId,
+        ...filters,
+      },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    )
+  );
 
   useEffect(() => {
     if (data?.pages) {
-      setInvitations(data.pages.flatMap(p => p.items));
+      setInvitations(data.pages.flatMap((p) => p.items));
     }
   }, [data]);
 
-
-  const updateFilter = <K extends keyof InvitationsState>(key: K, value: InvitationsState[K]) => {
+  const updateFilter = <K extends keyof InvitationsState>(
+    key: K,
+    value: InvitationsState[K]
+  ) => {
     setFilters((prev) => {
       if (key === "name" && typeof value === "string" && value.trim() === "") {
         return { ...prev, [key]: undefined };
@@ -88,41 +110,32 @@ export const InvitationsProvider = ({ children, eventId }: { children: React.Rea
     setInvitations((prev) => prev.map((i) => (i.id === inv.id ? inv : i)));
   };
 
-  const removeInvitation = (id: string) => {
-    setInvitations((prev) => {
-      return prev.filter((i) => i.id !== id)
-    });
-  };
-
-  // if(isFetching) {
-  //   return <Loader isLoading={isFetching}/>
-  // }
   return (
-    <InvitationsContext.Provider value={{
-      filters,
-      setFilters,
-      updateFilter,
-      hasActiveFilters,
-      resetFilters,
+    <InvitationsContext.Provider
+      value={{
+        filters,
+        setFilters,
+        updateFilter,
+        hasActiveFilters,
+        resetFilters,
 
-      invitations,
-      setInvitations,
-      updateInvitation,
-      removeInvitation,
+        invitations,
+        setInvitations,
+        updateInvitation,
 
-      fetchNextPage,
-      hasNextPage,
-      isFetchingNextPage,
-      isFetching,
-      refetch
-      
-    }}>
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isFetching,
+        refetch,
+      }}
+    >
       {children}
     </InvitationsContext.Provider>
   );
 };
 
-export const useInvitations= () => {
+export const useInvitations = () => {
   const context = useContext(InvitationsContext);
   if (!context) {
     throw new Error("useInvitations must be used within a InvitationsProvider");

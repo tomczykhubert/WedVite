@@ -1,13 +1,13 @@
+import EmailVerification from "@/components/emails/email-verification";
+import { Locale, routing } from "@/i18n/routing";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import prisma from "../prisma/prisma";
 import { nextCookies } from "better-auth/next-js";
-import EmailVerification from "@/components/emails/email-verification";
 import { hasLocale } from "next-intl";
-import resend from "../resend/resend";
-import { cookies } from "next/headers";
-import { Locale, routing } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
+import prisma from "../prisma/prisma";
+import resend from "../resend/resend";
 
 export const auth = betterAuth({
   appName: "WedVite",
@@ -26,19 +26,26 @@ export const auth = betterAuth({
     sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      const cookieStore = await cookies();
-      let locale =
-        cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
-      if (!hasLocale(routing.locales, locale)) {
-        locale = routing.defaultLocale;
+      try {
+        const cookieStore = await cookies();
+        let locale =
+          cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
+        if (!hasLocale(routing.locales, locale)) {
+          locale = routing.defaultLocale;
+        }
+        const t = await getTranslations({
+          locale: locale,
+          namespace: "emails",
+        });
+        await resend.emails.send({
+          from: process.env.RESEND_FROM as string,
+          to: user.email,
+          subject: t("verification.subject"),
+          react: EmailVerification(url, user.email, locale as Locale),
+        });
+      } catch {
+        // Running outside a request scope (e.g., seed script) – fallback to default locale
       }
-      const t = await getTranslations({ locale: locale, namespace: "emails" });
-      await resend.emails.send({
-        from: process.env.RESEND_FROM as string,
-        to: user.email,
-        subject: t("verification.subject"),
-        react: EmailVerification(url, user.email, locale as Locale),
-      });
     },
   },
   user: {
@@ -73,7 +80,7 @@ export const auth = betterAuth({
     expiresIn: 24 * 60 * 60, // 24 hours
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60
-    }
+      maxAge: 5 * 60,
+    },
   },
 });

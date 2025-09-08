@@ -17,15 +17,25 @@ function getInvitationBadgeVariant(status: InvitationStatus) {
 export function InvitationStatusBadge({
   status,
   className,
-  onClick
-}: { status: InvitationStatus, className?: string, onClick?: (status: InvitationStatus) => void }) {
-  const t = useTranslations("dashboard.event.invitations.status")
+  onClick,
+}: {
+  status: InvitationStatus;
+  className?: string;
+  onClick?: (status: InvitationStatus) => void;
+}) {
+  const t = useTranslations("dashboard.event.invitations.status");
 
-
-  return (<>
-    <Badge className={cn(className)} variant={getInvitationBadgeVariant(status)} onClick={() => onClick?.(status)}>{t(status.toLowerCase())}</Badge>
-  </>
-  )
+  return (
+    <>
+      <Badge
+        className={cn(className)}
+        variant={getInvitationBadgeVariant(status)}
+        onClick={() => onClick?.(status)}
+      >
+        {t(status)}
+      </Badge>
+    </>
+  );
 }
 
 function getAttendanceBadgeVariant(status: AttendanceStatus) {
@@ -42,12 +52,23 @@ function getAttendanceBadgeVariant(status: AttendanceStatus) {
 export function AttendanceStatusBadge({
   status,
   className,
-  onClick
-}: { status: AttendanceStatus, className?: string, onClick?: (status: AttendanceStatus) => void }) {
-  const t = useTranslations("dashboard.event.guests.status")
+  onClick,
+}: {
+  status: AttendanceStatus;
+  className?: string;
+  onClick?: (status: AttendanceStatus) => void;
+}) {
+  const t = useTranslations("dashboard.event.guests.status");
 
-  return (<>
-    <Badge className={cn(className)} variant={getAttendanceBadgeVariant(status)} onClick={() => onClick?.(status)}>{t(status.toLowerCase())}</Badge>
-  </>
-  )
+  return (
+    <>
+      <Badge
+        className={cn(className)}
+        variant={getAttendanceBadgeVariant(status)}
+        onClick={() => onClick?.(status)}
+      >
+        {t(status)}
+      </Badge>
+    </>
+  );
 }

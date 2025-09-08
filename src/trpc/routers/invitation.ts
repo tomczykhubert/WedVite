@@ -1,7 +1,13 @@
+import { stc } from "@/i18n/utils";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { assertOwnerOfEvent } from "@/lib/prisma/eventUtils";
-import { updateEventConfig } from "@/schemas/eventFormConfig";
-import { addInvitationConfig } from "@/schemas/invitationFormConfig";
+import {
+  assertOwnerOfEvent,
+  assertOwnerOfInvitation,
+} from "@/lib/prisma/eventUtils";
+import {
+  addInvitationConfig,
+  updateInvitationConfig,
+} from "@/schemas/invitationFormConfig";
 import {
   AttendanceStatus,
   Guest,
@@ -12,7 +18,6 @@ import {
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { TRPCResponse } from "./_app";
-import { stc } from "@/i18n/utils";
 
 const INVITATIONS_PER_PAGE = 15;
 
@@ -79,38 +84,23 @@ export const invitationRouter = createTRPCRouter({
   //   }),
   update: protectedProcedure
     .input(
-      z.object({ ...translateSchemaConfig(updateEventConfig), id: z.string() })
+      z.object({
+        ...translateSchemaConfig(updateInvitationConfig),
+        id: z.string(),
+      })
     )
     .mutation(async ({ ctx: { user, db }, input }) => {
-      await assertOwnerOfEvent(user.id, input.id, db);
+      await assertOwnerOfInvitation(user.id, input.id, db);
 
-      const event = await db.event.update({
+      return db.invitation.update({
         where: {
           id: input.id,
-          userId: user.id,
-        },
-        include: {
-          notificationSettings: true,
         },
         data: {
           name: input.name,
-          respondStart: input.respondStart.toISOString(),
-          respondEnd: input.respondEnd.toISOString(),
-          notificationSettings: {
-            upsert: {
-              create: {
-                onImageUpload: input.onImageUpload,
-                onAttendanceRespond: input.onAttendanceRespond,
-              },
-              update: {
-                onImageUpload: input.onImageUpload,
-                onAttendanceRespond: input.onAttendanceRespond,
-              },
-            },
-          },
+          status: input.status,
         },
       });
-      return event;
     }),
   get: protectedProcedure
     .input(
@@ -118,8 +108,16 @@ export const invitationRouter = createTRPCRouter({
         cursor: z.string().nullish(),
         eventId: z.string(),
         name: z.string().nullish(),
-        attendanceStatus: z.nativeEnum(AttendanceStatus, { message: stc("invalidAttendanceStatus") }).nullish(),
-        invitationStatus: z.nativeEnum(InvitationStatus, { message: stc("invalidInvitationStatus") }).nullish()
+        attendanceStatus: z
+          .nativeEnum(AttendanceStatus, {
+            message: stc("invalidAttendanceStatus"),
+          })
+          .nullish(),
+        invitationStatus: z
+          .nativeEnum(InvitationStatus, {
+            message: stc("invalidInvitationStatus"),
+          })
+          .nullish(),
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
@@ -184,5 +182,16 @@ export const invitationRouter = createTRPCRouter({
         items: invitations,
         nextCursor,
       };
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx: { user, db }, input }) => {
+      await assertOwnerOfInvitation(user.id, input.id, db);
+
+      return db.invitation.delete({
+        where: {
+          id: input.id,
+        },
+      });
     }),
 });

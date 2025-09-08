@@ -1,17 +1,14 @@
-import React from "react";
+import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { User } from "@prisma/client";
+import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
+import { LuChevronsUpDown } from "react-icons/lu";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
-import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
-import { LuChevronsUpDown } from "react-icons/lu";
-import UserMenuItems from "./user-menu-items";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { SidebarMenuButton } from "@/components/ui/sidebar";
 import UserAvatar from "./user-avatar";
+import UserMenuItems from "./user-menu-items";
 
 export default function UserMenu({
   user,
@@ -46,12 +43,6 @@ export default function UserMenu({
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent side={side} align="end" sideOffset={4}>
-        <DropdownMenuLabel>
-          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <UserAvatar user={user} />
-            <UserName user={user} />
-          </div>
-        </DropdownMenuLabel>
         <UserMenuItems />
       </DropdownMenuContent>
     </DropdownMenu>

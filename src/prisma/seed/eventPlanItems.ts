@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Event, PrismaClient } from "@prisma/client";
 
 export interface EventPlanItemSeedData {
   name: string;
@@ -179,7 +179,10 @@ export const eventPlanItemsSeedData: Record<number, EventPlanItemSeedData[]> = {
   ],
 };
 
-export async function seedEventPlanItems(prisma: PrismaClient, events: any[]) {
+export async function seedEventPlanItems(
+  prisma: PrismaClient,
+  events: Event[]
+) {
   console.log("Seeding event plan items...");
 
   let totalPlanItems = 0;

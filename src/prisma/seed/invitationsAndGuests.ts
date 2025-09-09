@@ -1,5 +1,6 @@
 import {
   AttendanceStatus,
+  Event,
   Gender,
   GuestType,
   InvitationStatus,
@@ -441,7 +442,7 @@ export const invitationsSeedData: Record<number, InvitationSeedData[]> = {
 
 export async function seedInvitationsAndGuests(
   prisma: PrismaClient,
-  events: any[]
+  events: Event[]
 ) {
   console.log("Seeding invitations and guests...");
 

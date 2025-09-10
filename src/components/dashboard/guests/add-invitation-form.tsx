@@ -17,11 +17,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { showError } from "@/lib/utils";
 import {
   addGuestConfig,
   addInvitationConfig,
+  AddInvitationData,
+  addInvitationSchema,
 } from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { TRPCResponse } from "@/trpc/routers/_app";
@@ -32,11 +33,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
-import { z } from "zod";
 import { useInvitations } from "./invitations-context";
-
-const formSchema = z.object(translateSchemaConfig(addInvitationConfig));
-type FormData = z.infer<typeof formSchema>;
 
 export default function AddInvitationForm({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
@@ -50,8 +47,8 @@ export default function AddInvitationForm({ event }: { event: Event }) {
     gender: Gender.UNSPECIFIED,
     type: GuestType.ADULT,
   };
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AddInvitationData>({
+    resolver: zodResolver(addInvitationSchema),
     defaultValues: {
       name: "",
       guests: [defaultGuestValues],
@@ -93,7 +90,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: AddInvitationData) => {
     createInvitation.mutate({
       ...data,
       eventId: event.id,

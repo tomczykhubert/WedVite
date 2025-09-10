@@ -62,26 +62,6 @@ export const invitationRouter = createTRPCRouter({
         return { success: true, data: invitation };
       }
     ),
-  // getById: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       id: z.string(),
-  //       withGuests: z.boolean().nullish(),
-  //     })
-  //   )
-  //   .query(async ({ ctx: { user, db }, input }) => {
-  //     await assertOwnerOfEvent(user.id, input.id, db);
-
-  //     const invitation = await db.invitation.findUnique({
-  //       where: {
-  //         id: input.id,
-  //       },
-  //       include: {
-  //         guests: input.withGuests ?? false,
-  //       },
-  //     });
-  //     return invitation;
-  //   }),
   update: protectedProcedure
     .input(
       z.object({
@@ -163,7 +143,9 @@ export const invitationRouter = createTRPCRouter({
       const invitations = await db.invitation.findMany({
         where: where,
         include: {
-          guests: true,
+          guests: {
+            orderBy: { id: "asc" },
+          },
         },
         take: INVITATIONS_PER_PAGE + 1,
         cursor: cursor ? { id: cursor } : undefined,

@@ -79,6 +79,7 @@
     "invalidAttendanceStatus": "Please select a valid sttendance status",
     "selectValidDate": "Select valid date",
     "minGuest": "Minimum number of guests in the invitation ({min})",
+    "notCompanionGuestNeedName": "Name is required for guests who are not companions",
     "auth": {
       "default": "An error occurred. Please try again.",
       "emailAlreadyTaken": "Given email is already taken.",
@@ -168,7 +169,20 @@
         "edit": "Edit invitation",
         "save": "Save invitation",
         "add": "Add invitation",
-        "new": "New invitation"
+        "new": "New invitation",
+        "access": {
+          "title": "Invitation Access",
+          "description": "Share the invitation with your guests using either a QR code or a direct link.",
+          "qrCode": "QR Code",
+          "link": "Link",
+          "copy": "Copy",
+          "copied": "Copied!",
+          "failedToCopy": "Failed to copy to clipboard",
+          "copyLink": "Copy link to clipboard",
+          "generatingQR": "Generating QR code...",
+          "failedToGenerateQR": "Failed to generate QR code. Please try again.",
+          "rsvpLink": "RSVP link"
+        }
       },
       "guests": {
         "guestsList": "Guests list",
@@ -203,5 +217,19 @@
         "add": "Add guest"
       }
     }
+  },
+  "rsvp": {
+    "title": "Invitation RSVP",
+    "subtitle": "Please let us know if you'll be attending",
+    "description": "Fill out the form below to confirm your attendance and provide details for each guest.",
+    "guestDetails": "Guest Details",
+    "guestName": "Guest Name",
+    "attendanceStatus": "Will you attend?",
+    "submitResponse": "Submit Response",
+    "thankYou": "Thank you for your response!",
+    "error": "Failed to submit response. Please try again.",
+    "loading": "Submitting...",
+    "expired": "This invitation has expired",
+    "notStarted": "This invitation is not active yet. RSVP will open on {date}."
   }
 }

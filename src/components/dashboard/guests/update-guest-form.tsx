@@ -10,9 +10,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { showError } from "@/lib/utils";
-import { updateGuestConfig } from "@/schemas/invitationFormConfig";
+import {
+  updateGuestConfig,
+  UpdateGuestData,
+  updateGuestSchema,
+} from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Guest } from "@prisma/client";
@@ -20,10 +23,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const formSchema = z.object(translateSchemaConfig(updateGuestConfig));
-type FormData = z.infer<typeof formSchema>;
 
 export default function UpdateGuestForm({
   guest,
@@ -47,8 +46,8 @@ export default function UpdateGuestForm({
     status: guest.status,
   };
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<UpdateGuestData>({
+    resolver: zodResolver(updateGuestSchema),
     defaultValues,
   });
 
@@ -81,7 +80,7 @@ export default function UpdateGuestForm({
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: UpdateGuestData) => {
     updateGuest.mutate({
       ...data,
       id: guest.id,

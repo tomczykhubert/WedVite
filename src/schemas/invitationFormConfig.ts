@@ -15,6 +15,11 @@ import z from "zod";
 
 export const guestConfig = [
   {
+    name: "id",
+    type: "hidden",
+    validation: z.string().cuid().nonempty(),
+  },
+  {
     name: "name",
     type: "text",
     required: false,
@@ -117,3 +122,62 @@ export const updateInvitationConfig = getFieldsByName(
   "name",
   "status"
 );
+
+export const rsvpGuestConfig = getFieldsByName(
+  guestConfig,
+  "id",
+  "name",
+  "gender",
+  "status"
+);
+
+const rsvpConfig = [
+  {
+    name: "guests",
+    type: "custom",
+    validation: z.array(z.object(translateSchemaConfig(rsvpGuestConfig))),
+  },
+] as const;
+
+export const respondRSVPConfig = getFieldsByName(rsvpConfig, "guests");
+
+export const addInvitationSchema = z
+  .object(translateSchemaConfig(addInvitationConfig))
+  .superRefine((data, ctx) => {
+    data.guests.forEach((guest, index) => {
+      if (
+        guest.type !== GuestType.COMPANION &&
+        guest.name.trim().length === 0
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: stc("notCompanionGuestNeedName"),
+          path: ["guests", index, "name"],
+        });
+      }
+    });
+  });
+
+export type AddInvitationData = z.infer<typeof addInvitationSchema>;
+
+export const addGuestSchema = z
+  .object(translateSchemaConfig(addGuestConfig))
+  .refine(
+    (data) => data.name.trim().length > 0 || data.type === GuestType.COMPANION,
+    {
+      message: stc("notCompanionGuestNeedName"),
+      path: ["name"],
+    }
+  );
+export type AddGuestData = z.infer<typeof addGuestSchema>;
+
+export const updateGuestSchema = z
+  .object(translateSchemaConfig(updateGuestConfig))
+  .refine(
+    (data) => data.name.trim().length > 0 || data.type === GuestType.COMPANION,
+    {
+      message: stc("notCompanionGuestNeedName"),
+      path: ["name"],
+    }
+  );
+export type UpdateGuestData = z.infer<typeof updateGuestSchema>;

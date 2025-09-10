@@ -1,0 +1,206 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { AutoFormField, Form } from "@/components/ui/form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import { showError } from "@/lib/utils";
+import {
+  respondRSVPConfig,
+  rsvpGuestConfig,
+} from "@/schemas/invitationFormConfig";
+import { useTRPC } from "@/trpc/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { GuestType } from "@prisma/client";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import Loader from "../base/loader";
+import { getGuestImage } from "../dashboard/guests/guest-row";
+import { InvitationWithGuests } from "../dashboard/guests/invitations-context";
+import RSVPCard from "./rsvp-card";
+
+const formSchema = z.object(translateSchemaConfig(respondRSVPConfig));
+
+type FormData = z.infer<typeof formSchema>;
+
+export default function RSVPForm({
+  invitation,
+}: {
+  invitation: InvitationWithGuests & {
+    event: {
+      name: string;
+    };
+  };
+}) {
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const validationT = useTranslations("formValidation");
+  const [mounted, setMounted] = useState(false);
+  const gT = useTranslations("dashboard.event.guests");
+  const t = useTranslations("rsvp");
+  const trpc = useTRPC();
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      guests: invitation.guests.map((guest) => ({
+        id: guest.id,
+        name: guest.name,
+        gender: guest.gender,
+        status: guest.status,
+      })),
+    },
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const submitResponse = useMutation(
+    trpc.rsvp.submitResponse.mutationOptions({
+      onSuccess: () => {
+        setSubmitted(true);
+      },
+      onError: () => {
+        showError(validationT, { key: "forms.error" });
+        toast.error(t("error"));
+      },
+      onMutate: () => {
+        setLoading(true);
+      },
+      onSettled: () => {
+        setLoading(false);
+      },
+    })
+  );
+
+  const onSubmit = (data: FormData) => {
+    submitResponse.mutate({
+      invitationId: invitation.id,
+      guests: data.guests,
+    });
+  };
+  if (submitted) {
+    return <RSVPCard message={t("thankYou")} />;
+  }
+
+  return (
+    <div className="container mx-auto max-w-2xl p-4 relative">
+      <Card className="border-b bg-accent/40">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">{t("title")}</CardTitle>
+          <CardDescription className="text-lg">
+            {invitation.event.name}
+          </CardDescription>
+          <p className="text-muted-foreground">{t("description")}</p>
+        </CardHeader>
+
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-4">
+                  {t("guestDetails")}
+                </h3>
+
+                <Tabs
+                  defaultValue={invitation.guests[0]?.id}
+                  className="w-full"
+                >
+                  <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 gap-1 h-auto mb-6">
+                    {invitation.guests.map((guest) => (
+                      <TabsTrigger
+                        key={guest.id}
+                        value={guest.id}
+                        className="flex items-center gap-2 p-3 text-sm"
+                      >
+                        <Image
+                          src={`/images/guests/${getGuestImage(guest.type, guest.gender)}.png`}
+                          alt={gT(
+                            `typeAlt.${getGuestImage(guest.type, guest.gender)}`
+                          )}
+                          width={20}
+                          height={20}
+                        />
+                        <span className="truncate">
+                          {guest.name ||
+                            gT(`guestTypes.${GuestType.COMPANION}`)}
+                        </span>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+
+                  {invitation.guests.map((guest, index) => (
+                    <TabsContent
+                      key={guest.id}
+                      value={guest.id}
+                      className="mt-0"
+                    >
+                      <Card className="border-accent">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-3">
+                            <Image
+                              src={`/images/guests/${getGuestImage(guest.type, guest.gender)}.png`}
+                              alt={gT(
+                                `typeAlt.${getGuestImage(guest.type, guest.gender)}`
+                              )}
+                              width={32}
+                              height={32}
+                            />
+                            {guest.name ||
+                              gT(`guestTypes.${GuestType.COMPANION}`)}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {rsvpGuestConfig.map((fieldConfig) => {
+                            // Skip name and gender fields for non-companion guests
+                            if (
+                              guest.type !== GuestType.COMPANION &&
+                              fieldConfig.name === "name"
+                            ) {
+                              return null;
+                            }
+
+                            return (
+                              <AutoFormField
+                                key={`${guest.id}-${fieldConfig.name}`}
+                                control={form.control}
+                                fieldConfig={fieldConfig}
+                                name={`guests.${index}.${fieldConfig.name}`}
+                              />
+                            );
+                          })}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading}
+                size="lg"
+              >
+                {loading ? t("loading") : t("submitResponse")}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+      <Loader isLoading={loading || !mounted} />
+    </div>
+  );
+}

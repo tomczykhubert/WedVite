@@ -90,3 +90,38 @@ export const assertOwnerOfGuest = async (
 const assertOwnership = (count: number) => {
   if (count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
 };
+
+export const assertEventIsAcceptingResponses = async (
+  invitationId: ID,
+  db: PrismaClient
+) => {
+  const { event } =
+    (await db.invitation.findFirst({
+      where: {
+        id: invitationId,
+      },
+      include: {
+        event: {
+          select: {
+            respondStart: true,
+            respondEnd: true,
+          },
+        },
+      },
+    })) ?? {};
+
+  if (!event) {
+    throw new TRPCError({ code: "NOT_FOUND" });
+  }
+
+  const now = new Date();
+
+  const beforeStart = event.respondStart && now < event.respondStart;
+  const afterEnd = event.respondEnd && now > event.respondEnd;
+
+  if (beforeStart || afterEnd) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+    });
+  }
+};

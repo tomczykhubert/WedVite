@@ -50,7 +50,7 @@ export default function GuestRow({
           height={32}
         />
         <div className="font-semibold max-w-[300px] whitespace-normal [overflow-wrap:anywhere] line-clamp-2">
-          {guest.name}
+          {guest.name || t(`guestTypes.${GuestType.COMPANION}`)}
         </div>
       </div>
       <div>
@@ -63,7 +63,7 @@ export default function GuestRow({
   );
 }
 
-const getGuestImage = (type: GuestType, gender: Gender): string => {
+export const getGuestImage = (type: GuestType, gender: Gender): string => {
   if (gender == Gender.UNSPECIFIED) return "unspecified";
 
   switch (type) {

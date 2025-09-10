@@ -200,24 +200,26 @@ function FormMessage({
   );
 }
 
-function AutoFormField({
+function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
   control,
   fieldConfig,
   name,
 }: {
-  control: Control;
+  control: Control<TFieldValues>;
   fieldConfig: FormFieldConfig;
-  name?: string;
+  name?: FieldPath<TFieldValues>;
 }) {
   const t = useTranslations();
-  const translatedLabel = translate(fieldConfig.label, t);
+  const translatedLabel = translate(fieldConfig.label ?? "", t);
 
   const inlineLabel = ["checkbox"].includes(fieldConfig.type);
   const ownFormControl = ["select"].includes(fieldConfig.type);
 
   if (fieldConfig.type == "custom") return;
 
-  const renderField = (field: ControllerRenderProps<FieldValues, string>) => {
+  const renderField = (
+    field: ControllerRenderProps<TFieldValues, FieldPath<TFieldValues>>
+  ) => {
     switch (fieldConfig.type) {
       case "text":
       case "number":
@@ -248,7 +250,7 @@ function AutoFormField({
         );
       case "select":
         return (
-          <FormSelect
+          <FormSelect<TFieldValues>
             {...field}
             fieldConfig={fieldConfig}
             label={translatedLabel}
@@ -258,6 +260,8 @@ function AutoFormField({
         return <CountryPicker {...field} fieldConfig={fieldConfig} />;
       case "custom":
         return <></>;
+      case "hidden":
+        return <input type="hidden" {...field} />;
       default:
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _exhaustiveCheck: never = fieldConfig.type;
@@ -268,9 +272,9 @@ function AutoFormField({
   };
 
   return (
-    <FormField
+    <FormField<TFieldValues>
       control={control}
-      name={name ? name : fieldConfig.name}
+      name={(name ? name : fieldConfig.name) as FieldPath<TFieldValues>}
       render={({ field }) => (
         <FormItem>
           <div
@@ -278,9 +282,11 @@ function AutoFormField({
               inlineLabel && "flex flex-row-reverse justify-end gap-2"
             )}
           >
-            <FormLabel required={fieldConfig.required} className="mb-2">
-              {translatedLabel}
-            </FormLabel>
+            {translatedLabel && (
+              <FormLabel required={fieldConfig.required} className="mb-2">
+                {translatedLabel}
+              </FormLabel>
+            )}
             {ownFormControl ? (
               <>{renderField(field)}</>
             ) : (
@@ -294,11 +300,11 @@ function AutoFormField({
   );
 }
 
-function FormSelect({
+function FormSelect<TFieldValues extends FieldValues = FieldValues>({
   fieldConfig,
   label,
   ...field
-}: ControllerRenderProps<FieldValues, string> & {
+}: ControllerRenderProps<TFieldValues, FieldPath<TFieldValues>> & {
   fieldConfig: FormFieldConfig;
   label?: string;
 }) {

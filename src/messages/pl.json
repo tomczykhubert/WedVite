@@ -79,6 +79,7 @@
     "invalidAttendanceStatus": "Prosze wybrać poprawny status obecności",
     "selectValidDate": "Wybierz poprawną datę",
     "minGuest": "Minimalna liczba gości w zaproszeniu ({min})",
+    "notCompanionGuestNeedName": "Nazwa jest wymagana dla gości, którzy nie są osobami towarzyszącymi",
     "auth": {
       "default": "Wystąpił błąd. Spróbuj ponownie.",
       "emailAlreadyTaken": "Podany email jest już zajęty.",
@@ -168,7 +169,20 @@
         "edit": "Edytuj zaproszenie",
         "save": "Zapisz zaproszenie",
         "add": "Dodaj zaproszenie",
-        "new": "Nowe zaproszenie"
+        "new": "Nowe zaproszenie",
+        "access": {
+          "title": "Dostęp do zaproszenia",
+          "description": "Udostępnij zaproszenie swoim gościom za pomocą kodu QR lub bezpośredniego linku.",
+          "qrCode": "Kod QR",
+          "link": "Link",
+          "copy": "Kopiuj",
+          "copied": "Skopiowano!",
+          "failedToCopy": "Nie udało się skopiować do schowka",
+          "copyLink": "Kopiuj link do schowka",
+          "generatingQR": "Generowanie kodu QR...",
+          "failedToGenerateQR": "Nie udało się wygenerować kodu QR. Spróbuj ponownie.",
+          "rsvpLink": "Link do potwierdzenia obecności"
+        }
       },
       "guests": {
         "guestsList": "Lista gości",
@@ -203,5 +217,19 @@
         "save": "Zapisz gościa"
       }
     }
+  },
+  "rsvp": {
+    "title": "Potwierdzenie uczestnictwa",
+    "subtitle": "Prosimy o potwierdzenie czy będziecie Państwo obecni",
+    "description": "Wypełnij poniższy formularz, aby potwierdzić obecność i podać szczegóły dla każdego gościa.",
+    "guestDetails": "Szczegóły gościa",
+    "guestName": "Imię i nazwisko gościa",
+    "attendanceStatus": "Czy będziesz uczestniczyć?",
+    "submitResponse": "Wyślij odpowiedź",
+    "thankYou": "Dziękujemy za odpowiedź!",
+    "error": "Nie udało się wysłać odpowiedzi. Spróbuj ponownie.",
+    "loading": "Wysyłanie...",
+    "expired": "To zaproszenie wygasło",
+    "notStarted": "To zaproszenie jeszcze nie jest aktywne. Potwierdzanie rozpocznie się {date}."
   }
 }

@@ -10,9 +10,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { showError } from "@/lib/utils";
-import { addGuestConfig } from "@/schemas/invitationFormConfig";
+import {
+  addGuestConfig,
+  AddGuestData,
+  addGuestSchema,
+} from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
 import ID from "@/types/id";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,10 +24,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const formSchema = z.object(translateSchemaConfig(addGuestConfig));
-type FormData = z.infer<typeof formSchema>;
 
 export default function AddGuestForm({
   invitationId,
@@ -47,8 +46,8 @@ export default function AddGuestForm({
     type: GuestType.ADULT,
   };
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AddGuestData>({
+    resolver: zodResolver(addGuestSchema),
     defaultValues,
   });
 
@@ -72,7 +71,7 @@ export default function AddGuestForm({
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: AddGuestData) => {
     addGuest.mutate({
       ...data,
       invitationId,

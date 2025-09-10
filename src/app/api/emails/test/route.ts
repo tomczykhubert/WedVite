@@ -6,19 +6,23 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 
 export async function POST() {
-	const t = await getTranslations("emails")
-	const cookieStore = await cookies();
-	let locale = cookieStore.get('NEXT_LOCALE')?.value || routing.defaultLocale
-	if (!hasLocale(routing.locales, locale)) {
-		locale = routing.defaultLocale
-	}
+  const t = await getTranslations("emails");
+  const cookieStore = await cookies();
+  let locale = cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
+  if (!hasLocale(routing.locales, locale)) {
+    locale = routing.defaultLocale;
+  }
 
   try {
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM as string,
       to: "tomczyk.hubert22@gmail.com",
       subject: t("verification.subject"),
-      react: EmailVerification("localhost:3000", "tomczyk.hubert22@gmail.com", locale as Locale),
+      react: EmailVerification(
+        process.env.BETTER_AUTH_URL as string,
+        "tomczyk.hubert22@gmail.com",
+        locale as Locale
+      ),
     });
 
     if (error) {

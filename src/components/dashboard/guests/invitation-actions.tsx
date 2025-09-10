@@ -9,6 +9,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import AccessDialog from "./access-dialog";
 import AddGuestForm from "./add-guest-form";
 import DeleteInvitation from "./delete-invitation";
 import { InvitationWithGuests } from "./invitations-context";
@@ -22,6 +23,7 @@ export default function InvitationActions({
   const [updateOpen, setUpdateOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [addGuestOpen, setAddGuestOpen] = useState(false);
+  const [accessOpen, setAccessOpen] = useState(false);
   const baseT = useTranslations("base");
   const t = useTranslations("dashboard.event.invitations");
   const gT = useTranslations("dashboard.event.guests");
@@ -35,6 +37,13 @@ export default function InvitationActions({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={() => {
+              setAccessOpen(true);
+            }}
+          >
+            {t("access.title")}
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               setUpdateOpen(true);
@@ -59,6 +68,11 @@ export default function InvitationActions({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AccessDialog
+        invitationId={invitation.id}
+        open={accessOpen}
+        setOpen={(value) => setAccessOpen(value)}
+      />
       <DeleteInvitation
         invitationId={invitation.id}
         open={deleteOpen}

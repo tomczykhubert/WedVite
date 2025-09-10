@@ -36,8 +36,7 @@ export const translateSchemaConfig = <T extends readonly FormFieldConfig[]>(
   const result = {} as SchemaType;
 
   for (const item of config) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    result[item.name as keyof SchemaType] = item.validation as any;
+    (result as Record<string, ZodType>)[item.name] = item.validation;
   }
 
   return result;
@@ -47,6 +46,8 @@ export function getFieldsByName<
   Schema extends readonly FormFieldConfig[],
   N extends Schema[number]["name"],
 >(schema: Schema, ...names: N[]): Extract<Schema[number], { name: N }>[] {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return schema.filter((field) => names.includes(field.name as N)) as any;
+  return schema.filter((field) => names.includes(field.name as N)) as Extract<
+    Schema[number],
+    { name: N }
+  >[];
 }

@@ -189,6 +189,5 @@ export const availableCountries = Object.values(countries.all).map(
 );
 
 function isCountry(value: unknown): value is RPNInput.Country {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return typeof value === "string" && availableCountries.includes(value as any);
+  return typeof value === "string" && availableCountries.includes(value);
 }

@@ -1,9 +1,8 @@
 "use client";
 import Loader from "@/components/base/loader";
 import { Card, CardContent } from "@/components/ui/card";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { showError } from "@/lib/utils";
-import { baseContactConfig } from "@/schemas/contactFormConfig";
+import { BaseContactData } from "@/schemas/contactFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { TRPCResponse } from "@/trpc/routers/_app";
 import ID from "@/types/id";
@@ -12,13 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FaAddressBook } from "react-icons/fa";
-import z from "zod";
 import ContactForm from "./contact-form";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const formSchema = z.object(translateSchemaConfig(baseContactConfig));
-
-type FormData = z.infer<typeof formSchema>;
 
 type AddContactFormProps = {
   eventId: ID;
@@ -51,7 +44,7 @@ export default function AddContactForm({ eventId }: AddContactFormProps) {
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: BaseContactData) => {
     createContact.mutate({
       ...data,
       eventId: eventId,

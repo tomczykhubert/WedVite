@@ -62,8 +62,8 @@ export const eventRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
-          respondStart: input.respondStart.toISOString(),
-          respondEnd: input.respondEnd.toISOString(),
+          respondStart: input.respondStart && input.respondStart.toISOString(),
+          respondEnd: input.respondEnd && input.respondEnd.toISOString(),
           notificationSettings: {
             upsert: {
               create: {

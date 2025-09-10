@@ -1,8 +1,7 @@
 "use client";
 import ActionButton from "@/components/base/button-link";
 import Loader from "@/components/base/loader";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
+import { BasePlanItemData } from "@/schemas/planItemFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { EventPlanItem } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,13 +9,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { toast } from "sonner";
-import z from "zod";
 import PlanItemForm from "./plan-item-form";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
-
-type FormData = z.infer<typeof formSchema>;
 
 type UpdatePlanItemFormProps = {
   planItem: EventPlanItem;
@@ -47,7 +40,7 @@ export default function UpdatePlanItemForm({
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: BasePlanItemData) => {
     updatePlanItem.mutate({
       ...data,
       id: planItem.id,

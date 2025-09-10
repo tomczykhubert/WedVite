@@ -1,8 +1,7 @@
 "use client";
 import ActionButton from "@/components/base/button-link";
 import Loader from "@/components/base/loader";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { baseContactConfig } from "@/schemas/contactFormConfig";
+import { BaseContactData } from "@/schemas/contactFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,13 +9,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { toast } from "sonner";
-import z from "zod";
 import ContactForm from "./contact-form";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const formSchema = z.object(translateSchemaConfig(baseContactConfig));
-
-type FormData = z.infer<typeof formSchema>;
 
 type UpdateContactFormProps = {
   contact: EventContact;
@@ -45,7 +38,7 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: BaseContactData) => {
     updateContact.mutate({
       ...data,
       id: contact.id,

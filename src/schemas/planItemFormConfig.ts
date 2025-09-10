@@ -1,6 +1,9 @@
 import { availableCountries } from "@/components/ui/country-picker";
 import { stc } from "@/i18n/utils";
-import { getFieldsByName } from "@/lib/forms/schemaTranslator";
+import {
+  getFieldsByName,
+  translateSchemaConfig,
+} from "@/lib/forms/schemaTranslator";
 import { zDate, zMaxString, zMinMaxString } from "@/lib/zod/extension";
 import z from "zod";
 
@@ -17,7 +20,7 @@ export const planItemConfig = [
     type: "text",
     required: false,
     label: stc("base.description"),
-    validation: zMaxString(),
+    validation: zMaxString().nullish(),
   },
   {
     name: "startAt",
@@ -37,7 +40,7 @@ export const planItemConfig = [
     name: "details",
     type: "text",
     label: stc("dashboard.forms.planItem.details"),
-    validation: zMaxString(1500),
+    validation: zMaxString(1500).nullish(),
   },
   {
     name: "addressLine1",
@@ -50,7 +53,7 @@ export const planItemConfig = [
     name: "addressLine2",
     type: "text",
     label: stc("base.addressLine2"),
-    validation: zMaxString(),
+    validation: zMaxString().nullish(),
   },
   {
     name: "city",
@@ -70,7 +73,7 @@ export const planItemConfig = [
     name: "region",
     type: "text",
     label: stc("base.region"),
-    validation: zMaxString(),
+    validation: zMaxString().nullish(),
   },
   {
     name: "country",
@@ -99,3 +102,9 @@ export const basePlanItemConfig = getFieldsByName(
   "region",
   "country"
 );
+
+export const basePlanItemSchema = z.object(
+  translateSchemaConfig(basePlanItemConfig)
+);
+
+export type BasePlanItemData = z.infer<typeof basePlanItemSchema>;

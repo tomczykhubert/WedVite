@@ -76,7 +76,7 @@ export const planItemRouter = createTRPCRouter({
           description: input.description,
           details: input.details,
           startAt: input.startAt.toISOString(),
-          endAt: input.endAt.toISOString(),
+          endAt: input.endAt && input.endAt.toISOString(),
           addressLine1: input.addressLine1,
           addressLine2: input.addressLine2,
           city: input.city,

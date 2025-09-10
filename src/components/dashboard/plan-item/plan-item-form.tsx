@@ -10,21 +10,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AutoFormField, Form } from "@/components/ui/form";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
+import {
+  basePlanItemConfig,
+  BasePlanItemData,
+  basePlanItemSchema,
+} from "@/schemas/planItemFormConfig";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
-
-const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
-
-type FormData = z.infer<typeof formSchema>;
 
 type PlanItemFormProps = {
-  initialValues?: Partial<z.infer<typeof formSchema>>;
-  onSubmit: (values: z.infer<typeof formSchema>) => void;
+  initialValues?: Partial<BasePlanItemData>;
+  onSubmit: (values: BasePlanItemData) => void;
   title: string;
   trigger: React.ReactElement;
   event?: Event;
@@ -39,12 +37,12 @@ export default function PlanItemForm({
   const t = useTranslations("base.forms");
   const [isOpen, setOpen] = useState(false);
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<BasePlanItemData>({
+    resolver: zodResolver(basePlanItemSchema),
     defaultValues: initialValues,
   });
 
-  const handleSubmit = (data: FormData) => {
+  const handleSubmit = (data: BasePlanItemData) => {
     onSubmit(data);
     setOpen(false);
   };

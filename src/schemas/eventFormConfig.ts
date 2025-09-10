@@ -16,14 +16,14 @@ export const eventConfig = [
     type: "datetime",
     required: true,
     label: stc("dashboard.forms.event.respondStart"),
-    validation: zDate(),
+    validation: zDate().nullish(),
   },
   {
     name: "respondEnd",
     type: "datetime",
     required: true,
     label: stc("dashboard.forms.event.respondEnd"),
-    validation: zDate(),
+    validation: zDate().nullish(),
   },
   {
     name: "onImageUpload",

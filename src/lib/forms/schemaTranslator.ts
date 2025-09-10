@@ -36,6 +36,7 @@ export const translateSchemaConfig = <T extends readonly FormFieldConfig[]>(
   const result = {} as SchemaType;
 
   for (const item of config) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     result[item.name as keyof SchemaType] = item.validation as any;
   }
 

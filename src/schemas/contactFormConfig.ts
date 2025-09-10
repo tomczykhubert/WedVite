@@ -1,5 +1,8 @@
 import { stc } from "@/i18n/utils";
-import { getFieldsByName } from "@/lib/forms/schemaTranslator";
+import {
+  getFieldsByName,
+  translateSchemaConfig,
+} from "@/lib/forms/schemaTranslator";
 import { getEnumKeys, validatePhoneNumber } from "@/lib/utils";
 import { zMaxString } from "@/lib/zod/extension";
 import { EventContactType } from "@prisma/client";
@@ -61,3 +64,9 @@ export const baseContactConfig = getFieldsByName(
   "phoneNumber",
   "contactType"
 );
+
+export const baseContactSchema = z.object(
+  translateSchemaConfig(baseContactConfig)
+);
+
+export type BaseContactData = z.infer<typeof baseContactSchema>;

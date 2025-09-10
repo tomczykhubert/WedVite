@@ -1,8 +1,7 @@
 "use client";
 import Loader from "@/components/base/loader";
 import { Card, CardContent } from "@/components/ui/card";
-import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { basePlanItemConfig } from "@/schemas/planItemFormConfig";
+import { BasePlanItemData } from "@/schemas/planItemFormConfig";
 import { useTRPC } from "@/trpc/client";
 import ID from "@/types/id";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,13 +9,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FaCalendarPlus } from "react-icons/fa";
 import { toast } from "sonner";
-import z from "zod";
 import PlanItemForm from "./plan-item-form";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const formSchema = z.object(translateSchemaConfig(basePlanItemConfig));
-
-type FormData = z.infer<typeof formSchema>;
 
 type AddPlanItemFormProps = {
   eventId: ID;
@@ -45,7 +38,7 @@ export default function AddPlanItemForm({ eventId }: AddPlanItemFormProps) {
     })
   );
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: BasePlanItemData) => {
     createPlanItem.mutate({
       ...data,
       eventId: eventId,

@@ -18,12 +18,14 @@ import {
 } from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GuestType } from "@prisma/client";
+import { AttendanceStatus, Gender, GuestType } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaQuestion } from "react-icons/fa";
+import { LuCheck, LuX } from "react-icons/lu";
 import { toast } from "sonner";
 import { z } from "zod";
 import Loader from "../base/loader";
@@ -48,7 +50,6 @@ export default function RSVPForm({
   const [submitted, setSubmitted] = useState(false);
   const validationT = useTranslations("formValidation");
   const [mounted, setMounted] = useState(false);
-  const gT = useTranslations("dashboard.event.guests");
   const t = useTranslations("rsvp");
   const trpc = useTRPC();
   const form = useForm<FormData>({
@@ -119,72 +120,78 @@ export default function RSVPForm({
                   className="w-full"
                 >
                   <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 gap-1 h-auto mb-6">
-                    {invitation.guests.map((guest) => (
-                      <TabsTrigger
-                        key={guest.id}
-                        value={guest.id}
-                        className="flex items-center gap-2 p-3 text-sm"
-                      >
-                        <Image
-                          src={`/images/guests/${getGuestImage(guest.type, guest.gender)}.png`}
-                          alt={gT(
-                            `typeAlt.${getGuestImage(guest.type, guest.gender)}`
-                          )}
-                          width={20}
-                          height={20}
-                        />
-                        <span className="truncate">
-                          {guest.name ||
-                            gT(`guestTypes.${GuestType.COMPANION}`)}
-                        </span>
-                      </TabsTrigger>
-                    ))}
+                    {invitation.guests.map((guest, index) => {
+                      const currentStatus = form.watch(
+                        `guests.${index}.status`
+                      );
+                      const currentGender = form.watch(
+                        `guests.${index}.gender`
+                      );
+                      const currentName = form.watch(`guests.${index}.name`);
+
+                      return (
+                        <TabsTrigger
+                          key={guest.id}
+                          value={guest.id}
+                          className="flex items-center justify-between gap-2 p-3 text-sm"
+                        >
+                          <GuestInfo
+                            name={currentName}
+                            gender={currentGender}
+                            status={currentStatus}
+                            type={guest.type}
+                            size="small"
+                          />
+                        </TabsTrigger>
+                      );
+                    })}
                   </TabsList>
 
-                  {invitation.guests.map((guest, index) => (
-                    <TabsContent
-                      key={guest.id}
-                      value={guest.id}
-                      className="mt-0"
-                    >
-                      <Card className="border-accent">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-3">
-                            <Image
-                              src={`/images/guests/${getGuestImage(guest.type, guest.gender)}.png`}
-                              alt={gT(
-                                `typeAlt.${getGuestImage(guest.type, guest.gender)}`
-                              )}
-                              width={32}
-                              height={32}
-                            />
-                            {guest.name ||
-                              gT(`guestTypes.${GuestType.COMPANION}`)}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          {rsvpGuestConfig.map((fieldConfig) => {
-                            // Skip name and gender fields for non-companion guests
-                            if (
-                              guest.type !== GuestType.COMPANION &&
-                              fieldConfig.name === "name"
-                            ) {
-                              return null;
-                            }
-
-                            return (
-                              <AutoFormField
-                                key={`${guest.id}-${fieldConfig.name}`}
-                                control={form.control}
-                                fieldConfig={fieldConfig}
-                                name={`guests.${index}.${fieldConfig.name}`}
+                  {invitation.guests.map((guest, index) => {
+                    const currentGender = form.watch(`guests.${index}.gender`);
+                    const currentName = form.watch(`guests.${index}.name`);
+                    const currentStatus = form.watch(`guests.${index}.status`);
+                    return (
+                      <TabsContent
+                        key={guest.id}
+                        value={guest.id}
+                        className="mt-0"
+                      >
+                        <Card className="border-accent">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-3">
+                              <GuestInfo
+                                name={currentName}
+                                gender={currentGender}
+                                status={currentStatus}
+                                type={guest.type}
                               />
-                            );
-                          })}
-                        </CardContent>
-                      </Card>
-                    </TabsContent>
-                  ))}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            {rsvpGuestConfig.map((fieldConfig) => {
+                              // Skip name and gender fields for non-companion guests
+                              if (
+                                guest.type !== GuestType.COMPANION &&
+                                fieldConfig.name === "name"
+                              ) {
+                                return null;
+                              }
+
+                              return (
+                                <AutoFormField
+                                  key={`${guest.id}-${fieldConfig.name}`}
+                                  control={form.control}
+                                  fieldConfig={fieldConfig}
+                                  name={`guests.${index}.${fieldConfig.name}`}
+                                />
+                              );
+                            })}
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+                    );
+                  })}
                 </Tabs>
               </div>
 
@@ -203,4 +210,71 @@ export default function RSVPForm({
       <Loader isLoading={loading || !mounted} />
     </div>
   );
+}
+
+function GuestInfo({
+  name,
+  gender,
+  status,
+  type,
+  size = "default",
+}: {
+  name: string;
+  gender: Gender;
+  status: AttendanceStatus;
+  type: GuestType;
+  size?: "small" | "default";
+}) {
+  const t = useTranslations("dashboard.event.guests");
+  const imageSize = size === "small" ? 20 : 32;
+
+  return (
+    <>
+      <Image
+        src={`/images/guests/${getGuestImage(type, gender)}.png`}
+        alt={t(`typeAlt.${getGuestImage(type, gender)}`)}
+        width={imageSize}
+        height={imageSize}
+      />
+      <div className="flex flex-col flex-1 min-w-0 gap-1">
+        <span className="truncate">
+          {name || t(`guestTypes.${GuestType.COMPANION}`)}
+        </span>
+        {size === "default" && (
+          <span className="text-xs text-muted-foreground">
+            {t(`guestTypes.${type}`)}
+          </span>
+        )}
+      </div>
+      <div>{getAttendanceStatusIcon(status, size)}</div>
+    </>
+  );
+}
+
+function getAttendanceStatusIcon(
+  status: AttendanceStatus,
+  size: "small" | "default" = "default"
+) {
+  switch (status) {
+    case AttendanceStatus.CONFIRMED:
+      return (
+        <LuCheck
+          className={`text-green-500 ${size === "small" ? "size-4" : "size-5"}`}
+        />
+      );
+    case AttendanceStatus.DECLINED:
+      return (
+        <LuX
+          className={`text-red-500 ${size === "small" ? "size-4" : "size-5"}`}
+        />
+      );
+    case AttendanceStatus.PENDING:
+      return (
+        <FaQuestion
+          className={`text-yellow-500 ${size === "small" ? "size-3" : "size-4"}`}
+        />
+      );
+    default:
+      return null;
+  }
 }

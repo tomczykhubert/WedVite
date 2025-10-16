@@ -9,8 +9,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { VariantProps } from "class-variance-authority";
 import { useTranslations } from "next-intl";
 import React from "react";
+import { buttonVariants } from "../ui/button";
 
 interface ModalProps {
   header: string;
@@ -21,6 +23,7 @@ interface ModalProps {
   trigger?: React.ReactElement;
   onConfirm: () => void;
   onCancel?: () => void;
+  confirmVariant?:  VariantProps<typeof buttonVariants>["variant"]
 }
 
 const ConfirmModal: React.FC<ModalProps> = ({
@@ -32,6 +35,7 @@ const ConfirmModal: React.FC<ModalProps> = ({
   trigger,
   onConfirm,
   onCancel,
+  confirmVariant
 }) => {
   const t = useTranslations("base");
 
@@ -47,7 +51,7 @@ const ConfirmModal: React.FC<ModalProps> = ({
           <AlertDialogCancel onClick={onCancel}>
             {cancel ? cancel : t("no")}
           </AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>
+          <AlertDialogAction onClick={onConfirm} variant={confirmVariant}>
             {confirm ? confirm : t("yes")}
           </AlertDialogAction>
         </AlertDialogFooter>

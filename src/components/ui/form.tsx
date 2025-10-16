@@ -21,7 +21,7 @@ import {
   isSerializedTranslationCall,
   translate,
 } from "@/i18n/utils";
-import { FormFieldConfig } from "@/lib/forms/schemaTranslator";
+import { FormFieldConfig, FormSelectOption } from "@/lib/forms/schemaTranslator";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { Checkbox } from "./checkbox";
@@ -38,6 +38,11 @@ import {
   SelectValue,
 } from "./select";
 import { Textarea } from "./textarea";
+import { ColorPicker, ColorPickerAlpha, ColorPickerEyeDropper, ColorPickerFormat, ColorPickerHue, ColorPickerOutput, ColorPickerSelection } from "./color-picker";
+import { getAttendanceStatusIcon } from "../dashboard/guests/partials/attendance-status-icon";
+import { AttendanceStatus, Gender, InvitationStatus } from "@prisma/client";
+import { getInvitationStatusIcon } from "../dashboard/guests/partials/invitation-status-icon";
+import { getGenderIcon } from "../dashboard/guests/partials/gender-icon";
 
 const Form = FormProvider;
 
@@ -204,10 +209,12 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
   control,
   fieldConfig,
   name,
+  valuesOverride
 }: {
   control: Control<TFieldValues>;
   fieldConfig: FormFieldConfig;
   name?: FieldPath<TFieldValues>;
+  valuesOverride?: FormSelectOption[];
 }) {
   const t = useTranslations();
   const translatedLabel = translate(fieldConfig.label ?? "", t);
@@ -217,6 +224,40 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
 
   if (fieldConfig.type == "custom") return;
 
+  const renderedValues = valuesOverride ?? fieldConfig.values?.map(item => {
+    switch (fieldConfig.name) {
+      case "attendanceStatus":
+        return {
+          ...item,
+          label: (
+            <div className="flex items-center gap-2">
+              {getAttendanceStatusIcon(item.value as AttendanceStatus)} <span>{t(`dashboard.event.guests.status.${item.name}`)}</span>
+            </div>
+          ),
+        };
+      case "invitationStatus":
+        return {
+          ...item,
+          label: (
+            <div className="flex items-center gap-2">
+              {getInvitationStatusIcon(item.value as InvitationStatus)} <span>{t(`dashboard.event.invitations.status.${item.name}`)}</span>
+            </div>
+          ),
+        };
+      case "gender":
+        return {
+          ...item,
+          label: (
+            <div className="flex items-center gap-2">
+              {getGenderIcon(item.value as Gender)} <span>{t(`base.genderTypes.${item.name}`)}</span>
+            </div>
+          ),
+        };
+      default:
+        return item; // fallback dla zwykłych selectów
+    }
+  });
+
   const renderField = (
     field: ControllerRenderProps<TFieldValues, FieldPath<TFieldValues>>
   ) => {
@@ -225,6 +266,7 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
       case "number":
       case "password":
       case "email":
+      case "color":
         return (
           <Input
             type={fieldConfig.type}
@@ -252,12 +294,32 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
         return (
           <FormSelect<TFieldValues>
             {...field}
-            fieldConfig={fieldConfig}
+            fieldConfig={{
+              ...fieldConfig,
+              values: renderedValues,
+            }}
             label={translatedLabel}
           />
         );
       case "country_select":
-        return <CountryPicker {...field} fieldConfig={fieldConfig} />;
+        return
+      case "color":
+        return (
+          <ColorPicker className="max-w-sm rounded-md border bg-background p-4 shadow-sm">
+            <ColorPickerSelection />
+            <div className="flex items-center gap-4">
+              <ColorPickerEyeDropper />
+              <div className="grid w-full gap-1">
+                <ColorPickerHue />
+                <ColorPickerAlpha />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <ColorPickerOutput />
+              <ColorPickerFormat />
+            </div>
+          </ColorPicker>
+        )
       case "custom":
         return <></>;
       case "hidden":
@@ -309,26 +371,29 @@ function FormSelect<TFieldValues extends FieldValues = FieldValues>({
   label?: string;
 }) {
   const t = useTranslations();
+  if (fieldConfig.needValues && !fieldConfig.values) {
+    throw new Error("Select field must have values");
+  }
   return (
     <Select
       onValueChange={(value) => field.onChange(value == "_null" ? null : value)}
       defaultValue={field.value}
     >
       <FormControl>
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full" data-size="auto">
           <SelectValue placeholder={label} />
         </SelectTrigger>
       </FormControl>
       <SelectContent>
         {!fieldConfig.required && (
           <SelectItem value="_null" className="opacity-50">
-            {t("base.forms.selectEmpty")}
+            {t("base.forms.selectNone")}
           </SelectItem>
         )}
         {fieldConfig.values &&
           fieldConfig.values.map((item) => (
             <SelectItem key={item.value} value={item.value}>
-              {translate(item.name, t)}
+              {item.label ?? translate(item.name ?? "", t)}
             </SelectItem>
           ))}
       </SelectContent>

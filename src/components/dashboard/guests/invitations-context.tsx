@@ -7,10 +7,12 @@ import {
   Guest,
   Invitation,
   InvitationStatus,
+  Menu,
 } from "@prisma/client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { createContext, useContext, useEffect, useState } from "react";
-export type InvitationWithGuests = Invitation & { guests: Guest[] };
+export type GuestWithMenu = Guest & {menu: Menu | null}
+export type InvitationWithGuests = Invitation & { guests: GuestWithMenu[] };
 
 interface InvitationsState {
   name?: string;

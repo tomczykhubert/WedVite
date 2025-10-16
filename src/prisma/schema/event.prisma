@@ -5,6 +5,7 @@ model Event {
   eventContacts        EventContact[]
   notificationSettings NotificationSettings?
   invitations          Invitation[]
+  menu                 Menu[]
   respondStart         DateTime?
   respondEnd           DateTime?
   createdAt            DateTime              @default(now())

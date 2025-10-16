@@ -27,6 +27,7 @@ export const eventRouter = createTRPCRouter({
         withNotificationSettings: z.boolean().nullish(),
         withContacts: z.boolean().nullish(),
         withPlanItems: z.boolean().nullish(),
+        withMenu: z.boolean().nullish(),
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
@@ -41,6 +42,13 @@ export const eventRouter = createTRPCRouter({
           notificationSettings: input.withNotificationSettings ?? false,
           eventContacts: input.withContacts ?? false,
           eventPlanItems: input.withPlanItems ?? false,
+          menu: input.withMenu
+            ? {
+              orderBy: {
+                id: "asc"
+              },
+            }
+            : false,
         },
       });
       return event;

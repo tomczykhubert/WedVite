@@ -51,6 +51,23 @@ export const assertOwnerOfPlanItem = async (
   assertOwnership(count);
 };
 
+export const assertOwnerOfMenu = async (
+  userId: ID,
+  menuId: ID,
+  db: PrismaClient
+) => {
+  const count = await db.menu.count({
+    where: {
+      id: menuId,
+      event: {
+        userId: userId,
+      },
+    },
+  });
+
+  assertOwnership(count);
+};
+
 export const assertOwnerOfInvitation = async (
   userId: ID,
   invitationId: ID,

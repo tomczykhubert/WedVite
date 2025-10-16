@@ -18,8 +18,8 @@ model Guest {
   status       AttendanceStatus
   gender       Gender
   type         GuestType
-  // menuId       String
-  // menu         Menu
+  menuId       String?
+  menu         Menu?            @relation(fields: [menuId], references: [id], onDelete: SetNull)
   respondedAt  DateTime?
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
@@ -29,15 +29,16 @@ model Guest {
   @@map("guest")
 }
 
-// model Menu {
-//   id      String   @id @default(cuid())
-//   name    String
-//   icon    MenuIcon
-//   color   String
-//   guests  Guests[]
-//   eventId String
-//   event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-// }
+model Menu {
+  id      String   @id @default(cuid())
+  name    String
+  color   String
+  default Boolean  @default(false)
+  system  Boolean  @default(false)
+  guests  Guest[]
+  eventId String
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
 
 enum Gender {
   MALE

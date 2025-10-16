@@ -38,9 +38,10 @@ export default function InvitationsTable() {
     <>
       <div className="overflow-auto">
         <div className="min-w-max">
-          <div className="grid grid-cols-[minmax(150px,auto)_150px_90px] font-bold w-full [&>*]:px-4 [&>*]:py-2">
+          <div className="grid grid-cols-[minmax(150px,auto)__90px_90px_90px] font-bold w-full [&>*]:px-4 [&>*]:py-2">
             <div>{baseT("name")}</div>
-            <div>{baseT("status")}</div>
+            <div className="text-center">{t("menu")}</div>
+            <div className="text-center">{baseT("status")}</div>
             <div className="text-center">{baseT("actions")}</div>
           </div>
 

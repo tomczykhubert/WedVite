@@ -28,6 +28,7 @@
     "region": "Region",
     "country": "Kraj",
     "name": "Nazwa",
+    "color": "Kolor",
     "description": "Opis",
     "gender": "Płeć",
     "genderTypes": {
@@ -71,6 +72,7 @@
     "minLength": "Minimalna długość to {min} znaków.",
     "maxLength": "Maksymalna długość to {max} znaków.",
     "passwordMismatch": "Hasła muszą się zgadzać.",
+    "invalidColor": "Nieprawidłowy format koloru. Musi to być 7-znakowy kod szesnastkowy (np. #RRGGBB).",
     "invalidPhoneNumber": "Proszę podać prawidłowy numer telefonu.",
     "invalidCountry": "Proszę podać prawidłowy kraj.",
     "invalidContactType": "Proszę wybrać prawidłowy typ kontaktu.",
@@ -79,6 +81,7 @@
     "invalidAttendanceStatus": "Prosze wybrać poprawny status obecności",
     "selectValidDate": "Wybierz poprawną datę",
     "minGuest": "Minimalna liczba gości w zaproszeniu ({min})",
+    "minMenu": "Minimalna liczba menu ({min})",
     "notCompanionGuestNeedName": "Nazwa jest wymagana dla gości, którzy nie są osobami towarzyszącymi",
     "auth": {
       "default": "Wystąpił błąd. Spróbuj ponownie.",
@@ -92,7 +95,8 @@
     },
     "trpcError": {
       "maxPlanItemsReached": "Osiągnięto maksymalną liczbę punktów planu ({max}).",
-      "maxContactsReached": "Osiągnięto maksymalną liczbę kontaków ({max})."
+      "maxContactsReached": "Osiągnięto maksymalną liczbę kontaków ({max}).",
+      "maxMenuReached": "Osiągnięto maksymalną liczbę menu ({max})."
     }
   },
   "emails": {
@@ -117,7 +121,32 @@
         "respondStart": "Data rozpoczęcia potwierdzeń obecności",
         "respondEnd": "Data zakończenia potwierdzeń obecności",
         "onImageUpload": "Powiadomienia podczas dodawania zdjęć",
-        "onAttendanceRespond": "Powiadomienia podczas potwierdzania obecnościć"
+        "onAttendanceRespond": "Powiadomienia podczas potwierdzania obecności"
+      },
+      "menu": {
+        "add": "Dodaj menu",
+        "update": "Zaktualizuj menu",
+        "delete": {
+          "success": "Menu usunięte pomyślnie",
+          "header": "Usuń menu",
+          "message": "Czy jesteś pewien że chcesz usunąć to menu?"
+        },
+        "default": {
+          "success": "Menu ustawione jako domyślne",
+          "header": "Ustaw jako domyślne",
+          "message": "Czy jesteś pewien że chcesz ustawić to menu jako domyślne? Tylko jedno menu może być domyślne."
+        },
+        "system": {
+          "success": "Menu systemowe dodane pomyślnie",
+          "header": "Dodaj menu systemowe",
+          "message": "Tak akcja następujące menu systemowe do Twojego wydarzenia: {menus}. Czy chcesz kontynuować?",
+          "types": {
+            "MEAT": "Mięsne",
+            "VEGETARIAN": "Wegetariańskie",
+            "VEGAN": "Wegańskie",
+            "KIDS": "Dziecięce"
+          }
+        }
       },
       "contact": {
         "add": "Dodaj kontakt",
@@ -207,6 +236,7 @@
           "COMPANION": "Osoba towarzysząca",
           "CHILD": "Dziecko"
         },
+        "menu": "Menu",
         "delete": {
           "header": "Usuń gościa",
           "message": "Czy jesteś pewien że chcesz usunąć tego gościa?"

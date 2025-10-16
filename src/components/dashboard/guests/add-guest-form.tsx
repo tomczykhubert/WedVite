@@ -24,6 +24,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
+import { useParams } from "next/navigation";
+import Loader from "@/components/base/loader";
 
 export default function AddGuestForm({
   invitationId,
@@ -44,6 +47,7 @@ export default function AddGuestForm({
     name: "",
     gender: Gender.UNSPECIFIED,
     type: GuestType.ADULT,
+    menuId: null,
   };
 
   const form = useForm<AddGuestData>({
@@ -51,6 +55,7 @@ export default function AddGuestForm({
     defaultValues,
   });
 
+  const { id: eventId } = useParams();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const addGuest = useMutation(
@@ -70,6 +75,9 @@ export default function AddGuestForm({
       },
     })
   );
+
+  const { options: menuOptions, isPending } = useEventMenuOptions(eventId as string);
+    if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   const onSubmit = (data: AddGuestData) => {
     addGuest.mutate({
@@ -111,6 +119,9 @@ export default function AddGuestForm({
                       key={fieldConfig.name}
                       control={form.control}
                       fieldConfig={fieldConfig}
+                      valuesOverride={
+                        fieldConfig.name === "menuId" ? menuOptions : undefined
+                      }
                     />
                   ))}
                 </div>

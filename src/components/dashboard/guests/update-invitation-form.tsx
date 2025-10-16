@@ -42,7 +42,7 @@ export default function UpdateInvitationForm({
 
   const defaultValues = {
     name: invitation.name,
-    status: invitation.status,
+    invitationStatus: invitation.status,
   };
 
   const form = useForm<FormData>({
@@ -53,7 +53,7 @@ export default function UpdateInvitationForm({
   useEffect(() => {
     form.reset({
       name: invitation.name,
-      status: invitation.status,
+      invitationStatus: invitation.status,
     });
   }, [invitation, form]);
 

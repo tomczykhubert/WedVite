@@ -34,6 +34,8 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { useInvitations } from "./invitations-context";
+import Loader from "@/components/base/loader";
+import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
 
 export default function AddInvitationForm({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
@@ -45,7 +47,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
   const defaultGuestValues = {
     name: "",
     gender: Gender.UNSPECIFIED,
-    type: GuestType.ADULT,
+    guestType: GuestType.ADULT,
   };
   const form = useForm<AddInvitationData>({
     resolver: zodResolver(addInvitationSchema),
@@ -89,6 +91,9 @@ export default function AddInvitationForm({ event }: { event: Event }) {
       },
     })
   );
+
+  const { options: menuOptions, isPending } = useEventMenuOptions(event.id);
+  if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   const onSubmit = (data: AddInvitationData) => {
     createInvitation.mutate({
@@ -150,6 +155,9 @@ export default function AddInvitationForm({ event }: { event: Event }) {
                                   key={fieldConfig.name}
                                   control={form.control}
                                   fieldConfig={fieldConfig}
+                                  valuesOverride={
+                                    fieldConfig.name === "menuId" ? menuOptions : undefined
+                                  }
                                   name={`guests.${index}.${fieldConfig.name}`}
                                 />
                               ))}

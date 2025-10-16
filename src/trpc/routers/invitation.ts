@@ -3,6 +3,7 @@ import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import {
   assertOwnerOfEvent,
   assertOwnerOfInvitation,
+  assertOwnerOfMenu,
 } from "@/lib/prisma/eventUtils";
 import {
   addInvitationConfig,
@@ -37,14 +38,24 @@ export const invitationRouter = createTRPCRouter({
         await assertOwnerOfEvent(user.id, input.eventId, db);
         const guests = input.guests.map(
           (
-            guest: Pick<Guest, "name" | "gender" | "type">
-          ): Pick<Guest, "name" | "gender" | "type" | "status"> => {
+            guest
+          ): Pick<Guest, "name" | "gender" | "type" | "status" | "menuId"> => {
             return {
-              ...guest,
+              name: guest.name,
+              gender: guest.gender,
+              type: guest.guestType,
               status: AttendanceStatus.PENDING,
+              menuId: guest.menuId ?? null
             };
           }
         );
+
+        for (const guest of guests) {
+          if(guest.menuId) {
+            await assertOwnerOfMenu(user.id, guest.menuId, db);
+          }
+        }
+
         const invitation = await db.invitation.create({
           data: {
             name: input.name,
@@ -78,7 +89,7 @@ export const invitationRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
-          status: input.status,
+          status: input.invitationStatus,
         },
       });
     }),
@@ -145,6 +156,9 @@ export const invitationRouter = createTRPCRouter({
         include: {
           guests: {
             orderBy: { id: "asc" },
+            include: {
+              menu: true,
+            }
           },
         },
         take: INVITATIONS_PER_PAGE + 1,

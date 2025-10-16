@@ -55,7 +55,8 @@ export const rsvpRouter = createTRPCRouter({
             data: {
               name: guest.name,
               gender: guest.gender,
-              status: guest.status,
+              status: guest.attendanceStatus,
+              menuId: guest.menuId ?? null,
               respondedAt: new Date(),
             },
           })

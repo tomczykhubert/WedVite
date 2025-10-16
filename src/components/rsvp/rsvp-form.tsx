@@ -24,14 +24,14 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaQuestion } from "react-icons/fa";
-import { LuCheck, LuX } from "react-icons/lu";
 import { toast } from "sonner";
 import { z } from "zod";
 import Loader from "../base/loader";
 import { getGuestImage } from "../dashboard/guests/guest-row";
 import { InvitationWithGuests } from "../dashboard/guests/invitations-context";
 import RSVPCard from "./rsvp-card";
+import { getAttendanceStatusIcon } from "../dashboard/guests/partials/attendance-status-icon";
+import { useEventMenuOptions } from "../dashboard/event/menu/use-event-menu-options";
 
 const formSchema = z.object(translateSchemaConfig(respondRSVPConfig));
 
@@ -59,7 +59,8 @@ export default function RSVPForm({
         id: guest.id,
         name: guest.name,
         gender: guest.gender,
-        status: guest.status,
+        attendanceStatus: guest.status,
+        menuId: guest.menuId,
       })),
     },
   });
@@ -85,6 +86,9 @@ export default function RSVPForm({
       },
     })
   );
+
+  const { options: menuOptions, isPending } = useEventMenuOptions(invitation.eventId);
+  if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   const onSubmit = (data: FormData) => {
     submitResponse.mutate({
@@ -119,10 +123,10 @@ export default function RSVPForm({
                   defaultValue={invitation.guests[0]?.id}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 gap-1 h-auto mb-6">
+                  <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 gap-1 h-auto mb-6 bg-transparent">
                     {invitation.guests.map((guest, index) => {
                       const currentStatus = form.watch(
-                        `guests.${index}.status`
+                        `guests.${index}.attendanceStatus`
                       );
                       const currentGender = form.watch(
                         `guests.${index}.gender`
@@ -133,7 +137,8 @@ export default function RSVPForm({
                         <TabsTrigger
                           key={guest.id}
                           value={guest.id}
-                          className="flex items-center justify-between gap-2 p-3 text-sm"
+                          className="flex items-center justify-between gap-2 p-3 text-sm data-[state=inactive]:bg-gray-100 data-[state=inactive]:hover:bg-background data-[state=inactive]:border-input dark:data-[state=active]:bg-input/50 dark:data-[state=inactive]:bg-input/10 dark:data-[state=inactive]:hover:bg-input/50"
+
                         >
                           <GuestInfo
                             name={currentName}
@@ -150,14 +155,14 @@ export default function RSVPForm({
                   {invitation.guests.map((guest, index) => {
                     const currentGender = form.watch(`guests.${index}.gender`);
                     const currentName = form.watch(`guests.${index}.name`);
-                    const currentStatus = form.watch(`guests.${index}.status`);
+                    const currentStatus = form.watch(`guests.${index}.attendanceStatus`);
                     return (
                       <TabsContent
                         key={guest.id}
                         value={guest.id}
                         className="mt-0"
                       >
-                        <Card className="border-accent">
+                        <Card className="border-accent bg-background dark:bg-muted/50">
                           <CardHeader>
                             <CardTitle className="flex items-center gap-3">
                               <GuestInfo
@@ -184,6 +189,9 @@ export default function RSVPForm({
                                   control={form.control}
                                   fieldConfig={fieldConfig}
                                   name={`guests.${index}.${fieldConfig.name}`}
+                                  valuesOverride={
+                                    fieldConfig.name === "menuId" ? menuOptions : undefined
+                                  }
                                 />
                               );
                             })}
@@ -249,32 +257,4 @@ function GuestInfo({
       <div>{getAttendanceStatusIcon(status, size)}</div>
     </>
   );
-}
-
-function getAttendanceStatusIcon(
-  status: AttendanceStatus,
-  size: "small" | "default" = "default"
-) {
-  switch (status) {
-    case AttendanceStatus.CONFIRMED:
-      return (
-        <LuCheck
-          className={`text-green-500 ${size === "small" ? "size-4" : "size-5"}`}
-        />
-      );
-    case AttendanceStatus.DECLINED:
-      return (
-        <LuX
-          className={`text-red-500 ${size === "small" ? "size-4" : "size-5"}`}
-        />
-      );
-    case AttendanceStatus.PENDING:
-      return (
-        <FaQuestion
-          className={`text-yellow-500 ${size === "small" ? "size-3" : "size-4"}`}
-        />
-      );
-    default:
-      return null;
-  }
 }

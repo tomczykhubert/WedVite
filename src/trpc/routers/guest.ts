@@ -2,6 +2,7 @@ import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import {
   assertOwnerOfGuest,
   assertOwnerOfInvitation,
+  assertOwnerOfMenu,
 } from "@/lib/prisma/eventUtils";
 import {
   addGuestConfig,
@@ -21,14 +22,17 @@ export const guestRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx: { user, db }, input }) => {
       await assertOwnerOfInvitation(user.id, input.invitationId, db);
+      if (input.menuId)
+        await assertOwnerOfMenu(user.id, input.menuId, db);
 
       const invitation = await db.guest.create({
         data: {
           name: input.name,
           gender: input.gender,
-          type: input.type,
+          type: input.guestType,
           status: AttendanceStatus.PENDING,
           invitationId: input.invitationId,
+          menuId: input.menuId ?? null,
         },
       });
 
@@ -43,6 +47,8 @@ export const guestRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx: { user, db }, input }) => {
       await assertOwnerOfGuest(user.id, input.id, db);
+      if (input.menuId)
+        await assertOwnerOfMenu(user.id, input.menuId, db);
 
       return db.guest.update({
         where: {
@@ -51,8 +57,9 @@ export const guestRouter = createTRPCRouter({
         data: {
           name: input.name,
           gender: input.gender,
-          type: input.type,
-          status: input.status,
+          type: input.guestType,
+          status: input.attendanceStatus,
+          menuId: input.menuId ?? null,
         },
       });
     }),

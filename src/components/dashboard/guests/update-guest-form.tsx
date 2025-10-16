@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/base/loader";
 import UnsavedChangesModal from "@/components/base/unsaved-changes-modal";
 import { Button } from "@/components/ui/button";
 import { AutoFormField, Form } from "@/components/ui/form";
@@ -18,11 +19,14 @@ import {
 } from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Guest } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Guest, Menu } from "@prisma/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { IoFastFoodSharp } from "react-icons/io5";
+import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
 
 export default function UpdateGuestForm({
   guest,
@@ -42,8 +46,9 @@ export default function UpdateGuestForm({
   const defaultValues = {
     name: guest.name,
     gender: guest.gender,
-    type: guest.type,
-    status: guest.status,
+    guestType: guest.type,
+    attendanceStatus: guest.status,
+    menuId: guest.menuId,
   };
 
   const form = useForm<UpdateGuestData>({
@@ -55,12 +60,15 @@ export default function UpdateGuestForm({
     form.reset({
       name: guest.name,
       gender: guest.gender,
-      type: guest.type,
-      status: guest.status,
+      guestType: guest.type,
+      attendanceStatus: guest.status,
+      menuId: guest.menuId,
     });
   }, [guest, form]);
 
+  const { id: eventId } = useParams();
   const trpc = useTRPC();
+
   const queryClient = useQueryClient();
   const updateGuest = useMutation(
     trpc.guest.update.mutationOptions({
@@ -79,6 +87,8 @@ export default function UpdateGuestForm({
       },
     })
   );
+  const { options: menuOptions, isPending } = useEventMenuOptions(eventId as string);
+  if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   const onSubmit = (data: UpdateGuestData) => {
     updateGuest.mutate({
@@ -120,6 +130,9 @@ export default function UpdateGuestForm({
                       key={fieldConfig.name}
                       control={form.control}
                       fieldConfig={fieldConfig}
+                      valuesOverride={
+                        fieldConfig.name === "menuId" ? menuOptions : undefined
+                      }
                     />
                   ))}
                 </div>

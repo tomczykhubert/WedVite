@@ -4,17 +4,20 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import GuestActions from "./guest-actions";
 import { AttendanceStatusBadge } from "./invitations-badges";
-import { InvitationWithGuests, useInvitations } from "./invitations-context";
+import { GuestWithMenu, InvitationWithGuests, useInvitations } from "./invitations-context";
+import { IoFastFoodSharp } from "react-icons/io5";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function GuestRow({
   guest,
   invitation,
 }: {
-  guest: Guest;
+  guest: GuestWithMenu;
   invitation: InvitationWithGuests;
 }) {
   const { filters } = useInvitations();
   const t = useTranslations("dashboard.event.guests");
+  const tMenu = useTranslations("dashboard.forms.menu.system.types");
   const isGuestSearched = (invitation: Invitation, guest: Guest) => {
     const nameFilter = filters.name?.toLowerCase();
     const attendanceFilter = filters.attendanceStatus;
@@ -38,7 +41,7 @@ export default function GuestRow({
   return (
     <div
       className={cn(
-        "grid grid-cols-[minmax(150px,auto)_150px_90px] border-t border-accent items-center min-w-max [&>*]:px-4 [&>*]:py-2",
+        "grid grid-cols-[minmax(150px,auto)_90px_90px_90px] border-t border-accent items-center min-w-max [&>*]:px-4 [&>*]:py-2",
         !isGuestSearched(invitation, guest) && "opacity-50"
       )}
     >
@@ -53,7 +56,23 @@ export default function GuestRow({
           {guest.name || t(`guestTypes.${GuestType.COMPANION}`)}
         </div>
       </div>
-      <div>
+      <div className="flex items-center justify-center">
+        {guest.menu &&
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="rounded-full flex items-center justify-center p-2 aspect-square" style={{ backgroundColor: guest.menu.color }}>
+                  <IoFastFoodSharp className="text-white"/>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                {guest.menu.system ? tMenu(guest.menu.name) : guest.menu.name}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        }
+      </div>
+      <div className="text-center">
         <AttendanceStatusBadge status={guest.status} />
       </div>
       <div className="flex justify-center">
@@ -76,3 +95,5 @@ export const getGuestImage = (type: GuestType, gender: Gender): string => {
       return "unspecified";
   }
 };
+
+

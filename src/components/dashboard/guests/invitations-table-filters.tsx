@@ -73,12 +73,12 @@ function InvitationStatusFilter({
 
   return (
     <div>
-      <p className="text-sm">{t("invitationStatus")}:</p>
+      <p className="text-md">{t("invitationStatus")}:</p>
       <div className="flex items-center gap-2">
         {getEnumKeys(InvitationStatus).map((status) => (
           <InvitationStatusBadge
             status={status}
-            className={cn("cursor-pointer", value != status && "opacity-50")}
+            className={cn("cursor-pointer p-2 rounded border border-muted dark:border-accent", value == status && "bg-muted dark:bg-accent")}
             onClick={() => {
               if (value == status) {
                 setValue(undefined);
@@ -107,12 +107,12 @@ function AttendanceStatusFilter({
 
   return (
     <div>
-      <p className="text-sm">{t("attendanceStatus")}:</p>
+      <p className="text-md">{t("attendanceStatus")}:</p>
       <div className="flex items-center gap-2">
         {getEnumKeys(AttendanceStatus).map((status) => (
           <AttendanceStatusBadge
             status={status}
-            className={cn("cursor-pointer", value != status && "opacity-50")}
+            className={cn("cursor-pointer p-2 rounded border border-muted dark:border-accent", value == status && "bg-muted dark:bg-accent")}
             onClick={() => {
               if (value == status) {
                 setValue(undefined);

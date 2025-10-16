@@ -2,6 +2,9 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { AttendanceStatus, InvitationStatus } from "@prisma/client";
 import { useTranslations } from "next-intl";
+import { getAttendanceStatusIcon } from "./partials/attendance-status-icon";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getInvitationStatusIcon } from "./partials/invitation-status-icon";
 
 function getInvitationBadgeVariant(status: InvitationStatus) {
   switch (status) {
@@ -27,13 +30,16 @@ export function InvitationStatusBadge({
 
   return (
     <>
-      <Badge
-        className={cn(className)}
-        variant={getInvitationBadgeVariant(status)}
-        onClick={() => onClick?.(status)}
-      >
-        {t(status)}
-      </Badge>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger onClick={() => onClick?.(status)} className={cn(className)}>
+            {getInvitationStatusIcon(status)}
+          </TooltipTrigger>
+          <TooltipContent>
+            {t(status)}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </>
   );
 }
@@ -62,13 +68,16 @@ export function AttendanceStatusBadge({
 
   return (
     <>
-      <Badge
-        className={cn(className)}
-        variant={getAttendanceBadgeVariant(status)}
-        onClick={() => onClick?.(status)}
-      >
-        {t(status)}
-      </Badge>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger onClick={() => onClick?.(status)} className={cn(className)}>
+            {getAttendanceStatusIcon(status)}
+          </TooltipTrigger>
+          <TooltipContent>
+            {t(status)}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </>
   );
 }

@@ -55,7 +55,7 @@ export default function PlanItemForm({
   return (
     <Dialog open={isOpen} onOpenChange={openChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] overflow-y-scroll max-h-[90vh]">
+      <DialogContent className="sm:max-w-[425px] overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>

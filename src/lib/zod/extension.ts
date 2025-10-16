@@ -32,3 +32,6 @@ export const zDate = () =>
     required_error: stc("required"),
     invalid_type_error: stc("selectValidDate"),
   });
+
+export const zColorHex = () =>
+  z.string().regex(/^#[0-9a-fA-F]{6}$/, stc("invalidColor"));

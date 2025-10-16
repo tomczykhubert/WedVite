@@ -34,11 +34,11 @@ export const guestConfig = [
     validation: z.nativeEnum(Gender, { message: stc("invalidGender") }),
     values: getEnumKeys(Gender).map((key) => ({
       value: key,
-      name: stc(`base.genderTypes.${key}`),
+      name: key,
     })),
   },
   {
-    name: "type",
+    name: "guestType",
     type: "select",
     required: true,
     label: stc("dashboard.event.guests.type"),
@@ -49,7 +49,7 @@ export const guestConfig = [
     })),
   },
   {
-    name: "status",
+    name: "attendanceStatus",
     type: "select",
     required: true,
     label: stc("dashboard.event.guests.attendanceStatus"),
@@ -58,8 +58,16 @@ export const guestConfig = [
     }),
     values: getEnumKeys(AttendanceStatus).map((key) => ({
       value: key,
-      name: stc(`dashboard.event.guests.status.${key}`),
+      name: key,
     })),
+  },
+  {
+    name: "menuId",
+    type: "select",
+    label: stc("dashboard.event.guests.menu"),
+    required: false,
+    validation: z.string().nullable().optional(),
+    needValues: true,
   },
 ] as const;
 
@@ -67,15 +75,17 @@ export const addGuestConfig = getFieldsByName(
   guestConfig,
   "name",
   "gender",
-  "type"
+  "guestType",
+  "menuId"
 );
 
 export const updateGuestConfig = getFieldsByName(
   guestConfig,
   "name",
   "gender",
-  "type",
-  "status"
+  "guestType",
+  "attendanceStatus",
+  "menuId"
 );
 
 const MIN_GUEST = 1;
@@ -97,7 +107,7 @@ export const invitationConfig = [
       .min(MIN_GUEST, stc("minGuest", { min: MIN_GUEST })),
   },
   {
-    name: "status",
+    name: "invitationStatus",
     type: "select",
     required: true,
     label: stc("dashboard.event.invitations.invitationStatus"),
@@ -106,7 +116,7 @@ export const invitationConfig = [
     }),
     values: getEnumKeys(InvitationStatus).map((key) => ({
       value: key,
-      name: stc(`dashboard.event.invitations.status.${key}`),
+      name: key,
     })),
   },
 ] as const;
@@ -120,7 +130,7 @@ export const addInvitationConfig = getFieldsByName(
 export const updateInvitationConfig = getFieldsByName(
   invitationConfig,
   "name",
-  "status"
+  "invitationStatus"
 );
 
 export const rsvpGuestConfig = getFieldsByName(
@@ -128,7 +138,8 @@ export const rsvpGuestConfig = getFieldsByName(
   "id",
   "name",
   "gender",
-  "status"
+  "attendanceStatus",
+  "menuId"
 );
 
 const rsvpConfig = [
@@ -146,7 +157,7 @@ export const addInvitationSchema = z
   .superRefine((data, ctx) => {
     data.guests.forEach((guest, index) => {
       if (
-        guest.type !== GuestType.COMPANION &&
+        guest.guestType !== GuestType.COMPANION &&
         guest.name.trim().length === 0
       ) {
         ctx.addIssue({
@@ -163,7 +174,7 @@ export type AddInvitationData = z.infer<typeof addInvitationSchema>;
 export const addGuestSchema = z
   .object(translateSchemaConfig(addGuestConfig))
   .refine(
-    (data) => data.name.trim().length > 0 || data.type === GuestType.COMPANION,
+    (data) => data.name.trim().length > 0 || data.guestType === GuestType.COMPANION,
     {
       message: stc("notCompanionGuestNeedName"),
       path: ["name"],
@@ -174,7 +185,7 @@ export type AddGuestData = z.infer<typeof addGuestSchema>;
 export const updateGuestSchema = z
   .object(translateSchemaConfig(updateGuestConfig))
   .refine(
-    (data) => data.name.trim().length > 0 || data.type === GuestType.COMPANION,
+    (data) => data.name.trim().length > 0 || data.guestType === GuestType.COMPANION,
     {
       message: stc("notCompanionGuestNeedName"),
       path: ["name"],

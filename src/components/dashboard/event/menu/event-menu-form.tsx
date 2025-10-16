@@ -10,39 +10,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AutoFormField, Form } from "@/components/ui/form";
-import {
-  baseContactConfig,
-  BaseContactData,
-  baseContactSchema,
-} from "@/schemas/contactFormConfig";
+import { baseEventMenuConfig, BaseEventMenuData, baseEventMenuSchema } from "@/schemas/menuFormConfig";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-type ContactFormProps = {
-  initialValues?: Partial<BaseContactData>;
-  onSubmit: (values: BaseContactData) => void;
+type EventMenuFormProps = {
+  initialValues?: Partial<BaseEventMenuData>;
+  onSubmit: (values: BaseEventMenuData) => void;
   title: string;
   trigger: React.ReactElement;
   event?: Event;
 };
 
-export default function ContactForm({
+export default function EventMenuForm({
   initialValues,
   onSubmit,
   title,
   trigger,
-}: ContactFormProps) {
+}: EventMenuFormProps) {
   const t = useTranslations("base.forms");
   const [isOpen, setOpen] = useState(false);
 
-  const form = useForm<BaseContactData>({
-    resolver: zodResolver(baseContactSchema),
+  const form = useForm<BaseEventMenuData>({
+    resolver: zodResolver(baseEventMenuSchema),
     defaultValues: initialValues,
   });
 
-  const handleSubmit = (data: BaseContactData) => {
+  const handleSubmit = (data: BaseEventMenuData) => {
     onSubmit(data);
     setOpen(false);
   };
@@ -64,7 +60,7 @@ export default function ContactForm({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-4"
           >
-            {baseContactConfig.map((fieldConfig) => (
+            {baseEventMenuConfig.map((fieldConfig) => (
               <AutoFormField
                 key={fieldConfig.name}
                 control={form.control}

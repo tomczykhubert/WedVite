@@ -1,12 +1,21 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Gender, Guest, GuestType, Invitation } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { FaDrumstickBite } from "react-icons/fa6";
 import GuestActions from "./guest-actions";
 import { AttendanceStatusBadge } from "./invitations-badges";
-import { GuestWithMenu, InvitationWithGuests, useInvitations } from "./invitations-context";
-import { IoFastFoodSharp } from "react-icons/io5";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  GuestWithMenu,
+  InvitationWithGuests,
+  useInvitations,
+} from "./invitations-context";
 
 export default function GuestRow({
   guest,
@@ -57,12 +66,15 @@ export default function GuestRow({
         </div>
       </div>
       <div className="flex items-center justify-center">
-        {guest.menu &&
+        {guest.menu && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="rounded-full flex items-center justify-center p-2 aspect-square" style={{ backgroundColor: guest.menu.color }}>
-                  <IoFastFoodSharp className="text-white"/>
+                <div
+                  className="rounded-full flex items-center justify-center p-2 aspect-square"
+                  style={{ backgroundColor: guest.menu.color }}
+                >
+                  <FaDrumstickBite className="text-white" />
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -70,7 +82,7 @@ export default function GuestRow({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        }
+        )}
       </div>
       <div className="text-center">
         <AttendanceStatusBadge status={guest.status} />
@@ -95,5 +107,3 @@ export const getGuestImage = (type: GuestType, gender: Gender): string => {
       return "unspecified";
   }
 };
-
-

@@ -3,6 +3,7 @@ import { contactRouter } from "./contact";
 import { eventRouter } from "./event";
 import { eventMenuRouter } from "./eventMenu";
 import { guestRouter } from "./guest";
+import { imageRouter } from "./image";
 import { invitationRouter } from "./invitation";
 import { planItemRouter } from "./planItem";
 import { rsvpRouter } from "./rsvp";
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   guest: guestRouter,
   user: userRouter,
   rsvp: rsvpRouter,
+  image: imageRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/base/loader";
 import UnsavedChangesModal from "@/components/base/unsaved-changes-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,10 +33,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FaPlus } from "react-icons/fa";
-import { useInvitations } from "./invitations-context";
-import Loader from "@/components/base/loader";
+import { FaPlus } from "react-icons/fa6";
 import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
+import { useInvitations } from "./invitations-context";
 
 export default function AddInvitationForm({ event }: { event: Event }) {
   const [open, setOpen] = useState(false);
@@ -156,7 +156,9 @@ export default function AddInvitationForm({ event }: { event: Event }) {
                                   control={form.control}
                                   fieldConfig={fieldConfig}
                                   valuesOverride={
-                                    fieldConfig.name === "menuId" ? menuOptions : undefined
+                                    fieldConfig.name === "menuId"
+                                      ? menuOptions
+                                      : undefined
                                   }
                                   name={`guests.${index}.${fieldConfig.name}`}
                                 />

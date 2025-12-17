@@ -6,6 +6,7 @@ model Event {
   notificationSettings NotificationSettings?
   invitations          Invitation[]
   menu                 Menu[]
+  images               EventImage[]
   respondStart         DateTime?
   respondEnd           DateTime?
   createdAt            DateTime              @default(now())
@@ -64,4 +65,17 @@ enum EventContactType {
   GROOM
   MAID_OF_HONOR
   BEST_MAN
+}
+
+model EventImage {
+  id           String   @id @default(cuid(2))
+  filename     String
+  extension    String
+  size         Int
+  uploaderName String
+  eventId      String
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@map("event_image")
 }

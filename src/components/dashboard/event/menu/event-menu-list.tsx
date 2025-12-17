@@ -1,21 +1,29 @@
-import { Event, Menu } from "@prisma/client";
-import EventMenuListItem from "./event-menu-list-item";
-import AddEventMenuForm from "./add-event-menu-form";
-import { MAX_MENU, SYSTEM_MENUS } from "@/schemas/menuFormConfig";
-import ID from "@/types/id";
-import { useTranslations } from "next-intl";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import ConfirmModal from "@/components/base/confirm-modal";
 import ActionButton from "@/components/base/button-link";
-import { FaPlus } from "react-icons/fa";
-import { TRPCResponse } from "@/trpc/routers/_app";
+import ConfirmModal from "@/components/base/confirm-modal";
 import { showError } from "@/lib/utils";
+import { MAX_MENU, SYSTEM_MENUS } from "@/schemas/menuFormConfig";
+import { useTRPC } from "@/trpc/client";
+import { TRPCResponse } from "@/trpc/routers/_app";
+import ID from "@/types/id";
+import { Event, Menu } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { FaPlus } from "react-icons/fa6";
+import { toast } from "sonner";
+import AddEventMenuForm from "./add-event-menu-form";
+import EventMenuListItem from "./event-menu-list-item";
 
-export default function EventMenuList({ event }: { event: Event & { menu: Menu[] } }) {
-  const toAdd = SYSTEM_MENUS.filter(systemMenu => !event.menu.some((menu) => menu.system && menu.name === systemMenu.name))
-  const canAddSystemMenu = toAdd.length > 0 && toAdd.length + event.menu.length <= MAX_MENU
+export default function EventMenuList({
+  event,
+}: {
+  event: Event & { menu: Menu[] };
+}) {
+  const toAdd = SYSTEM_MENUS.filter(
+    (systemMenu) =>
+      !event.menu.some((menu) => menu.system && menu.name === systemMenu.name)
+  );
+  const canAddSystemMenu =
+    toAdd.length > 0 && toAdd.length + event.menu.length <= MAX_MENU;
 
   const sortedMenus = [...event.menu].sort((a, b) => {
     if (a.system === b.system) return 0;
@@ -65,7 +73,9 @@ function AddSystemMenus({ eventId }: { eventId: ID }) {
   return (
     <ConfirmModal
       header={t("header")}
-      message={t("message", { menus: SYSTEM_MENUS.map(m => t(`types.${m.name}`)).join(", ") })}
+      message={t("message", {
+        menus: SYSTEM_MENUS.map((m) => t(`types.${m.name}`)).join(", "),
+      })}
       onConfirm={onConfirm}
       confirmVariant={"default"}
       trigger={
@@ -76,4 +86,3 @@ function AddSystemMenus({ eventId }: { eventId: ID }) {
     />
   );
 }
-

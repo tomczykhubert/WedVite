@@ -1,8 +1,8 @@
-import NotFound from "@/app/[locale]/(protected)/dashboard/not-found";
 import RSVPCard from "@/components/rsvp/rsvp-card";
 import RSVPForm from "@/components/rsvp/rsvp-form";
 import { caller } from "@/trpc/server";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
 
 export default async function RSVPPage({
   params,
@@ -16,7 +16,7 @@ export default async function RSVPPage({
   const invitation = await caller.rsvp.getInvitation({ id });
 
   const now = new Date();
-  if (!invitation) return NotFound();
+  if (!invitation) return notFound();
   if (invitation.event.respondEnd && now > invitation.event.respondEnd) {
     return <RSVPCard message={t("expired")} />;
   }

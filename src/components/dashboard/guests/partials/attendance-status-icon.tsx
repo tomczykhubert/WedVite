@@ -1,6 +1,5 @@
 import { AttendanceStatus } from "@prisma/client";
-import { FaQuestion } from "react-icons/fa";
-import { LuCheck, LuX } from "react-icons/lu";
+import { FaCheck, FaQuestion, FaX } from "react-icons/fa6";
 
 export function getAttendanceStatusIcon(
   status: AttendanceStatus,
@@ -9,13 +8,13 @@ export function getAttendanceStatusIcon(
   switch (status) {
     case AttendanceStatus.CONFIRMED:
       return (
-        <LuCheck
+        <FaCheck
           className={`text-green-500 w-8 ${size === "small" ? "size-4" : "size-5"}`}
         />
       );
     case AttendanceStatus.DECLINED:
       return (
-        <LuX
+        <FaX
           className={`text-red-500 w-8 ${size === "small" ? "size-4" : "size-5"}`}
         />
       );

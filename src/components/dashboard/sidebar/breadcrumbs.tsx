@@ -9,15 +9,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Link } from "@/i18n/navigation";
-import React, { JSX, useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "@/i18n/navigation";
+import { Fragment, JSX, useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 const MAX_BREADCRUMB_ITEM_LENGTH = {
   sm: 1,
@@ -115,7 +115,7 @@ const renderItem = (
   i: number
 ) => {
   return (
-    <React.Fragment key={i}>
+    <Fragment key={i}>
       <BreadcrumbItem>
         {item.link ? (
           <BreadcrumbLink asChild>
@@ -129,7 +129,7 @@ const renderItem = (
         )}
       </BreadcrumbItem>
       {addSeparator && <BreadcrumbSeparator />}
-    </React.Fragment>
+    </Fragment>
   );
 };
 

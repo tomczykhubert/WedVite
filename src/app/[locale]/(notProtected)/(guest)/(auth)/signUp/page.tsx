@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { LuLogIn, LuUserPlus } from "react-icons/lu";
+import { FaArrowRightToBracket, FaUserPlus } from "react-icons/fa6";
 import { z } from "zod";
 
 const formConfig: FormConfig = [
@@ -139,7 +139,7 @@ export default function RegisterForm() {
                   />
                 ))}
                 <Button disabled={isPending} type="submit" className="w-full">
-                  <LuUserPlus className="mr-1" /> {t("signUp")}
+                  <FaUserPlus className="mr-1" /> {t("signUp")}
                 </Button>
               </form>
             </Form>
@@ -152,7 +152,7 @@ export default function RegisterForm() {
               className="w-full"
               variant={"outline"}
             >
-              <LuLogIn className="mr-1" />
+              <FaArrowRightToBracket className="mr-1" />
               {t("signIn")}
             </ActionButton>
           </CardContent>

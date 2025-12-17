@@ -7,7 +7,7 @@ import { Menu } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaPenToSquare } from "react-icons/fa6";
 import { toast } from "sonner";
 import EventMenuForm from "./event-menu-form";
 
@@ -54,7 +54,7 @@ export default function UpdateEventMenuForm({
 
   const trigger = (
     <ActionButton variant="default" size="sm" tooltip={t("update")}>
-      <FaEdit />
+      <FaPenToSquare />
     </ActionButton>
   );
   return (

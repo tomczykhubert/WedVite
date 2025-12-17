@@ -7,8 +7,14 @@ import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { FaTrash } from "react-icons/fa";
-import { MdDragIndicator, MdEmail, MdPerson, MdPhone } from "react-icons/md";
+import {
+  FaEnvelope,
+  FaGripVertical,
+  FaPhone,
+  FaTrash,
+  FaUser,
+} from "react-icons/fa6";
+
 import { toast } from "sonner";
 import UpdateContactForm from "./update-contact-form";
 
@@ -26,17 +32,17 @@ export default function ContactCard({
   const details = [
     {
       id: "name",
-      icon: MdPerson,
+      icon: FaUser,
       text: `${contact.firstName} ${contact.lastName}`,
     },
     {
       id: "email",
-      icon: MdEmail,
+      icon: FaEnvelope,
       text: contact.email,
     },
     {
       id: "phone",
-      icon: MdPhone,
+      icon: FaPhone,
       text: contact.phoneNumber,
     },
   ] as const;
@@ -64,7 +70,7 @@ export default function ContactCard({
             {...dragListeners}
             {...dragAttributes}
           >
-            <MdDragIndicator />
+            <FaGripVertical />
           </ActionButton>
           <DeleteContact contact={contact} />
         </div>

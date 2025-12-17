@@ -7,7 +7,7 @@ import ID from "@/types/id";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaCalendarPlus } from "react-icons/fa";
+import { FaCalendarPlus } from "react-icons/fa6";
 import { toast } from "sonner";
 import PlanItemForm from "./plan-item-form";
 

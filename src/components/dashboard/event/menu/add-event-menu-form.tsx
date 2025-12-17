@@ -1,18 +1,18 @@
 "use client";
 import Loader from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
+import { showError } from "@/lib/utils";
 import { BaseEventMenuData } from "@/schemas/menuFormConfig";
 import { useTRPC } from "@/trpc/client";
+import { TRPCResponse } from "@/trpc/routers/_app";
 import ID from "@/types/id";
+import { Menu } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
 import { toast } from "sonner";
 import EventMenuForm from "./event-menu-form";
-import { TRPCResponse } from "@/trpc/routers/_app";
-import { Menu } from "@prisma/client";
-import { showError } from "@/lib/utils";
 
 type AddEventMenuFormProps = {
   eventId: ID;
@@ -58,7 +58,10 @@ export default function AddEventMenuForm({ eventId }: AddEventMenuFormProps) {
   };
 
   const trigger = (
-    <Button className="w-full" variant={"primaryOutline"}><FaPlus />{t("add")}</Button>
+    <Button className="w-full" variant={"primaryOutline"}>
+      <FaPlus />
+      {t("add")}
+    </Button>
   );
   return (
     <>

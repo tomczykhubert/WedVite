@@ -2,11 +2,15 @@
 
 import { signIn } from "@/lib/auth/authClient";
 import { routes } from "@/lib/routes/routes";
-import { Button } from "../ui/button";
-import { FcGoogle } from "react-icons/fc";
 import { useTranslations } from "next-intl";
+import { FaGoogle } from "react-icons/fa";
+import { Button } from "../ui/button";
 
-export default function GoogleLogin({ setPending }: { setPending: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function GoogleLogin({
+  setPending,
+}: {
+  setPending: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const t = useTranslations("user");
 
   const handleGoogleSignIn = async () => {
@@ -14,7 +18,6 @@ export default function GoogleLogin({ setPending }: { setPending: React.Dispatch
       {
         provider: "google",
         callbackURL: routes.dashboard.index,
-
       },
       {
         onResponse: () => {
@@ -34,7 +37,7 @@ export default function GoogleLogin({ setPending }: { setPending: React.Dispatch
       variant={"outline"}
       onClick={handleGoogleSignIn}
     >
-      <FcGoogle className="mr-1" />
+      <FaGoogle className="mr-1" />
       {t("continueWithGoogle")}
     </Button>
   );

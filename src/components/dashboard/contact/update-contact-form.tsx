@@ -7,7 +7,7 @@ import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaPenToSquare } from "react-icons/fa6";
 import { toast } from "sonner";
 import ContactForm from "./contact-form";
 
@@ -55,7 +55,7 @@ export default function UpdateContactForm({ contact }: UpdateContactFormProps) {
 
   const trigger = (
     <ActionButton variant="default" size="icon" tooltip={t("update")}>
-      <FaEdit />
+      <FaPenToSquare />
     </ActionButton>
   );
   return (

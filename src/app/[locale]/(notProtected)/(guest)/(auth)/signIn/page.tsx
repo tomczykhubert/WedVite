@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { LuLogIn, LuUserPlus } from "react-icons/lu";
+import { FaArrowRightToBracket, FaUserPlus } from "react-icons/fa6";
 import { z } from "zod";
 
 const formConfig: FormConfig = [
@@ -115,7 +115,7 @@ export default function SignInForm() {
                   />
                 ))}
                 <Button type="submit" className="w-full">
-                  <LuLogIn className="mr-1" />
+                  <FaArrowRightToBracket className="mr-1" />
                   {t("signIn")}
                 </Button>
               </form>
@@ -129,7 +129,7 @@ export default function SignInForm() {
               className="w-full"
               variant={"outline"}
             >
-              <LuUserPlus className="mr-1" />
+              <FaUserPlus className="mr-1" />
               {t("signUp")}
             </ActionButton>
           </CardContent>

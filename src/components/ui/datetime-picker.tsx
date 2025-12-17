@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { useFormatter, useTranslations } from "next-intl";
 import React from "react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { LuCalendar } from "react-icons/lu";
+import { FaCalendar } from "react-icons/fa6";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -50,7 +50,7 @@ export default function DateTimePicker({
             !date && "text-muted-foreground"
           )}
         >
-          <LuCalendar className="mr-2 h-4 w-4" />
+          <FaCalendar className="mr-2 h-4 w-4" />
           {date ? (
             format.dateTime(date, {
               year: "numeric",

@@ -166,10 +166,17 @@
           "header": "Usuń punkt planu",
           "message": "Czy jesteś pewien że chcesz usunąć ten punkt planu?"
         }
+      },
+      "image": {
+        "size": "Rozmiar (w bajtach)",
+        "filename": "Nazwa pliku",
+        "uploaderName": "Nazwa przesyłającego",
+        "mediaType": "Typ mediów"
       }
     },
     "notFound": "Nie znaleziono strony",
     "goToDashboard": "Przejdź do wydarzeń",
+    "goToHomepage": "Przejdź do strony głównej",
     "event": {
       "settings": "Ustawienia",
       "overview": "Przegląd",
@@ -245,6 +252,42 @@
         "edit": "Edytuj gościa",
         "search": "Wyszukaj gościa lub zaproszenie",
         "save": "Zapisz gościa"
+      },
+      "gallery": {
+        "gallery": "Galeria",
+        "access": {
+          "title": "Dostęp do galerii",
+          "description": "Udostępnij galerię swoim gościom za pomocą kodu QR lub bezpośredniego linku.",
+          "qrCode": "Kod QR",
+          "link": "Link",
+          "copy": "Kopiuj",
+          "copied": "Skopiowano!",
+          "failedToCopy": "Nie udało się skopiować do schowka",
+          "copyLink": "Kopiuj link do schowka",
+          "generatingQR": "Generowanie kodu QR...",
+          "failedToGenerateQR": "Nie udało się wygenerować kodu QR. Spróbuj ponownie.",
+          "uploadImagesLink": "Link do przesyłania zdjęć"
+        },
+        "download": {
+          "alt": "Pobierz zdjęcie",
+          "failed": "Nie udało się pobrać zdjęcia. Spróbuj ponownie.",
+          "success": "Zdjęcie pobrane pomyślnie."
+        },
+        "rename": {
+          "header": "Zmień nazwę zdjęcia",
+          "message": "Wprowadź nową nazwę dla tego zdjęcia.",
+          "success": "Nazwa zdjęcia zmieniona pomyślnie.",
+          "failed": "Nie udało się zmienić nazwy zdjęcia. Spróbuj ponownie.",
+          "label": "Nowa nazwa zdjęcia",
+          "placeholder": "Wpisz nową nazwę zdjęcia"
+        },
+        "delete": {
+          "header": "Usuń zdjęcie",
+          "message": "Czy jesteś pewien, że chcesz usunąć to zdjęcie?",
+          "success": "Zdjęcie usunięte pomyślnie.",
+          "failed": "Nie udało się usunąć zdjęcia. Spróbuj ponownie."
+        },
+        "noImagesFound": "Dla tego wydarzenia nie przesłano jeszcze żadnych zdjęć."
       }
     }
   },
@@ -261,5 +304,22 @@
     "loading": "Wysyłanie...",
     "expired": "To zaproszenie wygasło",
     "notStarted": "To zaproszenie jeszcze nie jest aktywne. Potwierdzanie rozpocznie się {date}."
+  },
+  "imagesUpload": {
+    "title": "Przesyłanie zdjęć",
+    "subtitle": "Prosimy o przesłanie zdjęć z wydarzenia",
+    "notStarted": "Wydarzenie jeszcze się nie rozpoczeło. Przesyłanie zdjęć rozpocznie się {date}.",
+    "enterNamePrompt": "Zanim prześlemy zdjęcia, powiedz nam kim jesteś",
+    "yourName": "Twoje imię",
+    "namePlaceholder": "Wpisz swoje imię",
+    "continue": "Kontynuuj",
+    "drag": "Przeciągnij zdjęcia tutaj, aby je przesłać",
+    "drop": "Prześlij zdjęcia",
+    "orClickToBrowse": "lub kliknij, aby przeglądać (maksymalnie {maxSize}MB na plik)",
+    "chooseFiles": "Wybierz zdjęcia",
+    "uploadError": "Błąd podczas przesyłania {fileName}",
+    "uploadSuccess": "Zdjęcie {fileName} przesłane pomyślnie!",
+    "maxFilesError": "Możesz przesłać maksymalnie {maxFiles} plików na raz",
+    "fileSizeError": "{fileName} przekracza limit {maxSize}MB"
   }
 }

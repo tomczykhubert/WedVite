@@ -1,5 +1,5 @@
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
-import { assertEventIsAcceptingResponses } from "@/lib/prisma/eventUtils";
+import { assertEventIsAcceptingResponsesByInvitationId } from "@/lib/prisma/eventUtils";
 import { respondRSVPConfig } from "@/schemas/invitationFormConfig";
 import { InvitationStatus } from "@prisma/client";
 import { z } from "zod";
@@ -14,6 +14,9 @@ export const rsvpRouter = createTRPCRouter({
         include: {
           guests: {
             orderBy: { id: "asc" },
+            include: {
+              menu: true,
+            },
           },
           event: {
             select: {
@@ -25,10 +28,6 @@ export const rsvpRouter = createTRPCRouter({
         },
       });
 
-      if (!invitation) {
-        throw new Error("Invitation not found");
-      }
-
       return invitation;
     }),
   submitResponse: baseProcedure
@@ -39,7 +38,10 @@ export const rsvpRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx: { db }, input }) => {
-      await assertEventIsAcceptingResponses(input.invitationId, db);
+      await assertEventIsAcceptingResponsesByInvitationId(
+        input.invitationId,
+        db
+      );
       await db.invitation.update({
         where: { id: input.invitationId },
         data: {

@@ -21,11 +21,26 @@ import {
   isSerializedTranslationCall,
   translate,
 } from "@/i18n/utils";
-import { FormFieldConfig, FormSelectOption } from "@/lib/forms/schemaTranslator";
+import {
+  FormFieldConfig,
+  FormSelectOption,
+} from "@/lib/forms/schemaTranslator";
 import { cn } from "@/lib/utils";
+import { AttendanceStatus, Gender, InvitationStatus } from "@prisma/client";
 import { useTranslations } from "next-intl";
+import { getAttendanceStatusIcon } from "../dashboard/guests/partials/attendance-status-icon";
+import { getGenderIcon } from "../dashboard/guests/partials/gender-icon";
+import { getInvitationStatusIcon } from "../dashboard/guests/partials/invitation-status-icon";
 import { Checkbox } from "./checkbox";
-import { CountryPicker } from "./country-picker";
+import {
+  ColorPicker,
+  ColorPickerAlpha,
+  ColorPickerEyeDropper,
+  ColorPickerFormat,
+  ColorPickerHue,
+  ColorPickerOutput,
+  ColorPickerSelection,
+} from "./color-picker";
 import DatePicker from "./date-picker";
 import DateTimePicker from "./datetime-picker";
 import { Input } from "./input";
@@ -38,11 +53,6 @@ import {
   SelectValue,
 } from "./select";
 import { Textarea } from "./textarea";
-import { ColorPicker, ColorPickerAlpha, ColorPickerEyeDropper, ColorPickerFormat, ColorPickerHue, ColorPickerOutput, ColorPickerSelection } from "./color-picker";
-import { getAttendanceStatusIcon } from "../dashboard/guests/partials/attendance-status-icon";
-import { AttendanceStatus, Gender, InvitationStatus } from "@prisma/client";
-import { getInvitationStatusIcon } from "../dashboard/guests/partials/invitation-status-icon";
-import { getGenderIcon } from "../dashboard/guests/partials/gender-icon";
 
 const Form = FormProvider;
 
@@ -209,7 +219,7 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
   control,
   fieldConfig,
   name,
-  valuesOverride
+  valuesOverride,
 }: {
   control: Control<TFieldValues>;
   fieldConfig: FormFieldConfig;
@@ -224,39 +234,46 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
 
   if (fieldConfig.type == "custom") return;
 
-  const renderedValues = valuesOverride ?? fieldConfig.values?.map(item => {
-    switch (fieldConfig.name) {
-      case "attendanceStatus":
-        return {
-          ...item,
-          label: (
-            <div className="flex items-center gap-2">
-              {getAttendanceStatusIcon(item.value as AttendanceStatus)} <span>{t(`dashboard.event.guests.status.${item.name}`)}</span>
-            </div>
-          ),
-        };
-      case "invitationStatus":
-        return {
-          ...item,
-          label: (
-            <div className="flex items-center gap-2">
-              {getInvitationStatusIcon(item.value as InvitationStatus)} <span>{t(`dashboard.event.invitations.status.${item.name}`)}</span>
-            </div>
-          ),
-        };
-      case "gender":
-        return {
-          ...item,
-          label: (
-            <div className="flex items-center gap-2">
-              {getGenderIcon(item.value as Gender)} <span>{t(`base.genderTypes.${item.name}`)}</span>
-            </div>
-          ),
-        };
-      default:
-        return item; // fallback dla zwykłych selectów
-    }
-  });
+  const renderedValues =
+    valuesOverride ??
+    fieldConfig.values?.map((item) => {
+      switch (fieldConfig.name) {
+        case "attendanceStatus":
+          return {
+            ...item,
+            label: (
+              <div className="flex items-center gap-2">
+                {getAttendanceStatusIcon(item.value as AttendanceStatus)}{" "}
+                <span>{t(`dashboard.event.guests.status.${item.name}`)}</span>
+              </div>
+            ),
+          };
+        case "invitationStatus":
+          return {
+            ...item,
+            label: (
+              <div className="flex items-center gap-2">
+                {getInvitationStatusIcon(item.value as InvitationStatus)}{" "}
+                <span>
+                  {t(`dashboard.event.invitations.status.${item.name}`)}
+                </span>
+              </div>
+            ),
+          };
+        case "gender":
+          return {
+            ...item,
+            label: (
+              <div className="flex items-center gap-2">
+                {getGenderIcon(item.value as Gender)}{" "}
+                <span>{t(`base.genderTypes.${item.name}`)}</span>
+              </div>
+            ),
+          };
+        default:
+          return item; // fallback dla zwykłych selectów
+      }
+    });
 
   const renderField = (
     field: ControllerRenderProps<TFieldValues, FieldPath<TFieldValues>>
@@ -302,7 +319,7 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
           />
         );
       case "country_select":
-        return
+        return;
       case "color":
         return (
           <ColorPicker className="max-w-sm rounded-md border bg-background p-4 shadow-sm">
@@ -319,7 +336,7 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
               <ColorPickerFormat />
             </div>
           </ColorPicker>
-        )
+        );
       case "custom":
         return <></>;
       case "hidden":

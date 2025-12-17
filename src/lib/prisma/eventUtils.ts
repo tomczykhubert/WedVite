@@ -1,6 +1,8 @@
 import ID from "@/types/id";
 import { PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { STORAGE_CONFIG } from "../storage/config";
+import { isValidFileSize, isValidImageType } from "../storage/utils";
 
 export const assertOwnerOfEvent = async (
   userId: ID,
@@ -108,7 +110,23 @@ const assertOwnership = (count: number) => {
   if (count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
 };
 
-export const assertEventIsAcceptingResponses = async (
+const assertEventIsAcceptingResponses = (
+  respondStart: Date | null,
+  respondEnd: Date | null
+) => {
+  const now = new Date();
+
+  const beforeStart = respondStart && now < respondStart;
+  const afterEnd = respondEnd && now > respondEnd;
+
+  if (beforeStart || afterEnd) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+    });
+  }
+};
+
+export const assertEventIsAcceptingResponsesByInvitationId = async (
   invitationId: ID,
   db: PrismaClient
 ) => {
@@ -131,14 +149,63 @@ export const assertEventIsAcceptingResponses = async (
     throw new TRPCError({ code: "NOT_FOUND" });
   }
 
-  const now = new Date();
+  assertEventIsAcceptingResponses(event.respondStart, event.respondEnd);
+};
 
-  const beforeStart = event.respondStart && now < event.respondStart;
-  const afterEnd = event.respondEnd && now > event.respondEnd;
+export const assertEventIsAcceptingResponsesByEventId = async (
+  eventId: ID,
+  db: PrismaClient
+) => {
+  const event = await db.event.findUnique({
+    where: {
+      id: eventId,
+    },
+    select: {
+      respondStart: true,
+      respondEnd: true,
+    },
+  });
 
-  if (beforeStart || afterEnd) {
+  if (!event) {
+    throw new TRPCError({ code: "NOT_FOUND" });
+  }
+
+  assertEventIsAcceptingResponses(event.respondStart, event.respondEnd);
+};
+
+export const assertImageIsValid = (contentType: string, size: number) => {
+  if (!isValidImageType(contentType)) {
     throw new TRPCError({
-      code: "FORBIDDEN",
+      code: "BAD_REQUEST",
+      message: `Invalid file type. Only ${STORAGE_CONFIG.ALLOWED_IMAGE_TYPES.join(", ")} are allowed.`,
     });
   }
+
+  if (!isValidFileSize(size)) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `File size exceeds ${STORAGE_CONFIG.MAX_FILE_SIZE_MB}MB limit.`,
+    });
+  }
+};
+
+export const assertOwnerOfImage = async (
+  userId: ID,
+  imageId: ID,
+  db: PrismaClient
+) => {
+  const image = await db.eventImage.findUnique({
+    where: {
+      id: imageId,
+      event: {
+        userId: userId,
+      },
+    },
+  });
+
+  if (!image) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return image;
 };

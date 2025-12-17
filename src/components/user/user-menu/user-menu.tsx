@@ -1,7 +1,6 @@
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { User } from "@prisma/client";
 import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
-import { LuChevronsUpDown } from "react-icons/lu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +22,6 @@ export default function UserMenu({
     <>
       <UserAvatar user={user} />
       <UserName user={user} />
-      <LuChevronsUpDown className="ml-auto size-4" />
     </>
   );
   return (

@@ -17,9 +17,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
-import { FiCopy } from "react-icons/fi";
-import { HiQrCode } from "react-icons/hi2";
-import { IoLink } from "react-icons/io5";
+import { FaCopy, FaLink, FaQrcode } from "react-icons/fa6";
 import { toast } from "sonner";
 
 const QR_CODE_SIZE = 256;
@@ -80,11 +78,11 @@ export default function AccessDialog({
           <Tabs defaultValue="qr" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="qr" className="flex items-center gap-2">
-                <HiQrCode className="h-4 w-4" />
+                <FaQrcode className="h-4 w-4" />
                 {t("qrCode")}
               </TabsTrigger>
               <TabsTrigger value="link" className="flex items-center gap-2">
-                <IoLink className="h-4 w-4" />
+                <FaLink className="h-4 w-4" />
                 {t("link")}
               </TabsTrigger>
             </TabsList>
@@ -127,7 +125,7 @@ export default function AccessDialog({
                     onClick={copyToClipboard}
                     tooltip={t("copyLink")}
                   >
-                    <FiCopy />
+                    <FaCopy />
                   </ActionButton>
                 </div>
               </div>

@@ -6,8 +6,7 @@ import { useTRPC } from "@/trpc/client";
 import { EventPlanItem } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
-import { FaTrash } from "react-icons/fa";
-import { IoLocation, IoTime } from "react-icons/io5";
+import { FaClock, FaLocationDot, FaTrash } from "react-icons/fa6";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
 import { toast } from "sonner";
@@ -55,7 +54,7 @@ export default function PlanItemCard({
         )}
         <div className="flex items-center text-lg gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
           <div className="text-primary">
-            <IoTime />
+            <FaClock />
           </div>
           <div>
             <span>{FormatDate(planItem.startAt)}</span>
@@ -71,7 +70,7 @@ export default function PlanItemCard({
         </div>
         <div className="flex items-center text-lg gap-2 mb-2 bg-muted rounded-xl border-dashed border-2 border-accent p-2">
           <div className="text-primary">
-            <IoLocation />
+            <FaLocationDot />
           </div>
           <div>
             <div>{planItem.addressLine1}</div>

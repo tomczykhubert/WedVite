@@ -1,6 +1,9 @@
 import { InvitationStatus } from "@prisma/client";
-import { FaRegEnvelope, FaRegEnvelopeOpen } from "react-icons/fa";
-import { IoCreateOutline } from "react-icons/io5";
+import {
+  FaPenToSquare,
+  FaRegEnvelope,
+  FaRegEnvelopeOpen,
+} from "react-icons/fa6";
 
 export function getInvitationStatusIcon(
   status: InvitationStatus,
@@ -15,7 +18,7 @@ export function getInvitationStatusIcon(
       );
     case InvitationStatus.CREATED:
       return (
-        <IoCreateOutline
+        <FaPenToSquare
           className={`text-gray-500 w-8 ${size === "small" ? "size-4" : "size-5"}`}
         />
       );

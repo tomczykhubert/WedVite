@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import React from "react";
+import { Fragment } from "react";
 import EventCard from "./event-card";
 
 export default function EventsList() {
@@ -21,11 +21,11 @@ export default function EventsList() {
   return (
     <>
       {data.pages.map((page, i) => (
-        <React.Fragment key={i}>
+        <Fragment key={i}>
           {page.items.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
-        </React.Fragment>
+        </Fragment>
       ))}
 
       {hasNextPage && (

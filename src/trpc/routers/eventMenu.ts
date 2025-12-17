@@ -1,13 +1,14 @@
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import { assertOwnerOfEvent, assertOwnerOfMenu } from "@/lib/prisma/eventUtils";
 import {
-  assertOwnerOfEvent,
-  assertOwnerOfMenu,
-} from "@/lib/prisma/eventUtils";
+  baseEventMenuConfig,
+  MAX_MENU,
+  SYSTEM_MENUS,
+} from "@/schemas/menuFormConfig";
 import { Menu } from "@prisma/client";
 import z from "zod";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "../init";
 import { TRPCResponse } from "./_app";
-import { baseEventMenuConfig, MAX_MENU, SYSTEM_MENUS } from "@/schemas/menuFormConfig";
 
 export const eventMenuRouter = createTRPCRouter({
   add: protectedProcedure
@@ -18,10 +19,7 @@ export const eventMenuRouter = createTRPCRouter({
       })
     )
     .mutation(
-      async ({
-        ctx: { user, db },
-        input,
-      }): Promise<TRPCResponse<Menu>> => {
+      async ({ ctx: { user, db }, input }): Promise<TRPCResponse<Menu>> => {
         await assertOwnerOfEvent(user.id, input.eventId, db);
 
         const count = await db.menu.count({
@@ -50,9 +48,7 @@ export const eventMenuRouter = createTRPCRouter({
       }
     ),
   markDefault: protectedProcedure
-    .input(
-      z.object({ id: z.string(), eventId: z.string() })
-    )
+    .input(z.object({ id: z.string(), eventId: z.string() }))
     .mutation(async ({ ctx: { user, db }, input }) => {
       await assertOwnerOfEvent(user.id, input.eventId, db);
       await assertOwnerOfMenu(user.id, input.id, db);
@@ -78,44 +74,50 @@ export const eventMenuRouter = createTRPCRouter({
       return menu;
     }),
   addSystem: protectedProcedure
-    .input(
-      z.object({ eventId: z.string() })
-    )
-    .mutation(async ({ ctx: { user, db }, input }): Promise<TRPCResponse<string[]>> => {
-      await assertOwnerOfEvent(user.id, input.eventId, db);
+    .input(z.object({ eventId: z.string() }))
+    .mutation(
+      async ({ ctx: { user, db }, input }): Promise<TRPCResponse<string[]>> => {
+        await assertOwnerOfEvent(user.id, input.eventId, db);
 
-      const menus = await db.menu.findMany({
-        where: {
-          eventId: input.eventId,
-        }
-      });
-
-      const toAdd = SYSTEM_MENUS.filter(systemMenu => !menus.some((menu) => menu.system && menu.name === systemMenu.name))
-
-      if (menus.length + toAdd.length > MAX_MENU)
-        return {
-          success: false,
-          error: {
-            key: "trpcError.maxMenuReached",
-            values: { max: MAX_MENU },
-          },
-        };
-
-      if (toAdd.length > 0) {
-        await db.menu.createMany({
-          data: toAdd.map((menu) => ({
+        const menus = await db.menu.findMany({
+          where: {
             eventId: input.eventId,
-            name: menu.name,
-            color: menu.color,
-            system: true,
-          })),
+          },
         });
+
+        const toAdd = SYSTEM_MENUS.filter(
+          (systemMenu) =>
+            !menus.some((menu) => menu.system && menu.name === systemMenu.name)
+        );
+
+        if (menus.length + toAdd.length > MAX_MENU)
+          return {
+            success: false,
+            error: {
+              key: "trpcError.maxMenuReached",
+              values: { max: MAX_MENU },
+            },
+          };
+
+        if (toAdd.length > 0) {
+          await db.menu.createMany({
+            data: toAdd.map((menu) => ({
+              eventId: input.eventId,
+              name: menu.name,
+              color: menu.color,
+              system: true,
+            })),
+          });
+        }
+        return { success: true, data: toAdd.map((m) => m.name) };
       }
-      return { success: true, data: toAdd.map(m => m.name) };
-    }),
+    ),
   update: protectedProcedure
     .input(
-      z.object({ ...translateSchemaConfig(baseEventMenuConfig), id: z.string() })
+      z.object({
+        ...translateSchemaConfig(baseEventMenuConfig),
+        id: z.string(),
+      })
     )
     .mutation(async ({ ctx: { user, db }, input }) => {
       await assertOwnerOfMenu(user.id, input.id, db);
@@ -133,14 +135,14 @@ export const eventMenuRouter = createTRPCRouter({
     }),
   get: baseProcedure
     .input(z.object({ eventId: z.string() }))
-    .query(async ({ ctx: { user, db }, input }) => {
+    .query(async ({ ctx: { db }, input }) => {
       //TODO: Zmienic spowrotem na base procedure a w routerze rsvp dodac nowa procedure ktora wrpardza czy event jest publiczny
       // await assertOwnerOfEvent(user.id, input.eventId, db);
 
       return await db.menu.findMany({
         where: {
           eventId: input.eventId,
-        }
+        },
       });
     }),
   delete: protectedProcedure

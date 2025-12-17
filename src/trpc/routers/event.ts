@@ -31,8 +31,6 @@ export const eventRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx: { user, db }, input }) => {
-      await assertOwnerOfEvent(user.id, input.id, db);
-
       const event = await db.event.findUnique({
         where: {
           id: input.id,
@@ -44,13 +42,17 @@ export const eventRouter = createTRPCRouter({
           eventPlanItems: input.withPlanItems ?? false,
           menu: input.withMenu
             ? {
-              orderBy: {
-                id: "asc"
-              },
-            }
+                orderBy: {
+                  id: "asc",
+                },
+              }
             : false,
         },
       });
+
+      if (!event) return null;
+      await assertOwnerOfEvent(user.id, input.id, db);
+
       return event;
     }),
   update: protectedProcedure
@@ -108,7 +110,7 @@ export const eventRouter = createTRPCRouter({
         },
       });
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor = undefined;
       if (events.length > EVENTS_PER_PAGE) {
         const nextItem = events.pop();
         nextCursor = nextItem!.id;

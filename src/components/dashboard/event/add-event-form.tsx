@@ -20,7 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { LuCalendarPlus2 } from "react-icons/lu";
+import { FaCalendarPlus } from "react-icons/fa6";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -77,7 +77,7 @@ export default function AddEventForm() {
         <DialogTrigger asChild>
           <Card className="h-full min-h-[300px] text-gray-400 hover:bg-muted hover:text-current transition-all duration-200 cursor-pointer">
             <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
-              <LuCalendarPlus2 className="h-20 w-20" />
+              <FaCalendarPlus className="h-20 w-20" />
               <span>{t("add")}</span>
             </CardContent>
           </Card>

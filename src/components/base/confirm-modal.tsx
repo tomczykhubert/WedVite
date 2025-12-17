@@ -23,7 +23,7 @@ interface ModalProps {
   trigger?: React.ReactElement;
   onConfirm: () => void;
   onCancel?: () => void;
-  confirmVariant?:  VariantProps<typeof buttonVariants>["variant"]
+  confirmVariant?: VariantProps<typeof buttonVariants>["variant"];
 }
 
 const ConfirmModal: React.FC<ModalProps> = ({
@@ -35,14 +35,14 @@ const ConfirmModal: React.FC<ModalProps> = ({
   trigger,
   onConfirm,
   onCancel,
-  confirmVariant
+  confirmVariant,
 }) => {
   const t = useTranslations("base");
 
   return (
     <AlertDialog open={open}>
       {trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
-      <AlertDialogContent>
+      <AlertDialogContent onEscapeKeyDown={onCancel}>
         <AlertDialogHeader>
           <AlertDialogTitle>{header}</AlertDialogTitle>
           <AlertDialogDescription>{message}</AlertDialogDescription>

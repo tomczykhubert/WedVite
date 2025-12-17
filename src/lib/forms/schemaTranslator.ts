@@ -16,15 +16,17 @@ export type FieldType =
   | "hidden"
   | "color";
 
-export type FormSelectOption = {
-  value: string;
-  name: string;
-  label?: React.ReactNode;
-} | {
-  value: string;
-  name?: string;
-  label: React.ReactNode;
-};
+export type FormSelectOption =
+  | {
+      value: string;
+      name: string;
+      label?: React.ReactNode;
+    }
+  | {
+      value: string;
+      name?: string;
+      label: React.ReactNode;
+    };
 
 export type FormFieldConfig = {
   name: string;
@@ -42,7 +44,7 @@ export const translateSchemaConfig = <T extends readonly FormFieldConfig[]>(
   config: T
 ) => {
   type SchemaType = {
-    [K in T[number]as K["name"]]: K["validation"];
+    [K in T[number] as K["name"]]: K["validation"];
   };
 
   const result = {} as SchemaType;

@@ -1,10 +1,10 @@
-"use client"
+"use client";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useRouter } from "@/i18n/navigation";
 import { signOut } from "@/lib/auth/authClient";
 import { routes } from "@/lib/routes/routes";
 import { useTranslations } from "next-intl";
-import { LuLogOut } from "react-icons/lu";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
 
 export default function UserSignOut() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function UserSignOut() {
         });
       }}
     >
-      <LuLogOut />
+      <FaArrowRightFromBracket />
       <span>{t("signOut")}</span>
     </DropdownMenuItem>
   );

@@ -19,13 +19,12 @@ import {
 } from "@/schemas/invitationFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Guest, Menu } from "@prisma/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Guest } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { IoFastFoodSharp } from "react-icons/io5";
 import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
 
 export default function UpdateGuestForm({
@@ -87,7 +86,9 @@ export default function UpdateGuestForm({
       },
     })
   );
-  const { options: menuOptions, isPending } = useEventMenuOptions(eventId as string);
+  const { options: menuOptions, isPending } = useEventMenuOptions(
+    eventId as string
+  );
   if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   const onSubmit = (data: UpdateGuestData) => {

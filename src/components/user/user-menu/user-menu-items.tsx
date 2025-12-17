@@ -3,13 +3,8 @@ import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { FaBell, FaCalendarDays, FaCreditCard, FaUser } from "react-icons/fa6";
 import { IconType } from "react-icons/lib";
-import {
-  LuBell,
-  LuCircleUser,
-  LuCreditCard,
-  LuLayoutDashboard,
-} from "react-icons/lu";
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
@@ -22,23 +17,23 @@ export default async function UserMenuItems({
     {
       href: routes.dashboard.index,
       title: "dashboard",
-      icon: LuLayoutDashboard,
+      icon: FaCalendarDays,
     },
     [
       {
         href: routes.account.index,
         title: "account",
-        icon: LuCircleUser,
+        icon: FaUser,
       },
       {
         href: routes.account.billing,
         title: "billing",
-        icon: LuCreditCard,
+        icon: FaCreditCard,
       },
       {
         href: routes.account.notifications,
         title: "notifications",
-        icon: LuBell,
+        icon: FaBell,
       },
     ],
   ],

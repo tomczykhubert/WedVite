@@ -288,6 +288,48 @@
           "failed": "Nie udało się usunąć zdjęcia. Spróbuj ponownie."
         },
         "noImagesFound": "Dla tego wydarzenia nie przesłano jeszcze żadnych zdjęć."
+      },
+      "tables": {
+        "tables": "Stoły",
+        "tablePlanner": "Planer Stołów",
+        "add": "Dodaj Stół",
+        "name": "Nazwa Stołu",
+        "shape": "Kształt",
+        "capacity": "Liczba Miejsc",
+        "rows": "Rzędy",
+        "columns": "Kolumny",
+        "round": "Okrągły",
+        "rectangular": "Prostokątny",
+        "assignGuest": "Przypisz Gościa do Miejsca",
+        "assignGuestText": "Przypisz gościa",
+        "clearSeat": "Wyczyść Miejsce",
+        "searchGuests": "Szukaj zaproszeń lub gości...",
+        "alreadySeated": "(Już przypisany)",
+        "noGuestsFound": "Nie znaleziono gości",
+        "tableAdded": "Stół dodany pomyślnie",
+        "tableFailed": "Nie udało się dodać stołu",
+        "guestAssigned": "Gość przypisany pomyślnie",
+        "seatCleared": "Miejsce wyczyszczone pomyślnie",
+        "assignFailed": "Nie udało się przypisać gościa",
+        "deleteTable": {
+          "header": "Usuń stół",
+          "message": "Czy jesteś pewien, że chcesz usunąć ten stół? Wszystkie przypisania miejsc zostaną utracone."
+        },
+        "desktop": {
+          "title": "Funkcja Tylko dla Komputerów",
+          "description": "Planer stołów jest zoptymalizowany do użytku na komputerach. Użyj większego ekranu z myszą lub trackpadem, aby rozmieszczać stoły i przypisywać miejsca.",
+          "mobileNote": "Nadal możesz zarządzać listą gości i innymi szczegółami wydarzenia na urządzeniu mobilnym."
+        },
+        "controls": {
+          "resetView": "Resetuj Widok",
+          "zoomIn": "Powiększ",
+          "zoomOut": "Pomniejsz",
+          "hint": "Przytrzymaj <ctrl>Ctrl</ctrl> + przeciągnij, aby przesunąć • <ctrl>Ctrl</ctrl> + przewiń, aby powiększyć"
+        },
+        "shapeTypes": {
+          "ROUND": "Okrągły",
+          "RECTANGULAR": "Prostokątny"
+        }
       }
     }
   },

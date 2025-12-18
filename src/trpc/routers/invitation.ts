@@ -45,13 +45,13 @@ export const invitationRouter = createTRPCRouter({
               gender: guest.gender,
               type: guest.guestType,
               status: AttendanceStatus.PENDING,
-              menuId: guest.menuId ?? null
+              menuId: guest.menuId ?? null,
             };
           }
         );
 
         for (const guest of guests) {
-          if(guest.menuId) {
+          if (guest.menuId) {
             await assertOwnerOfMenu(user.id, guest.menuId, db);
           }
         }
@@ -158,7 +158,8 @@ export const invitationRouter = createTRPCRouter({
             orderBy: { id: "asc" },
             include: {
               menu: true,
-            }
+              seat: true,
+            },
           },
         },
         take: INVITATIONS_PER_PAGE + 1,

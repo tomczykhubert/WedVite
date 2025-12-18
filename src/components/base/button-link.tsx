@@ -1,9 +1,7 @@
-import React from "react";
 import {
   Button as ButtonPrimitive,
   buttonVariants,
 } from "@/components/ui/button";
-import type { VariantProps } from "class-variance-authority";
 import {
   Tooltip,
   TooltipContent,
@@ -11,11 +9,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Link } from "@/i18n/navigation";
+import type { VariantProps } from "class-variance-authority";
+import React from "react";
 
 interface ButtonProps
   extends React.ComponentProps<"button">,
     VariantProps<typeof buttonVariants> {
   tooltip?: string;
+  tooltipSide?: "top" | "right" | "bottom" | "left";
   children: React.ReactNode;
   href?: string;
   asChild?: boolean;
@@ -23,19 +24,14 @@ interface ButtonProps
 
 const ActionButton: React.FC<ButtonProps> = ({
   tooltip,
+  tooltipSide,
   children,
   href,
   ...buttonProps
 }) => {
   const buttonContent = (
     <ButtonPrimitive asChild={!!href} {...buttonProps}>
-      {href ? (
-        <Link href={href}>
-          {children}
-        </Link>
-      ) : (
-        children
-      )}
+      {href ? <Link href={href}>{children}</Link> : children}
     </ButtonPrimitive>
   );
 
@@ -47,7 +43,7 @@ const ActionButton: React.FC<ButtonProps> = ({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>{buttonContent}</TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side={tooltipSide}>
           <p>{tooltip}</p>
         </TooltipContent>
       </Tooltip>

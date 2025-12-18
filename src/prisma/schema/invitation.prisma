@@ -25,19 +25,20 @@ model Guest {
   updatedAt    DateTime         @updatedAt
   invitationId String
   invitation   Invitation       @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  seat         Seat?
 
   @@map("guest")
 }
 
 model Menu {
-  id      String   @id @default(cuid())
+  id      String  @id @default(cuid())
   name    String
   color   String
-  default Boolean  @default(false)
-  system  Boolean  @default(false)
+  default Boolean @default(false)
+  system  Boolean @default(false)
   guests  Guest[]
   eventId String
-  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 enum Gender {

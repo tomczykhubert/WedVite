@@ -1,0 +1,36 @@
+model Table {
+  id        String     @id @default(cuid())
+  eventId   String
+  event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  shape     TableShape
+  capacity  Int
+  rows      Int? // For rectangular tables
+  columns   Int? // For rectangular tables
+  positionX Float      @default(0)
+  positionY Float      @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  seats     Seat[]
+
+  @@index([eventId])
+  @@map("table")
+}
+
+model Seat {
+  id       String  @id @default(cuid())
+  tableId  String
+  table    Table   @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  position Int
+  guestId  String? @unique
+  guest    Guest?  @relation(fields: [guestId], references: [id], onDelete: SetNull)
+
+  @@index([tableId])
+  @@index([guestId])
+  @@map("seat")
+}
+
+enum TableShape {
+  ROUND
+  RECTANGULAR
+}

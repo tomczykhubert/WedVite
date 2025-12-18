@@ -267,6 +267,48 @@
           "failedToGenerateQR": "Failed to generate QR code. Please try again.",
           "uploadImagesLink": "Upload images link"
         }
+      },
+      "tables": {
+        "tables": "Tables",
+        "tablePlanner": "Table Planner",
+        "add": "Add Table",
+        "name": "Table Name",
+        "shape": "Shape",
+        "capacity": "Number of Seats",
+        "rows": "Rows",
+        "columns": "Columns",
+        "round": "Round",
+        "rectangular": "Rectangular",
+        "assignGuest": "Assign Guest to Seat",
+        "assignGuestText": "Assign guest",
+        "clearSeat": "Clear Seat",
+        "searchGuests": "Search invitations or guests...",
+        "alreadySeated": "(Already seated)",
+        "noGuestsFound": "No guests found",
+        "tableAdded": "Table added successfully",
+        "tableFailed": "Failed to add table",
+        "guestAssigned": "Guest assigned successfully",
+        "seatCleared": "Seat cleared successfully",
+        "assignFailed": "Failed to assign guest",
+        "deleteTable": {
+          "header": "Delete table",
+          "message": "Are you sure you want to delete this table? All seat assignments will be lost."
+        },
+        "desktop": {
+          "title": "Desktop Only Feature",
+          "description": "The table planner is optimized for desktop use. Please use a larger screen with a mouse or trackpad to arrange tables and assign seats.",
+          "mobileNote": "You can still manage your guest list and other event details on mobile."
+        },
+        "controls": {
+          "resetView": "Reset View",
+          "zoomIn": "Zoom in",
+          "zoomOut": "Zoom out",
+          "hint": "Hold <ctrl>Ctrl</ctrl> + drag to pan • <ctrl>Ctrl</ctrl> + scroll to zoom"
+        },
+        "shapeTypes": {
+          "ROUND": "Round",
+          "RECTANGULAR": "Rectangular"
+        }
       }
     }
   },

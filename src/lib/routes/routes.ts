@@ -13,6 +13,7 @@ export const routes = {
       settings: (eventId: ID) => `/dashboard/${eventId}/settings`,
       guests: (eventId: ID) => `/dashboard/${eventId}/guests`,
       gallery: (eventId: ID) => `/dashboard/${eventId}/gallery`,
+      tables: (eventId: ID) => `/dashboard/${eventId}/tables`,
     },
   },
   rsvp: {

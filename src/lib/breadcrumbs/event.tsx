@@ -2,7 +2,13 @@ import { BreadcrumbsItemType } from "@/components/dashboard/sidebar/breadcrumbs"
 import { SidebarGroupType } from "@/components/dashboard/sidebar/navigation";
 import { Event } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
-import { FaCalendarDay, FaGear, FaImages, FaUsers } from "react-icons/fa6";
+import {
+  FaCalendarDay,
+  FaGear,
+  FaImages,
+  FaTable,
+  FaUsers,
+} from "react-icons/fa6";
 import { routes } from "../routes/routes";
 import { buildBaseBreadcrumbs } from "./base";
 
@@ -46,6 +52,11 @@ export const buildEventSidebarItems = async (
           link: routes.dashboard.event.gallery(event.id),
           name: t("gallery.gallery"),
           icon: FaImages,
+        },
+        {
+          link: routes.dashboard.event.tables(event.id),
+          name: t("tables.tables"),
+          icon: FaTable,
         },
       ],
     },

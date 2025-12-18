@@ -10,7 +10,7 @@ import { routes } from "@/lib/routes/routes";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { IconType } from "react-icons";
-import { FaCalendarAlt, FaHome } from "react-icons/fa";
+import { FaCalendar, FaHouse } from "react-icons/fa6";
 
 export async function Navigation({
   sidebarItems,
@@ -25,12 +25,12 @@ export async function Navigation({
         {
           link: routes.home,
           name: t("home"),
-          icon: FaHome,
+          icon: FaHouse,
         },
         {
           link: routes.dashboard.index,
           name: t("events"),
-          icon: FaCalendarAlt,
+          icon: FaCalendar,
         },
       ],
     },

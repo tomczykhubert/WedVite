@@ -3,7 +3,7 @@
 import { signIn } from "@/lib/auth/authClient";
 import { routes } from "@/lib/routes/routes";
 import { useTranslations } from "next-intl";
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa6";
 import { Button } from "../ui/button";
 
 export default function GoogleLogin({

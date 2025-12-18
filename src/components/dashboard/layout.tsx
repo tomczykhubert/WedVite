@@ -8,22 +8,23 @@ import { SidebarGroupType } from "./sidebar/navigation";
 export default async function Layout({
   sidebarItems,
   breadcrumbs,
-  children
+  children,
 }: {
   children: React.ReactNode;
-  sidebarItems: SidebarGroupType[]
-  breadcrumbs: BreadcrumbsItemType[]
+  sidebarItems: SidebarGroupType[];
+  breadcrumbs: BreadcrumbsItemType[];
 }) {
-  const cookieStore = await cookies()
-  const sidebarCookie = cookieStore.get("sidebar_state")
-  const defaultOpen = sidebarCookie === undefined ? true : sidebarCookie.value === "true";
+  const cookieStore = await cookies();
+  const sidebarCookie = cookieStore.get("sidebar_state");
+  const defaultOpen =
+    sidebarCookie === undefined ? true : sidebarCookie.value === "true";
 
   return (
     <>
       <SidebarProvider defaultOpen={defaultOpen}>
-        <AppSidebar sidebarItems={sidebarItems}/>
+        <AppSidebar sidebarItems={sidebarItems} />
         <SidebarInset className="overflow-hidden">
-          <AppHeader breadcrumbs={breadcrumbs}/>
+          <AppHeader breadcrumbs={breadcrumbs} />
           <div className="flex flex-1 flex-col p-4 lg:p-8 relative">
             {children}
           </div>

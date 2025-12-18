@@ -280,6 +280,7 @@
         "round": "Round",
         "rectangular": "Rectangular",
         "assignGuest": "Assign Guest to Seat",
+        "assignGuestDescription": "Select a guest from the list or clear the seat",
         "assignGuestText": "Assign guest",
         "clearSeat": "Clear Seat",
         "searchGuests": "Search invitations or guests...",
@@ -287,8 +288,8 @@
         "noGuestsFound": "No guests found",
         "tableAdded": "Table added successfully",
         "tableFailed": "Failed to add table",
-        "guestAssigned": "Guest assigned successfully",
-        "seatCleared": "Seat cleared successfully",
+        "guestAssigned": "Guest assigned",
+        "seatCleared": "Seat cleared",
         "assignFailed": "Failed to assign guest",
         "deleteTable": {
           "header": "Delete table",

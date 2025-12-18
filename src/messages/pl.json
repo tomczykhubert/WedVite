@@ -301,6 +301,7 @@
         "round": "Okrągły",
         "rectangular": "Prostokątny",
         "assignGuest": "Przypisz Gościa do Miejsca",
+        "assignGuestDescription": "Wybierz gościa z listy lub wyczyść miejsce",
         "assignGuestText": "Przypisz gościa",
         "clearSeat": "Wyczyść Miejsce",
         "searchGuests": "Szukaj zaproszeń lub gości...",
@@ -308,8 +309,8 @@
         "noGuestsFound": "Nie znaleziono gości",
         "tableAdded": "Stół dodany pomyślnie",
         "tableFailed": "Nie udało się dodać stołu",
-        "guestAssigned": "Gość przypisany pomyślnie",
-        "seatCleared": "Miejsce wyczyszczone pomyślnie",
+        "guestAssigned": "Gość przypisany",
+        "seatCleared": "Miejsce wyczyszczone",
         "assignFailed": "Nie udało się przypisać gościa",
         "deleteTable": {
           "header": "Usuń stół",

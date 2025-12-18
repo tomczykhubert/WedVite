@@ -13,8 +13,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useTRPC } from "@/trpc/client";
+import { AttendanceStatus, GuestType, InvitationStatus } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, User, Users, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -31,6 +33,9 @@ export function GuestAssignmentSheet({
   onClose,
   onSuccess,
 }: GuestAssignmentSheetProps) {
+  const tInvitations = useTranslations("dashboard.event.invitations");
+  const tGuests = useTranslations("dashboard.event.guests");
+  const t = useTranslations("dashboard.event.tables");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
@@ -48,12 +53,14 @@ export function GuestAssignmentSheet({
       onSuccess: async (_, variables) => {
         await queryClient.invalidateQueries(trpc.table.pathFilter());
         await queryClient.invalidateQueries(trpc.invitation.pathFilter());
-        toast.success(variables.guestId ? "Guest assigned" : "Seat cleared");
+        toast.success(
+          variables.guestId ? t("guestAssigned") : t("seatCleared")
+        );
         onSuccess();
         onClose();
       },
       onError: () => {
-        toast.error("Failed to assign guest");
+        toast.error(t("assignFailed"));
       },
       onMutate: async () => {
         setLoading(true);
@@ -68,23 +75,33 @@ export function GuestAssignmentSheet({
     assignGuest.mutate({ seatId, guestId });
   };
 
+  const getInvitationStatusLabel = (status: InvitationStatus) => {
+    return tInvitations(`status.${status}`);
+  };
+
+  const getGuestStatusLabel = (status: AttendanceStatus) => {
+    return tGuests(`status.${status}`);
+  };
+
+  const getGuestTypeLabel = (type: GuestType) => {
+    return tGuests(`guestTypes.${type}`);
+  };
+
   return (
     <>
       <Loader isLoading={loading} />
       <Sheet open onOpenChange={onClose}>
-        <SheetContent className="w-full sm:max-w-lg">
+        <SheetContent className="w-full sm:max-w-lg p-3">
           <SheetHeader>
-            <SheetTitle>Assign Guest to Seat</SheetTitle>
-            <SheetDescription>
-              Select a guest from the list or clear the seat
-            </SheetDescription>
+            <SheetTitle>{t("assignGuest")}</SheetTitle>
+            <SheetDescription>{t("assignGuestDescription")}</SheetDescription>
           </SheetHeader>
 
           <div className="mt-6 space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search invitations or guests..."
+                placeholder={t("searchGuests")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
@@ -98,7 +115,7 @@ export function GuestAssignmentSheet({
               disabled={loading}
             >
               <X className="h-4 w-4 mr-2" />
-              Clear Seat
+              {t("clearSeat")}
             </Button>
 
             <ScrollArea className="h-[calc(100vh-280px)]">
@@ -112,9 +129,11 @@ export function GuestAssignmentSheet({
                       className="border rounded-lg p-4 space-y-2"
                     >
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                        <h3 className="font-semibold">{invitation.name}</h3>
-                        <Badge variant="outline">{invitation.status}</Badge>
+                        <Users className="text-muted-foreground" />
+                        <h3 className="mb-0">{invitation.name}</h3>
+                        <Badge variant="outline">
+                          {getInvitationStatusLabel(invitation.status)}
+                        </Badge>
                       </div>
 
                       <div className="space-y-2 pl-6">
@@ -131,10 +150,11 @@ export function GuestAssignmentSheet({
                               <div className="flex-1 text-left">
                                 <div className="font-medium">{guest.name}</div>
                                 <div className="text-xs text-muted-foreground">
-                                  {guest.type} • {guest.status}
+                                  {getGuestTypeLabel(guest.type)} •{" "}
+                                  {getGuestStatusLabel(guest.status)}
                                   {guest.seat && (
                                     <span className="ml-2 text-orange-600">
-                                      (Already seated)
+                                      {t("alreadySeated")}
                                     </span>
                                   )}
                                 </div>
@@ -148,7 +168,7 @@ export function GuestAssignmentSheet({
 
                   {data?.items.length === 0 && (
                     <div className="text-center text-muted-foreground py-8">
-                      No guests found
+                      {t("noGuestsFound")}
                     </div>
                   )}
                 </div>

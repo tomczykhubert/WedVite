@@ -7,10 +7,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { routes } from "@/lib/routes/routes";
+import { Calendar, Home, LucideIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { IconType } from "react-icons";
-import { FaCalendar, FaHouse } from "react-icons/fa6";
 
 export async function Navigation({
   sidebarItems,
@@ -25,12 +24,12 @@ export async function Navigation({
         {
           link: routes.home,
           name: t("home"),
-          icon: FaHouse,
+          icon: Home,
         },
         {
           link: routes.dashboard.index,
           name: t("events"),
-          icon: FaCalendar,
+          icon: Calendar,
         },
       ],
     },
@@ -64,7 +63,7 @@ export async function Navigation({
 }
 
 export type SidebarItemType = {
-  icon: IconType;
+  icon: LucideIcon;
   name: string;
   link: string;
 };

@@ -30,10 +30,10 @@ import { TRPCResponse } from "@/trpc/routers/_app";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Event, Gender, Guest, GuestType, Invitation } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FaPlus } from "react-icons/fa6";
 import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
 import { useInvitations } from "./invitations-context";
 
@@ -188,7 +188,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
                             form.trigger("guests");
                           }}
                         >
-                          <FaPlus /> {invT("addGuest")}
+                          <Plus /> {invT("addGuest")}
                         </Button>
                       </FormItem>
                     )}

@@ -1,9 +1,5 @@
 import { InvitationStatus } from "@prisma/client";
-import {
-  FaPenToSquare,
-  FaRegEnvelope,
-  FaRegEnvelopeOpen,
-} from "react-icons/fa6";
+import { Mail, MailOpen, PenSquare } from "lucide-react";
 
 export function getInvitationStatusIcon(
   status: InvitationStatus,
@@ -12,19 +8,19 @@ export function getInvitationStatusIcon(
   switch (status) {
     case InvitationStatus.ANSWERED:
       return (
-        <FaRegEnvelopeOpen
+        <MailOpen
           className={`text-green-500 w-8 ${size === "small" ? "size-4" : "size-5"}`}
         />
       );
     case InvitationStatus.CREATED:
       return (
-        <FaPenToSquare
+        <PenSquare
           className={`text-gray-500 w-8 ${size === "small" ? "size-4" : "size-5"}`}
         />
       );
     case InvitationStatus.DELIVERED:
       return (
-        <FaRegEnvelope
+        <Mail
           className={`text-yellow-500 w-8 ${size === "small" ? "size-4" : "size-5"}`}
         />
       );

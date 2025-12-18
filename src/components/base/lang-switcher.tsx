@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/menubar";
 import { Link } from "@/i18n/navigation";
 import { availableLocales } from "@/i18n/routing";
+import { Globe } from "lucide-react";
 import { getLocale } from "next-intl/server";
 import { headers } from "next/headers";
 import Image from "next/image";
-import { FaGlobe } from "react-icons/fa6";
 
 export async function LangSwitcher() {
   const locale = await getLocale();
@@ -23,7 +23,7 @@ export async function LangSwitcher() {
     <Menubar className="p-0 h-9 w-9 border transition-all hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50">
       <MenubarMenu>
         <MenubarTrigger className="w-full h-full flex items-center justify-center cursor-pointer">
-          <FaGlobe />
+          <Globe />
         </MenubarTrigger>
         <MenubarContent>
           <MenubarRadioGroup value={locale}>

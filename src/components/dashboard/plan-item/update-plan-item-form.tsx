@@ -5,9 +5,9 @@ import { BasePlanItemData } from "@/schemas/planItemFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { EventPlanItem } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PenSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaPenToSquare } from "react-icons/fa6";
 import { toast } from "sonner";
 import PlanItemForm from "./plan-item-form";
 
@@ -63,7 +63,7 @@ export default function UpdatePlanItemForm({
 
   const trigger = (
     <ActionButton variant="default" size="icon" tooltip={t("update")}>
-      <FaPenToSquare />
+      <PenSquare />
     </ActionButton>
   );
   return (

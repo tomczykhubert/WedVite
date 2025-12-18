@@ -4,10 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { toMB } from "@/lib/storage/utils";
 import { cn } from "@/lib/utils";
-import { Download, Pencil } from "lucide-react";
+import { Download, Pencil, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import Image from "next/image";
-import { FaTrash } from "react-icons/fa6";
 
 interface ImageCardProps {
   image: {
@@ -77,7 +76,7 @@ export function ImageCard({
                   variant="destructive"
                   tooltip={t("delete.header")}
                 >
-                  <FaTrash />
+                  <Trash2 />
                 </ActionButton>
               }
             />

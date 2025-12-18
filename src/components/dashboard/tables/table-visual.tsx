@@ -8,10 +8,10 @@ import {
 import { cn } from "@/lib/utils";
 import { SeatWithRelations } from "@/types/table";
 import { TableShape } from "@prisma/client";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useMemo } from "react";
-import { FaPlus } from "react-icons/fa6";
 import { getGuestImage } from "../guests/guest-row";
 
 type SeatSide = "top" | "right" | "bottom" | "left";
@@ -199,7 +199,7 @@ export function TableVisual({
                   />
                 ) : (
                   <span className="text-xs font-medium text-muted-foreground">
-                    <FaPlus />
+                    <Plus />
                   </span>
                 )}
               </button>

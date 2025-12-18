@@ -8,9 +8,9 @@ import { TRPCResponse } from "@/trpc/routers/_app";
 import ID from "@/types/id";
 import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { BookUser } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaAddressBook } from "react-icons/fa6";
 import ContactForm from "./contact-form";
 
 type AddContactFormProps = {
@@ -61,7 +61,7 @@ export default function AddContactForm({ eventId }: AddContactFormProps) {
   const trigger = (
     <Card className="h-full min-h-[300px] text-accent bg-accent/20 hover:bg-muted hover:text-current transition-all duration-200 cursor-pointer border-dashed border-2">
       <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
-        <FaAddressBook className="h-20 w-20" />
+        <BookUser className="h-20 w-20" />
         <span>{t("add")}</span>
       </CardContent>
     </Card>

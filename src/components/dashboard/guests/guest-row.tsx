@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Gender, Guest, GuestType, Invitation } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { FaDrumstickBite } from "react-icons/fa6";
+import { MenuIcon } from "../event/menu/menu-icon";
 import GuestActions from "./guest-actions";
 import { AttendanceStatusBadge } from "./invitations-badges";
 import {
@@ -70,12 +70,7 @@ export default function GuestRow({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div
-                  className="rounded-full flex items-center justify-center p-2 aspect-square"
-                  style={{ backgroundColor: guest.menu.color }}
-                >
-                  <FaDrumstickBite className="text-white" />
-                </div>
+                <MenuIcon color={guest.menu.color} />
               </TooltipTrigger>
               <TooltipContent>
                 {guest.menu.system ? tMenu(guest.menu.name) : guest.menu.name}

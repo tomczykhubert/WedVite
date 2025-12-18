@@ -5,15 +5,9 @@ import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { EventContact } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { GripVertical, Mail, Phone, Trash2, User } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import {
-  FaEnvelope,
-  FaGripVertical,
-  FaPhone,
-  FaTrash,
-  FaUser,
-} from "react-icons/fa6";
 
 import { toast } from "sonner";
 import UpdateContactForm from "./update-contact-form";
@@ -32,17 +26,17 @@ export default function ContactCard({
   const details = [
     {
       id: "name",
-      icon: FaUser,
+      icon: User,
       text: `${contact.firstName} ${contact.lastName}`,
     },
     {
       id: "email",
-      icon: FaEnvelope,
+      icon: Mail,
       text: contact.email,
     },
     {
       id: "phone",
-      icon: FaPhone,
+      icon: Phone,
       text: contact.phoneNumber,
     },
   ] as const;
@@ -70,7 +64,7 @@ export default function ContactCard({
             {...dragListeners}
             {...dragAttributes}
           >
-            <FaGripVertical />
+            <GripVertical />
           </ActionButton>
           <DeleteContact contact={contact} />
         </div>
@@ -124,7 +118,7 @@ function DeleteContact({ contact }: { contact: EventContact }) {
       onConfirm={onConfirm}
       trigger={
         <ActionButton variant="destructive" size="icon" tooltip={t("header")}>
-          <FaTrash />
+          <Trash2 />
         </ActionButton>
       }
     />

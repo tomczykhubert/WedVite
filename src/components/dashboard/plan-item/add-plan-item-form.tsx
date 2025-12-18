@@ -5,9 +5,9 @@ import { BasePlanItemData } from "@/schemas/planItemFormConfig";
 import { useTRPC } from "@/trpc/client";
 import ID from "@/types/id";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CalendarPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaCalendarPlus } from "react-icons/fa6";
 import { toast } from "sonner";
 import PlanItemForm from "./plan-item-form";
 
@@ -62,7 +62,7 @@ export default function AddPlanItemForm({ eventId }: AddPlanItemFormProps) {
   const trigger = (
     <Card className="h-full min-h-[300px] text-accent bg-accent/20 hover:bg-muted hover:text-current transition-all duration-200 cursor-pointer border-dashed border-2">
       <CardContent className="flex flex-col h-full justify-center items-center gap-4 font-bold">
-        <FaCalendarPlus className="h-20 w-20" />
+        <CalendarPlus className="h-20 w-20" />
         <span>{t("add")}</span>
       </CardContent>
     </Card>

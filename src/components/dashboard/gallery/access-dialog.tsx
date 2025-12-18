@@ -13,11 +13,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { routes } from "@/lib/routes/routes";
 import ID from "@/types/id";
+import { Copy, Link as LinkIcon, QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
-import { FaCopy, FaLink, FaQrcode } from "react-icons/fa6";
 import { toast } from "sonner";
 
 const QR_CODE_SIZE = 256;
@@ -78,11 +78,11 @@ export default function AccessDialog({
           <Tabs defaultValue="qr" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="qr" className="flex items-center gap-2">
-                <FaQrcode className="h-4 w-4" />
+                <QrCode className="h-4 w-4" />
                 {t("qrCode")}
               </TabsTrigger>
               <TabsTrigger value="link" className="flex items-center gap-2">
-                <FaLink className="h-4 w-4" />
+                <LinkIcon className="h-4 w-4" />
                 {t("link")}
               </TabsTrigger>
             </TabsList>
@@ -131,7 +131,7 @@ export default function AccessDialog({
                     onClick={copyToClipboard}
                     tooltip={t("copyLink")}
                   >
-                    <FaCopy />
+                    <Copy />
                   </ActionButton>
                 </div>
               </div>

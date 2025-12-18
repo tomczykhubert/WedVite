@@ -3,8 +3,8 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useRouter } from "@/i18n/navigation";
 import { signOut } from "@/lib/auth/authClient";
 import { routes } from "@/lib/routes/routes";
+import { LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
 
 export default function UserSignOut() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function UserSignOut() {
         });
       }}
     >
-      <FaArrowRightFromBracket />
+      <LogOut />
       <span>{t("signOut")}</span>
     </DropdownMenuItem>
   );

@@ -1,10 +1,9 @@
 import { routes } from "@/lib/routes/routes";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
+import { Bell, CalendarDays, CreditCard, LucideIcon, User } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { FaBell, FaCalendarDays, FaCreditCard, FaUser } from "react-icons/fa6";
-import { IconType } from "react-icons/lib";
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
@@ -17,23 +16,23 @@ export default async function UserMenuItems({
     {
       href: routes.dashboard.index,
       title: "dashboard",
-      icon: FaCalendarDays,
+      icon: CalendarDays,
     },
     [
       {
         href: routes.account.index,
         title: "account",
-        icon: FaUser,
+        icon: User,
       },
       {
         href: routes.account.billing,
         title: "billing",
-        icon: FaCreditCard,
+        icon: CreditCard,
       },
       {
         href: routes.account.notifications,
         title: "notifications",
-        icon: FaBell,
+        icon: Bell,
       },
     ],
   ],
@@ -83,7 +82,7 @@ function UserMenuSeparator() {
 type UserMenuItem = {
   href: string;
   title: string;
-  icon: IconType;
+  icon: LucideIcon;
 };
 
 type UserMenuItems = UserMenuItem[];

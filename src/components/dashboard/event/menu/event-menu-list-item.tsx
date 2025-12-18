@@ -3,9 +3,10 @@ import ConfirmModal from "@/components/base/confirm-modal";
 import { useTRPC } from "@/trpc/client";
 import { Menu } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Check, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FaCheck, FaDrumstickBite, FaTrash } from "react-icons/fa6";
 import { toast } from "sonner";
+import { MenuIcon } from "./menu-icon";
 import UpdateEventMenuForm from "./update-event-menu-form";
 
 export default function EventMenuListItem({ menu }: { menu: Menu }) {
@@ -13,12 +14,7 @@ export default function EventMenuListItem({ menu }: { menu: Menu }) {
   return (
     <div className="flex gap-2 items-center justify-between p-4 border rounded-md">
       <div className="flex gap-2 items-center">
-        <div
-          className="rounded-full flex items-center justify-center p-2"
-          style={{ backgroundColor: menu.color }}
-        >
-          <FaDrumstickBite className="text-white" />
-        </div>
+        <MenuIcon color={menu.color} />
         <span className="whitespace-normal [overflow-wrap:anywhere] mb-0">
           {menu.system ? t(`system.types.${menu.name}`) : menu.name}
         </span>
@@ -60,7 +56,7 @@ function DeleteEventMenu({ menu }: { menu: Menu }) {
       onConfirm={onConfirm}
       trigger={
         <ActionButton variant="destructive" size="sm" tooltip={t("header")}>
-          <FaTrash />
+          <Trash2 />
         </ActionButton>
       }
     />
@@ -91,7 +87,7 @@ function MarkEventMenuAsDefault({ menu }: { menu: Menu }) {
   if (menu.default) {
     return (
       <span className="text-green-500 px-2.5">
-        <FaCheck />
+        <Check />
       </span>
     );
   }
@@ -104,7 +100,7 @@ function MarkEventMenuAsDefault({ menu }: { menu: Menu }) {
       confirmVariant={"default"}
       trigger={
         <ActionButton variant="outline" size="sm" tooltip={t("header")}>
-          <FaCheck />
+          <Check />
         </ActionButton>
       }
     />

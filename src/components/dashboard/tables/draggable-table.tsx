@@ -5,9 +5,9 @@ import ConfirmModal from "@/components/base/confirm-modal";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { TableWithRelations } from "@/types/table";
+import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { FaTrash } from "react-icons/fa6";
 import { TableVisual } from "./table-visual";
 
 interface DraggableTableProps {
@@ -132,7 +132,7 @@ export function DraggableTable({
               tooltip={t("deleteTable.header")}
               tooltipSide="bottom"
             >
-              <FaTrash />
+              <Trash2 />
             </ActionButton>
           }
         />

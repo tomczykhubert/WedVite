@@ -7,8 +7,8 @@ import { TRPCResponse } from "@/trpc/routers/_app";
 import ID from "@/types/id";
 import { Event, Menu } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FaPlus } from "react-icons/fa6";
 import { toast } from "sonner";
 import AddEventMenuForm from "./add-event-menu-form";
 import EventMenuListItem from "./event-menu-list-item";
@@ -80,7 +80,7 @@ function AddSystemMenus({ eventId }: { eventId: ID }) {
       confirmVariant={"default"}
       trigger={
         <ActionButton variant="default" size="sm" tooltip={t("header")}>
-          <FaPlus /> {t("header")}
+          <Plus /> {t("header")}
         </ActionButton>
       }
     />

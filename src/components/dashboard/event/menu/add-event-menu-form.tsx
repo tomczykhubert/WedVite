@@ -8,9 +8,9 @@ import { TRPCResponse } from "@/trpc/routers/_app";
 import ID from "@/types/id";
 import { Menu } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa6";
 import { toast } from "sonner";
 import EventMenuForm from "./event-menu-form";
 
@@ -59,7 +59,7 @@ export default function AddEventMenuForm({ eventId }: AddEventMenuFormProps) {
 
   const trigger = (
     <Button className="w-full" variant={"primaryOutline"}>
-      <FaPlus />
+      <Plus />
       {t("add")}
     </Button>
   );

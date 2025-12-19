@@ -17,6 +17,7 @@ interface DraggableTableProps {
   onPositionChange: (tableId: string, x: number, y: number) => void;
   onDragUpdate: (tableId: string, x: number, y: number) => void;
   onSeatClick: (seatId: string) => void;
+  onGuestMove: (fromSeatId: string, toSeatId: string) => void;
   onDelete: (tableId: string) => void;
 }
 
@@ -25,6 +26,7 @@ export function DraggableTable({
   onPositionChange,
   onDragUpdate,
   onSeatClick,
+  onGuestMove,
   onDelete,
 }: DraggableTableProps) {
   const t = useTranslations("dashboard.event.tables");
@@ -69,6 +71,7 @@ export function DraggableTable({
         columns={table.columns}
         seats={table.seats}
         onSeatClick={onSeatClick}
+        onGuestMove={onGuestMove}
         isDragging={isDragging}
       />
       <div

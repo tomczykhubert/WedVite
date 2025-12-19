@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { SeatWithRelations } from "@/types/table";
-import { TableShape } from "@prisma/client";
+import { GuestType, TableShape } from "@prisma/client";
 import { UserPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getGuestImage } from "../guests/guest-row";
 import {
   calculateRoundTableDiameter,
@@ -21,6 +21,7 @@ import {
   SEAT_SPACING,
   TABLE_PADDING,
 } from "./constants";
+import { useGuestDrag } from "./hooks/use-guest-drag";
 
 type SeatSide = "top" | "right" | "bottom" | "left";
 
@@ -30,6 +31,7 @@ interface TableVisualProps {
   columns?: number | null;
   seats: SeatWithRelations[];
   onSeatClick?: (seatId: string) => void;
+  onGuestMove?: (fromSeatId: string, toSeatId: string) => void;
   isDragging?: boolean;
 }
 
@@ -39,6 +41,7 @@ export function TableVisual({
   columns,
   seats,
   onSeatClick,
+  onGuestMove,
   isDragging,
 }: TableVisualProps) {
   const t = useTranslations("dashboard.event");
@@ -173,44 +176,211 @@ export function TableVisual({
         if (!pos) return null;
 
         return (
-          <Tooltip key={seat.id}>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => onSeatClick?.(seat.id)}
-                onMouseDown={(e) => e.stopPropagation()}
-                className={cn(
-                  "cursor-pointer absolute rounded-full border-primary bg-muted hover:bg-primary/50 border-2 transition-all flex items-center justify-center overflow-hidden pointer-events-auto select-none"
-                )}
-                style={{
-                  left: pos.x,
-                  top: pos.y,
-                  width: SEAT_SIZE,
-                  height: SEAT_SIZE,
-                }}
-              >
-                {seat.guest ? (
-                  <Image
-                    src={`/images/guests/${getGuestImage(seat.guest.type, seat.guest.gender)}.png`}
-                    alt={t(
-                      `guests.typeAlt.${getGuestImage(seat.guest.type, seat.guest.gender)}`
-                    )}
-                    width={SEAT_SIZE}
-                    height={SEAT_SIZE}
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="text-xs font-medium text-muted-foreground">
-                    <UserPlus />
-                  </span>
-                )}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side={pos.side} className="pointer-events-none">
-              {seat.guest ? seat.guest.name : t("tables.assignGuestText")}
-            </TooltipContent>
-          </Tooltip>
+          <SeatButton
+            key={seat.id}
+            seat={seat}
+            position={pos}
+            onSeatClick={onSeatClick}
+            onGuestMove={onGuestMove}
+          />
         );
       })}
     </div>
+  );
+}
+
+interface SeatButtonProps {
+  seat: SeatWithRelations;
+  position: { x: number; y: number; side: SeatSide };
+  onSeatClick?: (seatId: string) => void;
+  onGuestMove?: (fromSeatId: string, toSeatId: string) => void;
+}
+
+function SeatButton({
+  seat,
+  position,
+  onSeatClick,
+  onGuestMove,
+}: SeatButtonProps) {
+  const t = useTranslations("dashboard.event");
+  const { isDragging, isOver, dragHandlers } = useGuestDrag({
+    seatId: seat.id,
+    guestId: seat.guest?.id || null,
+    onGuestMove: onGuestMove || (() => {}),
+  });
+  const isTouchDevice =
+    typeof window !== "undefined" &&
+    ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
+  const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null);
+  const touchStartTime = useRef<number | null>(null);
+  const movedDuringTouch = useRef(false);
+  const ignoreNextClick = useRef(false);
+  const holdTimer = useRef<number | null>(null);
+  const HOLD_DURATION = 500; // ms
+
+  useEffect(() => {
+    const handleDocTouchEnd = (ev: TouchEvent) => {
+      if (!tooltipOpen) return;
+      const target = ev.target as Node | null;
+      if (!target) return;
+      const closestSeat = (target as HTMLElement).closest
+        ? (target as HTMLElement).closest("[data-seat-id]")
+        : null;
+      if (closestSeat && closestSeat.getAttribute("data-seat-id") === seat.id)
+        return;
+      setTooltipOpen(false);
+    };
+
+    document.addEventListener("touchend", handleDocTouchEnd, {
+      passive: true,
+    });
+    return () => document.removeEventListener("touchend", handleDocTouchEnd);
+  }, [tooltipOpen, seat.id]);
+
+  useEffect(() => {
+    return () => {
+      if (holdTimer.current) {
+        clearTimeout(holdTimer.current);
+        holdTimer.current = null;
+      }
+    };
+  }, []);
+
+  const handleTouchStartWrapper = (e: React.TouchEvent) => {
+    dragHandlers.onTouchStart?.(e as any);
+    const touch = e.touches[0];
+    touchStartPos.current = touch
+      ? { x: touch.clientX, y: touch.clientY }
+      : null;
+    touchStartTime.current = Date.now();
+    movedDuringTouch.current = false;
+
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+
+    holdTimer.current = window.setTimeout(() => {
+      if (!movedDuringTouch.current) {
+        onSeatClick?.(seat.id);
+        ignoreNextClick.current = true;
+        setTooltipOpen(false);
+      }
+      if (holdTimer.current) {
+        clearTimeout(holdTimer.current);
+        holdTimer.current = null;
+      }
+    }, HOLD_DURATION);
+  };
+
+  const handleTouchMoveWrapper = (e: React.TouchEvent) => {
+    dragHandlers.onTouchMove?.(e as any);
+    const touch = e.touches[0];
+    if (!touch || !touchStartPos.current) return;
+    const dx = touch.clientX - touchStartPos.current.x;
+    const dy = touch.clientY - touchStartPos.current.y;
+    if (Math.hypot(dx, dy) > 10) movedDuringTouch.current = true;
+    if (movedDuringTouch.current && holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+  };
+
+  const handleTouchEndWrapper = (e: React.TouchEvent) => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+
+    const duration = touchStartTime.current
+      ? Date.now() - touchStartTime.current
+      : 0;
+    const isTap = duration < 300 && !movedDuringTouch.current;
+
+    dragHandlers.onTouchEnd?.(e as any);
+
+    if (isTap) {
+      setTooltipOpen((v) => !v);
+      ignoreNextClick.current = true;
+    }
+
+    touchStartPos.current = null;
+    touchStartTime.current = null;
+    movedDuringTouch.current = false;
+  };
+
+  const handleClickWrapper = (e: React.MouseEvent) => {
+    if (ignoreNextClick.current) {
+      ignoreNextClick.current = false;
+      e.stopPropagation();
+      return;
+    }
+    onSeatClick?.(seat.id);
+  };
+
+  return (
+    <>
+      <Tooltip
+        key={`${seat.id}-${position.x}-${position.y}-${tooltipOpen ? "open" : "closed"}`}
+        {...(isTouchDevice
+          ? { open: tooltipOpen, onOpenChange: setTooltipOpen }
+          : {})}
+      >
+        <TooltipTrigger asChild>
+          <button
+            data-seat-id={seat.id}
+            draggable={dragHandlers.draggable}
+            onDragStart={dragHandlers.onDragStart}
+            onDragEnd={dragHandlers.onDragEnd}
+            onDragOver={dragHandlers.onDragOver}
+            onDragEnter={dragHandlers.onDragEnter}
+            onDragLeave={dragHandlers.onDragLeave}
+            onDrop={dragHandlers.onDrop}
+            onTouchStart={handleTouchStartWrapper}
+            onTouchMove={handleTouchMoveWrapper}
+            onTouchEnd={handleTouchEndWrapper}
+            onClick={handleClickWrapper}
+            onMouseDown={(e) => e.stopPropagation()}
+            className={cn(
+              "cursor-pointer absolute rounded-full border-primary bg-muted hover:bg-primary/50 border-2 transition-all flex items-center justify-center overflow-hidden pointer-events-auto select-none",
+              isDragging && "opacity-50 cursor-grabbing",
+              isOver && "ring-2 ring-primary ring-offset-2",
+              seat.guest && "cursor-grab"
+            )}
+            style={{
+              left: position.x,
+              top: position.y,
+              width: SEAT_SIZE,
+              height: SEAT_SIZE,
+              zIndex: 10,
+            }}
+          >
+            {seat.guest ? (
+              <Image
+                src={`/images/guests/${getGuestImage(seat.guest.type, seat.guest.gender)}.png`}
+                alt={t(
+                  `guests.typeAlt.${getGuestImage(seat.guest.type, seat.guest.gender)}`
+                )}
+                width={SEAT_SIZE}
+                height={SEAT_SIZE}
+                className="object-cover pointer-events-none"
+                draggable={false}
+              />
+            ) : (
+              <span className="text-xs font-medium text-muted-foreground">
+                <UserPlus />
+              </span>
+            )}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side={position.side} className="pointer-events-none">
+          {seat.guest
+            ? seat.guest.name || t(`guests.guestTypes.${GuestType.COMPANION}`)
+            : t("tables.assignGuestText")}
+        </TooltipContent>
+      </Tooltip>
+    </>
   );
 }

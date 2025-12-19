@@ -15,6 +15,12 @@ import {
 } from "react";
 import { useCanvasControls } from "./hooks/use-canvas-controls";
 
+interface GuestDragState {
+  draggingSeatId: string | null;
+  draggingGuestId: string | null;
+  overSeatId: string | null;
+}
+
 interface TablePlannerContextValue {
   zoom: number;
   pan: { x: number; y: number };
@@ -35,6 +41,8 @@ interface TablePlannerContextValue {
   setDragPositions: React.Dispatch<
     SetStateAction<Record<string, { x: number; y: number }>>
   >;
+  guestDragState: GuestDragState;
+  setGuestDragState: Dispatch<SetStateAction<GuestDragState>>;
 }
 
 const TablePlannerContext = createContext<TablePlannerContextValue | null>(
@@ -53,6 +61,11 @@ export function TablePlannerProvider({ children }: TablePlannerProviderProps) {
   const [dragPositions, setDragPositions] = useState<
     Record<string, { x: number; y: number }>
   >({});
+  const [guestDragState, setGuestDragState] = useState<GuestDragState>({
+    draggingSeatId: null,
+    draggingGuestId: null,
+    overSeatId: null,
+  });
 
   const canvasSize = useMemo(
     () =>
@@ -75,8 +88,10 @@ export function TablePlannerProvider({ children }: TablePlannerProviderProps) {
       setTables,
       dragPositions,
       setDragPositions,
+      guestDragState,
+      setGuestDragState,
     }),
-    [canvasControls, canvasSize, tables, dragPositions]
+    [canvasControls, canvasSize, tables, dragPositions, guestDragState]
   );
 
   return (

@@ -64,8 +64,12 @@ function TablePlannerContent({ event }: TablePlannerProps) {
     }
   }, [fetchedTables, setTables]);
 
-  const { handlePositionChange, handleDelete, invalidateTables } =
-    useTableMutations(event.id);
+  const {
+    handlePositionChange,
+    handleDelete,
+    handleMoveGuest,
+    invalidateTables,
+  } = useTableMutations(event.id);
 
   const handleDragUpdate = (tableId: string, x: number, y: number) => {
     setDragPositions((prev) => ({ ...prev, [tableId]: { x, y } }));
@@ -152,6 +156,7 @@ function TablePlannerContent({ event }: TablePlannerProps) {
                 onPositionChange={handleDragEnd}
                 onDragUpdate={handleDragUpdate}
                 onSeatClick={setSelectedSeatId}
+                onGuestMove={handleMoveGuest}
                 onDelete={handleDelete}
               />
             ))}

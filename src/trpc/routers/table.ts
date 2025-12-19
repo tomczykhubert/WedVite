@@ -111,4 +111,54 @@ export const tableRouter = createTRPCRouter({
         where: { id: input.tableId },
       });
     }),
+
+  moveGuest: protectedProcedure
+    .input(
+      z.object({
+        fromSeatId: z.string(),
+        toSeatId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const fromSeat = await assertOwnerOfSeat(
+        ctx.user.id,
+        input.fromSeatId,
+        ctx.db
+      );
+      const toSeat = await assertOwnerOfSeat(
+        ctx.user.id,
+        input.toSeatId,
+        ctx.db
+      );
+
+      await ctx.db.$transaction(async (tx) => {
+        await tx.seat.update({
+          where: { id: fromSeat.id },
+          data: { guestId: null },
+        });
+
+        if (toSeat.guestId) {
+          await tx.seat.update({
+            where: { id: toSeat.id },
+            data: { guestId: null },
+          });
+        }
+
+        if (fromSeat.guestId) {
+          await tx.seat.update({
+            where: { id: toSeat.id },
+            data: { guestId: fromSeat.guestId },
+          });
+        }
+
+        if (toSeat.guestId) {
+          await tx.seat.update({
+            where: { id: fromSeat.id },
+            data: { guestId: toSeat.guestId },
+          });
+        }
+      });
+
+      return { success: true };
+    }),
 });

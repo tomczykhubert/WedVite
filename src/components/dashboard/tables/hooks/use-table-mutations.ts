@@ -87,12 +87,27 @@ export function useTableMutations(eventId: string) {
     await deleteTable.mutateAsync({ tableId });
   };
 
+  const moveGuest = useMutation(
+    trpc.table.moveGuest.mutationOptions({
+      onSuccess: () => {
+        invalidateTables();
+        invalidateInvitations();
+      },
+    })
+  );
+
+  const handleMoveGuest = async (fromSeatId: string, toSeatId: string) => {
+    await moveGuest.mutateAsync({ fromSeatId, toSeatId });
+  };
+
   return {
     updatePosition,
     deleteTable,
     createTable,
+    moveGuest,
     handlePositionChange,
     handleDelete,
+    handleMoveGuest,
     invalidateTables,
   };
 }

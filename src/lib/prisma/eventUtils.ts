@@ -128,7 +128,7 @@ export const assertOwnerOfSeat = async (
   seatId: ID,
   db: PrismaClient
 ) => {
-  const count = await db.seat.count({
+  const seat = await db.seat.findUnique({
     where: {
       id: seatId,
       table: {
@@ -139,7 +139,11 @@ export const assertOwnerOfSeat = async (
     },
   });
 
-  assertOwnership(count);
+  if (!seat) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return seat;
 };
 
 const assertOwnership = (count: number) => {

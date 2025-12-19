@@ -56,7 +56,7 @@ export function AddTableDialog({
   const t = useTranslations("dashboard.event.tables");
   const [loading, setLoading] = useState(false);
   const { pan, zoom, canvasRef } = useTablePlanner();
-  const { createTable } = useTableMutations();
+  const { createTable } = useTableMutations(eventId);
 
   const form = useForm<AddTableData>({
     resolver: zodResolver(addTableSchema),
@@ -109,7 +109,7 @@ export function AddTableDialog({
       form.reset();
       onOpenChange(false);
       onSuccess();
-    } catch (error) {
+    } catch {
       toast.error(t("tableFailed"));
     } finally {
       setLoading(false);

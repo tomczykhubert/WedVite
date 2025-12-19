@@ -9,13 +9,23 @@ export const TABLE_PADDING = 40;
 export const CANVAS_GRID_SIZE = 40;
 
 // Table dimension constants
-export const ROUND_TABLE_DIAMETER = 200;
+export const MIN_ROUND_TABLE_DIAMETER = 120;
 export const RECTANGULAR_SEAT_WIDTH = 60;
 export const RECTANGULAR_BASE_PADDING = 200;
 
 // Calculate total table dimensions including margins
 const SEAT_OFFSET = SEAT_SIZE + SEAT_SPACING * 2;
-export const ROUND_TABLE_TOTAL_SIZE = ROUND_TABLE_DIAMETER + SEAT_OFFSET * 2; // 400
+
+export function calculateRoundTableDiameter(capacity: number): number {
+  // Minimum spacing between seats on the perimeter
+  const minSeatSpacing = SEAT_SIZE + SEAT_SPACING * 2;
+  // Calculate circumference needed
+  const circumference = capacity * minSeatSpacing;
+  // Calculate diameter from circumference (C = π * d)
+  const calculatedDiameter = circumference / Math.PI;
+  // Use minimum diameter for small capacities
+  return Math.max(MIN_ROUND_TABLE_DIAMETER, calculatedDiameter);
+}
 
 // Capacity constraints
 export const MIN_GRID_SIZE = 1;
@@ -42,22 +52,35 @@ export function calculateRectangularSeats(
 export function getTableDimensions(
   shapeOrTable:
     | TableShape
-    | { shape: string; rows?: number | null; columns?: number | null },
+    | {
+        shape: string;
+        rows?: number | null;
+        columns?: number | null;
+        capacity?: number;
+      },
   rows?: number | null,
-  columns?: number | null
+  columns?: number | null,
+  capacity?: number
 ): { width: number; height: number } {
   // Handle object parameter (table entity)
   if (typeof shapeOrTable === "object") {
     const shape = shapeOrTable.shape as TableShape;
-    return getTableDimensions(shape, shapeOrTable.rows, shapeOrTable.columns);
+    return getTableDimensions(
+      shape,
+      shapeOrTable.rows,
+      shapeOrTable.columns,
+      shapeOrTable.capacity
+    );
   }
 
   const shape = shapeOrTable;
 
   if (shape === TableShape.ROUND) {
+    const diameter = calculateRoundTableDiameter(capacity || DEFAULT_CAPACITY);
+    const totalSize = diameter + SEAT_OFFSET * 2;
     return {
-      width: ROUND_TABLE_TOTAL_SIZE,
-      height: ROUND_TABLE_TOTAL_SIZE,
+      width: totalSize,
+      height: totalSize,
     };
   }
 

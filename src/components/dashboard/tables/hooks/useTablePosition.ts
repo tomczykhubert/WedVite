@@ -1,3 +1,4 @@
+import { AddTableData } from "@/schemas/tableFormConfig";
 import { TableShape } from "@prisma/client";
 import { useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -5,7 +6,7 @@ import { getTableDimensions } from "../constants";
 
 interface UseTablePositionProps {
   open: boolean;
-  form: UseFormReturn<any>;
+  form: UseFormReturn<AddTableData>;
   selectedShape: TableShape;
   rows: number | null;
   columns: number | null;

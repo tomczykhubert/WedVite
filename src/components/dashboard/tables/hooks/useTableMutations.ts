@@ -1,7 +1,8 @@
 import { useTRPC } from "@/trpc/client";
+import { TableWithRelations } from "@/types/table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useTableMutations() {
+export function useTableMutations(eventId: string) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
@@ -14,7 +15,49 @@ export function useTableMutations() {
 
   const updatePosition = useMutation(
     trpc.table.updateTablePosition.mutationOptions({
-      onSuccess: invalidateTables,
+      onMutate: async (variables) => {
+        // Cancel any outgoing refetches to avoid overwriting our optimistic update
+        await queryClient.cancelQueries({
+          queryKey: [["table", "getTables"], { input: { eventId } }],
+        });
+
+        // Snapshot the previous value
+        const previousTables = queryClient.getQueryData<TableWithRelations[]>([
+          ["table", "getTables"],
+          { input: { eventId } },
+        ]);
+
+        // Optimistically update the cache
+        if (previousTables) {
+          queryClient.setQueryData<TableWithRelations[]>(
+            [["table", "getTables"], { input: { eventId } }],
+            previousTables.map((table) =>
+              table.id === variables.tableId
+                ? {
+                    ...table,
+                    positionX: variables.positionX,
+                    positionY: variables.positionY,
+                  }
+                : table
+            )
+          );
+        }
+
+        return { previousTables };
+      },
+      onError: (_err, _variables, context) => {
+        // Rollback to previous value on error
+        if (context?.previousTables) {
+          queryClient.setQueryData(
+            [["table", "getTables"], { input: { eventId } }],
+            context.previousTables
+          );
+        }
+      },
+      onSettled: () => {
+        // Refetch to ensure we're in sync with the server
+        invalidateTables();
+      },
     })
   );
 

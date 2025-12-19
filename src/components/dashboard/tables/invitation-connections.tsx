@@ -3,9 +3,9 @@
 import { TableWithRelations } from "@/types/table";
 import { ReactElement, useMemo } from "react";
 import {
+  calculateRoundTableDiameter,
   DEFAULT_COLUMNS,
   DEFAULT_ROWS,
-  ROUND_TABLE_DIAMETER,
   SEAT_SIZE,
   SEAT_SPACING,
   TABLE_PADDING,
@@ -108,7 +108,7 @@ export function InvitationConnections() {
         transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
         transformOrigin: "0 0",
         overflow: "visible",
-        zIndex: 9999,
+        zIndex: 10,
       }}
     >
       {connections.map((connection) => {
@@ -143,10 +143,6 @@ export function InvitationConnections() {
   );
 }
 
-/**
- * Helper function to calculate seat center position relative to table
- * This matches the logic from table-visual.tsx and returns the center point of each seat
- */
 function calculateSeatPosition(
   table: TableWithRelations,
   seatPosition: number
@@ -154,7 +150,7 @@ function calculateSeatPosition(
   const offset = SEAT_SIZE + SEAT_SPACING * 2;
 
   if (table.shape === "ROUND") {
-    const diameter = ROUND_TABLE_DIAMETER;
+    const diameter = calculateRoundTableDiameter(table.capacity);
     const centerX = offset + diameter / 2;
     const centerY = offset + diameter / 2;
     const radius = diameter / 2 + SEAT_SIZE / 2 + SEAT_SPACING;
@@ -167,15 +163,12 @@ function calculateSeatPosition(
       y: centerY + radius * Math.sin(angle),
     };
   } else {
-    // Rectangular table
     const rowSeats = table.rows || DEFAULT_ROWS;
     const colSeats = table.columns || DEFAULT_COLUMNS;
 
     const tableWidth = colSeats * (SEAT_SIZE + SEAT_SPACING) + TABLE_PADDING;
     const tableHeight = rowSeats * (SEAT_SIZE + SEAT_SPACING) + TABLE_PADDING;
 
-    // Calculate seat center positions in order: top, right, bottom, left
-    // Match table-visual.tsx positions (top-left corner) then add SEAT_SIZE/2 for center
     if (seatPosition < colSeats) {
       // Top edge
       const i = seatPosition;

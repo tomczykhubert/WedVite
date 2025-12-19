@@ -8,7 +8,7 @@ import { Event } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddTableDialog } from "./add-table-dialog";
 import { CanvasControls } from "./canvas-controls";
 import { CanvasHint } from "./canvas-hint";
@@ -53,7 +53,6 @@ function TablePlannerContent({ event }: TablePlannerProps) {
     handleMouseDown,
     tables,
     setTables,
-    dragPositions,
     setDragPositions,
   } = useTablePlanner();
 
@@ -61,23 +60,35 @@ function TablePlannerContent({ event }: TablePlannerProps) {
     trpc.table.getTables.queryOptions({ eventId: event.id })
   );
 
-  if (fetchedTables !== tables) {
-    setTables(fetchedTables);
-  }
+  // Sync fetched tables to context
+  useEffect(() => {
+    if (fetchedTables) {
+      setTables(fetchedTables);
+    }
+  }, [fetchedTables, setTables]);
+
   const { handlePositionChange, handleDelete, invalidateTables } =
-    useTableMutations();
+    useTableMutations(event.id);
 
   const handleDragUpdate = (tableId: string, x: number, y: number) => {
     setDragPositions((prev) => ({ ...prev, [tableId]: { x, y } }));
   };
 
   const handleDragEnd = async (tableId: string, x: number, y: number) => {
-    await handlePositionChange(tableId, x, y);
+    setTables((currentTables) => {
+      if (!currentTables) return currentTables;
+      return currentTables.map((table) =>
+        table.id === tableId ? { ...table, positionX: x, positionY: y } : table
+      );
+    });
+
     setDragPositions((prev) => {
       const newPos = { ...prev };
       delete newPos[tableId];
       return newPos;
     });
+
+    handlePositionChange(tableId, x, y);
   };
 
   const handleNavigateToTable = (

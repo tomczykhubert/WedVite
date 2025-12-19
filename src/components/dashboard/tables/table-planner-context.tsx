@@ -1,28 +1,39 @@
 "use client";
 
 import { TableWithRelations } from "@/types/table";
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  MouseEvent,
+  ReactNode,
+  RefObject,
+  SetStateAction,
+  useContext,
+  useMemo,
+  useState,
+  WheelEvent,
+} from "react";
 import { useCanvasControls } from "./hooks/use-canvas-controls";
 
 interface TablePlannerContextValue {
   zoom: number;
   pan: { x: number; y: number };
   setPan: (pan: { x: number; y: number }) => void;
-  canvasRef: React.RefObject<HTMLDivElement | null>;
+  canvasRef: RefObject<HTMLDivElement | null>;
   isCtrlPressed: boolean;
   canvasSize: { width: number; height: number };
-  handleWheel: (e: React.WheelEvent) => void;
-  handleMouseDown: (e: React.MouseEvent) => void;
+  handleWheel: (e: WheelEvent) => void;
+  handleMouseDown: (e: MouseEvent) => void;
   handleZoomIn: () => void;
   handleZoomOut: () => void;
   handleResetView: () => void;
   startPanning: (direction: "up" | "down" | "left" | "right") => void;
   stopPanning: () => void;
   tables: TableWithRelations[] | undefined;
-  setTables: (tables: TableWithRelations[] | undefined) => void;
+  setTables: Dispatch<SetStateAction<TableWithRelations[] | undefined>>;
   dragPositions: Record<string, { x: number; y: number }>;
   setDragPositions: React.Dispatch<
-    React.SetStateAction<Record<string, { x: number; y: number }>>
+    SetStateAction<Record<string, { x: number; y: number }>>
   >;
 }
 
@@ -53,7 +64,7 @@ export function TablePlannerProvider({ children }: TablePlannerProviderProps) {
               canvasControls.canvasRef.current.getBoundingClientRect().height,
           }
         : { width: 0, height: 0 },
-    [canvasControls.canvasRef.current, canvasControls.zoom, canvasControls.pan]
+    [canvasControls.canvasRef]
   );
 
   const value = useMemo(

@@ -71,7 +71,7 @@ export function DraggableTable({
       />
       <div
         className={cn(
-          "absolute -bottom-10 left-1/2 flex items-center gap-2 transition-opacity z-10",
+          "absolute -bottom-10 left-1/2 flex items-center gap-2 transition-opacity z-50",
           isHovered ? "opacity-100" : "opacity-0"
         )}
         style={{

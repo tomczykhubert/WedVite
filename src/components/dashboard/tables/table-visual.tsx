@@ -14,9 +14,9 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { getGuestImage } from "../guests/guest-row";
 import {
+  calculateRoundTableDiameter,
   DEFAULT_COLUMNS,
   DEFAULT_ROWS,
-  ROUND_TABLE_DIAMETER,
   SEAT_SIZE,
   SEAT_SPACING,
   TABLE_PADDING,
@@ -57,7 +57,7 @@ export function TableVisual({
     const offset = SEAT_SIZE + SEAT_SPACING * 2;
 
     if (shape === TableShape.ROUND) {
-      const diameter = ROUND_TABLE_DIAMETER;
+      const diameter = calculateRoundTableDiameter(seats.length);
       tableWidth = diameter;
       tableHeight = diameter;
 

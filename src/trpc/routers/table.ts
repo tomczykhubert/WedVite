@@ -19,7 +19,11 @@ export const tableRouter = createTRPCRouter({
         include: {
           seats: {
             include: {
-              guest: true,
+              guest: {
+                include: {
+                  invitation: true,
+                },
+              },
             },
             orderBy: { position: "asc" },
           },

@@ -5,6 +5,7 @@ interface UseTableDragProps {
   initialY: number;
   zoom: number;
   onDragEnd: (x: number, y: number) => void;
+  onDragUpdate?: (x: number, y: number) => void;
   disabled?: boolean;
 }
 
@@ -12,6 +13,7 @@ export function useTableDrag({
   initialX,
   initialY,
   zoom,
+  onDragUpdate,
   onDragEnd,
   disabled = false,
 }: UseTableDragProps) {
@@ -41,6 +43,7 @@ export function useTableDrag({
     const handleMouseMove = (e: MouseEvent) => {
       const newX = e.clientX / zoom - dragStartPos.current.x;
       const newY = e.clientY / zoom - dragStartPos.current.y;
+      onDragUpdate?.(newX, newY);
       setPosition({ x: newX, y: newY });
     };
 
@@ -56,7 +59,7 @@ export function useTableDrag({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging, position, zoom, onDragEnd]);
+  }, [isDragging, position, zoom, onDragEnd, onDragUpdate]);
 
   return {
     position,

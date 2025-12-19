@@ -15,6 +15,7 @@ import { TableVisual } from "./table-visual";
 interface DraggableTableProps {
   table: TableWithRelations;
   onPositionChange: (tableId: string, x: number, y: number) => void;
+  onDragUpdate: (tableId: string, x: number, y: number) => void;
   onSeatClick: (seatId: string) => void;
   onDelete: (tableId: string) => void;
 }
@@ -22,6 +23,7 @@ interface DraggableTableProps {
 export function DraggableTable({
   table,
   onPositionChange,
+  onDragUpdate,
   onSeatClick,
   onDelete,
 }: DraggableTableProps) {
@@ -35,6 +37,7 @@ export function DraggableTable({
     initialY: table.positionY,
     zoom,
     onDragEnd: (x, y) => onPositionChange(table.id, x, y),
+    onDragUpdate: (x, y) => onDragUpdate(table.id, x, y),
     disabled: isDeleted,
   });
 

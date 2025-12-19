@@ -16,6 +16,7 @@ import { CANVAS_GRID_SIZE } from "./constants";
 import { DraggableTable } from "./draggable-table";
 import { GuestAssignmentSheet } from "./guest-assignment-sheet";
 import { useTableMutations } from "./hooks/useTableMutations";
+import { InvitationConnections } from "./invitation-connections";
 import { MobileWarning } from "./mobile-warning";
 import { OffscreenIndicators } from "./offscreen-indicators";
 import { TablePlannerProvider, useTablePlanner } from "./table-planner-context";
@@ -43,15 +44,41 @@ function TablePlannerContent({ event }: TablePlannerProps) {
   const [selectedSeatId, setSelectedSeatId] = useState<string | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const { zoom, pan, setPan, canvasRef, handleWheel, handleMouseDown } =
-    useTablePlanner();
+  const {
+    zoom,
+    pan,
+    setPan,
+    canvasRef,
+    handleWheel,
+    handleMouseDown,
+    tables,
+    setTables,
+    dragPositions,
+    setDragPositions,
+  } = useTablePlanner();
 
-  const { data: tables, isLoading } = useQuery(
+  const { data: fetchedTables, isLoading } = useQuery(
     trpc.table.getTables.queryOptions({ eventId: event.id })
   );
 
+  if (fetchedTables !== tables) {
+    setTables(fetchedTables);
+  }
   const { handlePositionChange, handleDelete, invalidateTables } =
     useTableMutations();
+
+  const handleDragUpdate = (tableId: string, x: number, y: number) => {
+    setDragPositions((prev) => ({ ...prev, [tableId]: { x, y } }));
+  };
+
+  const handleDragEnd = async (tableId: string, x: number, y: number) => {
+    await handlePositionChange(tableId, x, y);
+    setDragPositions((prev) => {
+      const newPos = { ...prev };
+      delete newPos[tableId];
+      return newPos;
+    });
+  };
 
   const handleNavigateToTable = (
     indicator: ReturnType<typeof calculateOffscreenIndicators>[0]
@@ -110,6 +137,8 @@ function TablePlannerContent({ event }: TablePlannerProps) {
             }}
           />
 
+          <InvitationConnections />
+
           <div
             className="absolute inset-0"
             style={{
@@ -121,7 +150,8 @@ function TablePlannerContent({ event }: TablePlannerProps) {
               <DraggableTable
                 key={table.id}
                 table={table}
-                onPositionChange={handlePositionChange}
+                onPositionChange={handleDragEnd}
+                onDragUpdate={handleDragUpdate}
                 onSeatClick={setSelectedSeatId}
                 onDelete={handleDelete}
               />

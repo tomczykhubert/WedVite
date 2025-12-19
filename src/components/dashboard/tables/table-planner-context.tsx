@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import { TableWithRelations } from "@/types/table";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import { useCanvasControls } from "./hooks/use-canvas-controls";
 
 interface TablePlannerContextValue {
@@ -17,6 +18,12 @@ interface TablePlannerContextValue {
   handleResetView: () => void;
   startPanning: (direction: "up" | "down" | "left" | "right") => void;
   stopPanning: () => void;
+  tables: TableWithRelations[] | undefined;
+  setTables: (tables: TableWithRelations[] | undefined) => void;
+  dragPositions: Record<string, { x: number; y: number }>;
+  setDragPositions: React.Dispatch<
+    React.SetStateAction<Record<string, { x: number; y: number }>>
+  >;
 }
 
 const TablePlannerContext = createContext<TablePlannerContextValue | null>(
@@ -29,6 +36,12 @@ interface TablePlannerProviderProps {
 
 export function TablePlannerProvider({ children }: TablePlannerProviderProps) {
   const canvasControls = useCanvasControls();
+  const [tables, setTables] = useState<TableWithRelations[] | undefined>(
+    undefined
+  );
+  const [dragPositions, setDragPositions] = useState<
+    Record<string, { x: number; y: number }>
+  >({});
 
   const canvasSize = useMemo(
     () =>
@@ -47,8 +60,12 @@ export function TablePlannerProvider({ children }: TablePlannerProviderProps) {
     () => ({
       ...canvasControls,
       canvasSize,
+      tables,
+      setTables,
+      dragPositions,
+      setDragPositions,
     }),
-    [canvasControls, canvasSize]
+    [canvasControls, canvasSize, tables, dragPositions]
   );
 
   return (

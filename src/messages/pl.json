@@ -295,13 +295,13 @@
       },
       "tables": {
         "tables": "Stoły",
-        "tablePlanner": "Planer Stołów",
-        "add": "Dodaj Stół",
+        "tablePlanner": "Planer stołów",
+        "add": "Dodaj stół",
         "addDescription": "Utwórz nowy stół dla twojego rozmieszczenia gości",
-        "tableName": "Nazwa Stołu",
+        "tableName": "Nazwa stołu",
         "shape": "Kształt",
-        "capacity": "Liczba Miejsc",
-        "tableDimensions": "Wymiary Stołu",
+        "capacity": "Liczba miejsc",
+        "tableDimensions": "Wymiary stołu",
         "clickToSelect": "Kliknij, aby wybrać wymiary stołu (rzędy × kolumny)",
         "selected": "Wybrano: {rows} × {columns}",
         "totalSeats": "Łączna liczba miejsc:",
@@ -336,7 +336,7 @@
           "resetView": "Resetuj Widok",
           "zoomIn": "Powiększ",
           "zoomOut": "Pomniejsz",
-          "hint": "Przytrzymaj <ctrl>Ctrl</ctrl> + przeciągnij, aby przesunąć • <ctrl>Ctrl</ctrl> + przewiń, aby powiększyć"
+          "hint": "Naciśnij <key>↑</key> <key>↓</key> <key>←</key> <key>→</key>, aby przesunąć • Przytrzymaj <key>Ctrl</key> + przeciągnij, aby przesunąć • Przytrzymaj <key>Ctrl</key> + przewiń, aby powiększyć/zmniejszyć"
         },
         "shapes": {
           "ROUND": "Okrągły",

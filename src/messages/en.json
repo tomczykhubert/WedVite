@@ -274,13 +274,13 @@
       },
       "tables": {
         "tables": "Tables",
-        "tablePlanner": "Table Planner",
-        "add": "Add Table",
+        "tablePlanner": "Table planner",
+        "add": "Add table",
         "addDescription": "Create a new table for your seating arrangement",
-        "tableName": "Table Name",
+        "tableName": "Table name",
         "shape": "Shape",
-        "capacity": "Number of Seats",
-        "tableDimensions": "Table Dimensions",
+        "capacity": "Number of seats",
+        "tableDimensions": "Table dimensions",
         "clickToSelect": "Click to select table dimensions (rows × columns)",
         "selected": "Selected: {rows} × {columns}",
         "totalSeats": "Total seats:",
@@ -315,7 +315,7 @@
           "resetView": "Reset View",
           "zoomIn": "Zoom in",
           "zoomOut": "Zoom out",
-          "hint": "Hold <ctrl>Ctrl</ctrl> + drag to pan • <ctrl>Ctrl</ctrl> + scroll to zoom"
+          "hint": "Click <key>↑</key> <key>↓</key> <key>←</key> <key>→</key> to pan • Hold <key>Ctrl</key> + drag to pan • <key>Ctrl</key> + Hold scroll to zoom"
         },
         "shapes": {
           "ROUND": "Round",

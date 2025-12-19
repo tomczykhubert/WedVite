@@ -8,11 +8,19 @@ import {
 import { cn } from "@/lib/utils";
 import { SeatWithRelations } from "@/types/table";
 import { TableShape } from "@prisma/client";
-import { Plus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useMemo } from "react";
 import { getGuestImage } from "../guests/guest-row";
+import {
+  DEFAULT_COLUMNS,
+  DEFAULT_ROWS,
+  ROUND_TABLE_DIAMETER,
+  SEAT_SIZE,
+  SEAT_SPACING,
+  TABLE_PADDING,
+} from "./constants";
 
 type SeatSide = "top" | "right" | "bottom" | "left";
 
@@ -24,10 +32,6 @@ interface TableVisualProps {
   onSeatClick?: (seatId: string) => void;
   isDragging?: boolean;
 }
-
-const SEAT_SIZE = 40;
-const SEAT_SPACING = 10;
-const TABLE_PADDING = 40;
 
 export function TableVisual({
   shape,
@@ -53,7 +57,7 @@ export function TableVisual({
     const offset = SEAT_SIZE + SEAT_SPACING * 2;
 
     if (shape === TableShape.ROUND) {
-      const diameter = 200;
+      const diameter = ROUND_TABLE_DIAMETER;
       tableWidth = diameter;
       tableHeight = diameter;
 
@@ -84,8 +88,8 @@ export function TableVisual({
         positions.push({ x, y, side });
       });
     } else {
-      const rowSeats = rows || 2;
-      const colSeats = columns || 4;
+      const rowSeats = rows || DEFAULT_ROWS;
+      const colSeats = columns || DEFAULT_COLUMNS;
 
       tableWidth = colSeats * (SEAT_SIZE + SEAT_SPACING) + TABLE_PADDING;
       tableHeight = rowSeats * (SEAT_SIZE + SEAT_SPACING) + TABLE_PADDING;
@@ -196,7 +200,7 @@ export function TableVisual({
                   />
                 ) : (
                   <span className="text-xs font-medium text-muted-foreground">
-                    <Plus />
+                    <UserPlus />
                   </span>
                 )}
               </button>

@@ -33,14 +33,14 @@ export const buildEventSidebarItems = async (
           icon: CalendarDays,
         },
         {
-          link: routes.dashboard.event.settings(event.id),
-          name: t("settings"),
-          icon: Settings,
-        },
-        {
           link: routes.dashboard.event.guests(event.id),
           name: t("guests.guestsList"),
           icon: Users,
+        },
+        {
+          link: routes.dashboard.event.tables(event.id),
+          name: t("tables.tables"),
+          icon: Table,
         },
         {
           link: routes.dashboard.event.gallery(event.id),
@@ -48,9 +48,9 @@ export const buildEventSidebarItems = async (
           icon: Images,
         },
         {
-          link: routes.dashboard.event.tables(event.id),
-          name: t("tables.tables"),
-          icon: Table,
+          link: routes.dashboard.event.settings(event.id),
+          name: t("settings"),
+          icon: Settings,
         },
       ],
     },

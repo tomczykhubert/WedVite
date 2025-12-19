@@ -7,7 +7,9 @@ import { cn } from "@/lib/utils";
 import { TableWithRelations } from "@/types/table";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { useTableDrag } from "./hooks/useTableDrag";
+import { useTablePlanner } from "./table-planner-context";
 import { TableVisual } from "./table-visual";
 
 interface DraggableTableProps {
@@ -15,7 +17,6 @@ interface DraggableTableProps {
   onPositionChange: (tableId: string, x: number, y: number) => void;
   onSeatClick: (seatId: string) => void;
   onDelete: (tableId: string) => void;
-  zoom: number;
 }
 
 export function DraggableTable({
@@ -23,64 +24,24 @@ export function DraggableTable({
   onPositionChange,
   onSeatClick,
   onDelete,
-  zoom,
 }: DraggableTableProps) {
   const t = useTranslations("dashboard.event.tables");
-  const tableRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({
-    x: table.positionX,
-    y: table.positionY,
-  });
-  const [isDragging, setIsDragging] = useState(false);
+  const { zoom } = useTablePlanner();
   const [isHovered, setIsHovered] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const dragStartPos = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    setPosition({ x: table.positionX, y: table.positionY });
-  }, [table.positionX, table.positionY]);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.ctrlKey || e.metaKey || isDeleted) {
-      return;
-    }
-
-    setIsDragging(true);
-
-    dragStartPos.current = {
-      x: e.clientX / zoom - position.x,
-      y: e.clientY / zoom - position.y,
-    };
-  };
+  const { position, isDragging, handleMouseDown } = useTableDrag({
+    initialX: table.positionX,
+    initialY: table.positionY,
+    zoom,
+    onDragEnd: (x, y) => onPositionChange(table.id, x, y),
+    disabled: isDeleted,
+  });
 
   const handleDelete = () => {
     onDelete(table.id);
     setIsDeleted(true);
   };
-
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const newX = e.clientX / zoom - dragStartPos.current.x;
-      const newY = e.clientY / zoom - dragStartPos.current.y;
-      setPosition({ x: newX, y: newY });
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      onPositionChange(table.id, position.x, position.y);
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging, position.x, position.y, onPositionChange, table.id, zoom]);
 
   if (isDeleted) {
     return null;
@@ -88,7 +49,6 @@ export function DraggableTable({
 
   return (
     <div
-      ref={tableRef}
       className={cn("absolute cursor-move")}
       style={{
         left: position.x,
@@ -96,12 +56,7 @@ export function DraggableTable({
       }}
       onMouseDown={handleMouseDown}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={(e) => {
-        const relatedTarget = e.relatedTarget as HTMLElement;
-        if (!relatedTarget || !tableRef.current?.contains(relatedTarget)) {
-          setIsHovered(false);
-        }
-      }}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <TableVisual
         shape={table.shape}

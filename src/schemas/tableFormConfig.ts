@@ -1,3 +1,11 @@
+import {
+  MAX_CAPACITY,
+  MAX_GRID_SIZE,
+  MAX_ROUND_CAPACITY,
+  MIN_CAPACITY,
+  MIN_GRID_SIZE,
+  isValidRectangularCapacity,
+} from "@/components/dashboard/tables/constants";
 import { stc } from "@/i18n/utils";
 import {
   getFieldsByName,
@@ -7,13 +15,6 @@ import { getEnumKeys } from "@/lib/utils";
 import { zMaxString } from "@/lib/zod/extension";
 import { TableShape } from "@prisma/client";
 import z from "zod";
-
-const MIN_GRID_SIZE = 1;
-const MIN_CAPACITY = MIN_GRID_SIZE * 4;
-
-export const MAX_GRID_SIZE = 10;
-const MAX_CAPACITY = MAX_GRID_SIZE * 4;
-const MAX_ROUND_CAPACITY = MAX_GRID_SIZE * 2;
 
 export const tableConfig = [
   {
@@ -65,6 +66,18 @@ export const tableConfig = [
       .max(MAX_GRID_SIZE)
       .optional(),
   },
+  {
+    name: "positionX",
+    type: "hidden",
+    required: true,
+    validation: z.coerce.number(),
+  },
+  {
+    name: "positionY",
+    type: "hidden",
+    required: true,
+    validation: z.coerce.number(),
+  },
 ] as const;
 
 export const addTableConfig = getFieldsByName(
@@ -73,7 +86,9 @@ export const addTableConfig = getFieldsByName(
   "shape",
   "capacity",
   "rows",
-  "columns"
+  "columns",
+  "positionX",
+  "positionY"
 );
 
 export const addTableSchema = z
@@ -112,8 +127,11 @@ export const addTableSchema = z
   .refine(
     (data) => {
       if (data.shape === TableShape.RECTANGULAR && data.rows && data.columns) {
-        const expectedCapacity = 2 * data.rows + 2 * data.columns;
-        return data.capacity === expectedCapacity;
+        return isValidRectangularCapacity(
+          data.rows,
+          data.columns,
+          data.capacity
+        );
       }
       return true;
     },

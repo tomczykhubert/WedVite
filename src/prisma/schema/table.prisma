@@ -5,8 +5,8 @@ model Table {
   name      String
   shape     TableShape
   capacity  Int
-  rows      Int? // For rectangular tables
-  columns   Int? // For rectangular tables
+  rows      Int?
+  columns   Int?
   positionX Float      @default(0)
   positionY Float      @default(0)
   createdAt DateTime   @default(now())

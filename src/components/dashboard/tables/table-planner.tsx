@@ -102,8 +102,8 @@ function TablePlannerContent({ event }: TablePlannerProps) {
             className="canvas-grid absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: `
-                linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
+                linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--color-border) 1px, transparent 1px)
               `,
               backgroundSize: `${CANVAS_GRID_SIZE * zoom}px ${CANVAS_GRID_SIZE * zoom}px`,
               backgroundPosition: `${pan.x}px ${pan.y}px`,

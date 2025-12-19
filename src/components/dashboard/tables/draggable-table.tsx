@@ -33,6 +33,8 @@ export function DraggableTable({
   });
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+
   const dragStartPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -40,29 +42,27 @@ export function DraggableTable({
   }, [table.positionX, table.positionY]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    // Don't drag table if Ctrl/Cmd is pressed (panning mode)
-    if (e.ctrlKey || e.metaKey) {
-      return;
-    }
-
-    // Don't drag if clicking on buttons
-    if ((e.target as HTMLElement).closest("button")) {
+    if (e.ctrlKey || e.metaKey || isDeleted) {
       return;
     }
 
     setIsDragging(true);
-    // Account for zoom when calculating drag start position
+
     dragStartPos.current = {
       x: e.clientX / zoom - position.x,
       y: e.clientY / zoom - position.y,
     };
   };
 
+  const handleDelete = () => {
+    onDelete(table.id);
+    setIsDeleted(true);
+  };
+
   useEffect(() => {
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Account for zoom when calculating new position
       const newX = e.clientX / zoom - dragStartPos.current.x;
       const newY = e.clientY / zoom - dragStartPos.current.y;
       setPosition({ x: newX, y: newY });
@@ -81,6 +81,10 @@ export function DraggableTable({
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging, position.x, position.y, onPositionChange, table.id, zoom]);
+
+  if (isDeleted) {
+    return null;
+  }
 
   return (
     <div
@@ -117,14 +121,15 @@ export function DraggableTable({
           transformOrigin: "center top",
         }}
         onMouseEnter={() => setIsHovered(true)}
+        onMouseDown={(e) => e.stopPropagation()}
       >
-        <Badge variant="secondary" className="h-8">
+        <Badge variant="secondary" className="h-8 cursor-default">
           {table.name}
         </Badge>
         <ConfirmModal
           header={t("deleteTable.header")}
           message={t("deleteTable.message")}
-          onConfirm={() => onDelete(table.id)}
+          onConfirm={handleDelete}
           trigger={
             <ActionButton
               variant="destructive"

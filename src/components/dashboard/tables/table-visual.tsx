@@ -53,7 +53,6 @@ export function TableVisual({
     const offset = SEAT_SIZE + SEAT_SPACING * 2;
 
     if (shape === TableShape.ROUND) {
-      // Round table with dynamic seats
       const diameter = 200;
       tableWidth = diameter;
       tableHeight = diameter;
@@ -85,7 +84,6 @@ export function TableVisual({
         positions.push({ x, y, side });
       });
     } else {
-      // Rectangular table
       const rowSeats = rows || 2;
       const colSeats = columns || 4;
 
@@ -151,7 +149,6 @@ export function TableVisual({
       className="relative pointer-events-none"
       style={{ width: containerWidth, height: containerHeight }}
     >
-      {/* Table */}
       <div
         className={cn(
           "absolute border-2 border-primary bg-muted pointer-events-auto",
@@ -167,7 +164,6 @@ export function TableVisual({
         }}
       />
 
-      {/* Seats */}
       {seats.map((seat, index) => {
         const pos = seatPositions[index];
         if (!pos) return null;
@@ -177,6 +173,7 @@ export function TableVisual({
             <TooltipTrigger asChild>
               <button
                 onClick={() => onSeatClick?.(seat.id)}
+                onMouseDown={(e) => e.stopPropagation()}
                 className={cn(
                   "cursor-pointer absolute rounded-full border-primary bg-muted hover:bg-primary/50 border-2 transition-all flex items-center justify-center overflow-hidden pointer-events-auto"
                 )}

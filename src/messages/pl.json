@@ -97,7 +97,11 @@
       "maxPlanItemsReached": "Osiągnięto maksymalną liczbę punktów planu ({max}).",
       "maxContactsReached": "Osiągnięto maksymalną liczbę kontaków ({max}).",
       "maxMenuReached": "Osiągnięto maksymalną liczbę menu ({max})."
-    }
+    },
+    "invalidTableShape": "Proszę wybrać prawidłowy kształt stołu",
+    "rectangularTableNeedsDimensions": "Rzędy i kolumny są wymagane dla prostokątnych stołów",
+    "rectangularTableCapacityMismatch": "Liczba miejsc musi odpowiadać wymiarom stołu (2 x rzędy + 2 x kolumny)",
+    "capacityOutOfRange": "Liczba musi być między {min} a {max}"
   },
   "emails": {
     "verification": {
@@ -293,9 +297,16 @@
         "tables": "Stoły",
         "tablePlanner": "Planer Stołów",
         "add": "Dodaj Stół",
-        "name": "Nazwa Stołu",
+        "addDescription": "Utwórz nowy stół dla twojego rozmieszczenia gości",
+        "tableName": "Nazwa Stołu",
         "shape": "Kształt",
         "capacity": "Liczba Miejsc",
+        "tableDimensions": "Wymiary Stołu",
+        "clickToSelect": "Kliknij, aby wybrać wymiary stołu (rzędy × kolumny)",
+        "selected": "Wybrano: {rows} × {columns}",
+        "totalSeats": "Łączna liczba miejsc:",
+        "seatsInfo": "({columns} miejsc na każdej długiej stronie + {rows} miejsc na każdej krótkiej stronie)",
+        "adding": "Dodawanie...",
         "rows": "Rzędy",
         "columns": "Kolumny",
         "round": "Okrągły",
@@ -327,7 +338,7 @@
           "zoomOut": "Pomniejsz",
           "hint": "Przytrzymaj <ctrl>Ctrl</ctrl> + przeciągnij, aby przesunąć • <ctrl>Ctrl</ctrl> + przewiń, aby powiększyć"
         },
-        "shapeTypes": {
+        "shapes": {
           "ROUND": "Okrągły",
           "RECTANGULAR": "Prostokątny"
         }

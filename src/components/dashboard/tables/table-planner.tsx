@@ -1,7 +1,7 @@
 "use client";
 
+import ActionButton from "@/components/base/button-link";
 import { Loader } from "@/components/base/loader";
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTRPC } from "@/trpc/client";
 import { Event } from "@prisma/client";
@@ -25,7 +25,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
   const [selectedSeatId, setSelectedSeatId] = useState<string | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  // Pan and zoom state
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -65,21 +64,16 @@ export function TablePlanner({ event }: TablePlannerProps) {
     await deleteTable.mutateAsync({ tableId });
   };
 
-  // Handle mouse wheel zoom
   const handleWheel = (e: React.WheelEvent) => {
     if (e.ctrlKey || e.shiftKey) {
-      e.preventDefault();
       const delta = -e.deltaY * 0.001;
       const newZoom = Math.min(Math.max(0.5, zoom + delta), 2);
       setZoom(newZoom);
     }
   };
 
-  // Handle panning with Ctrl/Cmd key
   const handleMouseDown = (e: React.MouseEvent) => {
-    // Start panning if Ctrl/Cmd is pressed
     if ((e.ctrlKey || e.shiftKey) && e.button === 0) {
-      e.preventDefault();
       setIsPanning(true);
       panStartPos.current = {
         x: e.clientX - pan.x,
@@ -119,7 +113,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
     };
   }, [isPanning, isCtrlPressed]);
 
-  // Handle Ctrl/Cmd key for cursor feedback
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.shiftKey) && !isCtrlPressed) {
@@ -161,7 +154,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
     setPan({ x: 0, y: 0 });
   };
 
-  // Show mobile message
   if (isMobile) {
     return (
       <>
@@ -185,39 +177,10 @@ export function TablePlanner({ event }: TablePlannerProps) {
       <div className="flex flex-col h-full space-y-4">
         <div className="flex justify-between items-center flex-shrink-0">
           <h2 className="text-2xl font-bold">{t("tablePlanner")}</h2>
-          <div className="flex items-center gap-2">
-            {/* Zoom controls */}
-            <div className="flex items-center gap-1 border rounded-lg p-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleZoomOut}
-                disabled={zoom <= 0.5}
-                title={t("controls.zoomOut")}
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-              <span className="text-sm font-medium min-w-[3rem] text-center">
-                {Math.round(zoom * 100)}%
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleZoomIn}
-                disabled={zoom >= 2}
-                title={t("controls.zoomIn")}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleResetView}>
-              {t("controls.resetView")}
-            </Button>
-            <Button onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              {t("add")}
-            </Button>
-          </div>
+          <ActionButton onClick={() => setIsAddDialogOpen(true)}>
+            <Plus className="mr-1" />
+            {t("add")}
+          </ActionButton>
         </div>
 
         <div
@@ -227,7 +190,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
           onMouseDown={handleMouseDown}
           onContextMenu={(e) => e.preventDefault()}
         >
-          {/* Grid background */}
           <div
             className="canvas-grid absolute inset-0 pointer-events-none"
             style={{
@@ -240,7 +202,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
             }}
           />
 
-          {/* Tables container with zoom and pan */}
           <div
             className="absolute inset-0"
             style={{
@@ -260,7 +221,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
             ))}
           </div>
 
-          {/* Hint text */}
           <div className="absolute bottom-4 left-4 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded pointer-events-none">
             {t.rich("controls.hint", {
               ctrl: (chunks) => (
@@ -269,6 +229,40 @@ export function TablePlanner({ event }: TablePlannerProps) {
                 </kbd>
               ),
             })}
+          </div>
+
+          <div className="absolute bottom-4 right-4 flex flex-col gap-2 pointer-events-auto">
+            <ActionButton
+              variant="outline"
+              size="sm"
+              onClick={handleResetView}
+              className="w-full"
+            >
+              {t("controls.resetView")}
+            </ActionButton>
+            <div className="flex items-center gap-1 border rounded-lg p-1 bg-background">
+              <ActionButton
+                variant="ghost"
+                size="icon"
+                onClick={handleZoomOut}
+                disabled={zoom <= 0.5}
+                tooltip={t("controls.zoomOut")}
+              >
+                <Minus />
+              </ActionButton>
+              <span className="text-sm font-medium min-w-[3rem] text-center">
+                {Math.round(zoom * 100)}%
+              </span>
+              <ActionButton
+                variant="ghost"
+                size="icon"
+                onClick={handleZoomIn}
+                disabled={zoom >= 2}
+                tooltip={t("controls.zoomIn")}
+              >
+                <Plus />
+              </ActionButton>
+            </div>
           </div>
         </div>
 

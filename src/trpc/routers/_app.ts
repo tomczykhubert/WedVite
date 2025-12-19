@@ -7,7 +7,7 @@ import { imageRouter } from "./image";
 import { invitationRouter } from "./invitation";
 import { planItemRouter } from "./planItem";
 import { rsvpRouter } from "./rsvp";
-import { tableRouter } from "./tableRouter";
+import { tableRouter } from "./table";
 import { userRouter } from "./user";
 
 export const appRouter = createTRPCRouter({

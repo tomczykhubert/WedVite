@@ -1,4 +1,10 @@
-import { TableShape } from "@prisma/client";
+import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
+import {
+  assertOwnerOfEvent,
+  assertOwnerOfSeat,
+  assertOwnerOfTable,
+} from "@/lib/prisma/eventUtils";
+import { addTableConfig } from "@/schemas/tableFormConfig";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../init";
 
@@ -6,6 +12,8 @@ export const tableRouter = createTRPCRouter({
   getTables: protectedProcedure
     .input(z.object({ eventId: z.string() }))
     .query(async ({ ctx, input }) => {
+      await assertOwnerOfEvent(ctx.user.id, input.eventId, ctx.db);
+
       return ctx.db.table.findMany({
         where: { eventId: input.eventId },
         include: {
@@ -22,15 +30,13 @@ export const tableRouter = createTRPCRouter({
   createTable: protectedProcedure
     .input(
       z.object({
+        ...translateSchemaConfig(addTableConfig),
         eventId: z.string(),
-        name: z.string(),
-        shape: z.nativeEnum(TableShape),
-        capacity: z.number().min(1).max(50),
-        rows: z.number().min(1).max(10).optional(),
-        columns: z.number().min(1).max(10).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      await assertOwnerOfEvent(ctx.user.id, input.eventId, ctx.db);
+
       const { capacity, ...tableData } = input;
 
       const table = await ctx.db.table.create({
@@ -58,6 +64,8 @@ export const tableRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      await assertOwnerOfTable(ctx.user.id, input.tableId, ctx.db);
+
       return ctx.db.table.update({
         where: { id: input.tableId },
         data: {
@@ -75,6 +83,8 @@ export const tableRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      await assertOwnerOfSeat(ctx.user.id, input.seatId, ctx.db);
+
       if (input.guestId) {
         await ctx.db.seat.updateMany({
           where: { guestId: input.guestId },
@@ -91,6 +101,8 @@ export const tableRouter = createTRPCRouter({
   deleteTable: protectedProcedure
     .input(z.object({ tableId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      await assertOwnerOfTable(ctx.user.id, input.tableId, ctx.db);
+
       return ctx.db.table.delete({
         where: { id: input.tableId },
       });

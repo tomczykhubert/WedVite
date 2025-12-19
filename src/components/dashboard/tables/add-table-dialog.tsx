@@ -11,63 +11,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  AutoFormField,
   Form,
-  FormControl,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import {
+  addTableConfig,
+  addTableSchema,
+  MAX_GRID_SIZE,
+  type AddTableData,
+} from "@/schemas/tableFormConfig";
 import { useTRPC } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TableShape } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Circle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
-const addTableSchema = z
-  .object({
-    name: z.string().min(1, "Table name is required"),
-    shape: z.nativeEnum(TableShape),
-    capacity: z.coerce.number().min(2).max(50),
-    rows: z.coerce.number().min(1).max(10).optional(),
-    columns: z.coerce.number().min(1).max(10).optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.shape === TableShape.RECTANGULAR) {
-        return data.rows && data.columns;
-      }
-      return true;
-    },
-    {
-      message: "Rows and columns are required for rectangular tables",
-      path: ["rows"],
-    }
-  );
-
-type AddTableForm = z.infer<typeof addTableSchema>;
-
-interface AddTableDialogProps {
-  eventId: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSuccess: () => void;
-}
-
-const MAX_GRID_SIZE = 10;
+const DEFAULT_CAPACITY = 8;
+const DEFAULT_ROWS = 2;
+const DEFAULT_COLUMNS = 4;
 
 function GridPicker({
   rows,
@@ -78,6 +46,7 @@ function GridPicker({
   columns: number;
   onSelect: (rows: number, columns: number) => void;
 }) {
+  const t = useTranslations("dashboard.event.tables");
   const [hoverRows, setHoverRows] = useState(-1);
   const [hoverColumns, setHoverColumns] = useState(-1);
 
@@ -134,10 +103,17 @@ function GridPicker({
         </div>
       </div>
       <div className="text-xs text-muted-foreground text-center">
-        Click to select table dimensions (rows × columns)
+        {t("clickToSelect")}
       </div>
     </div>
   );
+}
+
+interface AddTableDialogProps {
+  eventId: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
 }
 
 export function AddTableDialog({
@@ -146,6 +122,8 @@ export function AddTableDialog({
   onOpenChange,
   onSuccess,
 }: AddTableDialogProps) {
+  const baseT = useTranslations("base.forms");
+  const t = useTranslations("dashboard.event.tables");
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
@@ -154,13 +132,13 @@ export function AddTableDialog({
     trpc.table.createTable.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.table.pathFilter());
-        toast.success("Table added successfully");
+        toast.success(t("tableAdded"));
         form.reset();
         onOpenChange(false);
         onSuccess();
       },
       onError: () => {
-        toast.error("Failed to add table");
+        toast.error(t("tableFailed"));
       },
       onMutate: async () => {
         setLoading(true);
@@ -171,14 +149,14 @@ export function AddTableDialog({
     })
   );
 
-  const form = useForm<AddTableForm>({
+  const form = useForm<AddTableData>({
     resolver: zodResolver(addTableSchema),
     defaultValues: {
       name: "",
       shape: TableShape.ROUND,
-      capacity: 8,
-      rows: 2,
-      columns: 4,
+      capacity: DEFAULT_CAPACITY,
+      rows: DEFAULT_ROWS,
+      columns: DEFAULT_COLUMNS,
     },
   });
 
@@ -186,18 +164,12 @@ export function AddTableDialog({
   const rows = form.watch("rows") || 0;
   const columns = form.watch("columns") || 0;
 
-  // Calculate seats for rectangular table: 2 long sides + 2 short sides
   const calculatedSeats = rows > 0 && columns > 0 ? columns * 2 + rows * 2 : 0;
 
-  const onSubmit = (data: AddTableForm) => {
+  const onSubmit = (data: AddTableData) => {
     const submitData = {
+      ...data,
       eventId,
-      name: data.name,
-      shape: data.shape,
-      capacity:
-        data.shape === TableShape.RECTANGULAR ? calculatedSeats : data.capacity,
-      rows: data.shape === TableShape.RECTANGULAR ? data.rows : undefined,
-      columns: data.shape === TableShape.RECTANGULAR ? data.columns : undefined,
     };
 
     createTable.mutate(submitData);
@@ -206,6 +178,7 @@ export function AddTableDialog({
   const handleGridSelect = (newRows: number, newColumns: number) => {
     form.setValue("rows", newRows);
     form.setValue("columns", newColumns);
+    form.setValue("capacity", newRows * 2 + newColumns * 2);
   };
 
   return (
@@ -214,113 +187,73 @@ export function AddTableDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Add Table</DialogTitle>
-            <DialogDescription>
-              Create a new table for your seating arrangement
-            </DialogDescription>
+            <DialogTitle>{t("add")}</DialogTitle>
+            <DialogDescription>{t("addDescription")}</DialogDescription>
           </DialogHeader>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Table Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Table 1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {addTableConfig.map((fieldConfig) => {
+                if (
+                  selectedShape === TableShape.RECTANGULAR &&
+                  fieldConfig.name === "capacity"
+                ) {
+                  return null;
+                }
 
-              <FormField
-                control={form.control}
-                name="shape"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Shape</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select shape" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={TableShape.ROUND}>
-                          <div className="flex items-center gap-2">
-                            <Circle className="h-4 w-4" />
-                            Round
-                          </div>
-                        </SelectItem>
-                        <SelectItem value={TableShape.RECTANGULAR}>
-                          <div className="flex items-center gap-2">
-                            <div className="h-3 w-5 border border-current" />
-                            Rectangular
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                if (
+                  selectedShape === TableShape.ROUND &&
+                  (fieldConfig.name === "rows" ||
+                    fieldConfig.name === "columns")
+                ) {
+                  return null;
+                }
 
-              {selectedShape === TableShape.ROUND && (
-                <FormField
-                  control={form.control}
-                  name="capacity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Number of Seats</FormLabel>
-                      <FormControl>
-                        <Input type="number" min={2} max={50} {...field} />
-                      </FormControl>
+                if (
+                  selectedShape === TableShape.RECTANGULAR &&
+                  fieldConfig.name === "rows"
+                ) {
+                  return (
+                    <FormItem key={fieldConfig.name}>
+                      <FormLabel>{t("tableDimensions")}</FormLabel>
+                      <GridPicker
+                        rows={rows}
+                        columns={columns}
+                        onSelect={handleGridSelect}
+                      />
                       <FormMessage />
-                      <div className="text-xs text-muted-foreground">
-                        Recommended: 6-10 seats for optimal spacing
-                      </div>
+                      {rows > 0 && columns > 0 && (
+                        <div className="rounded-lg bg-muted p-3 space-y-1">
+                          <div className="text-sm font-medium">
+                            {t("selected", { rows, columns })}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {t("totalSeats")}{" "}
+                            <span className="font-semibold text-foreground">
+                              {calculatedSeats}
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {t("seatsInfo", { rows, columns })}
+                          </div>
+                        </div>
+                      )}
                     </FormItem>
-                  )}
-                />
-              )}
+                  );
+                }
 
-              {selectedShape === TableShape.RECTANGULAR && (
-                <>
-                  <FormItem>
-                    <FormLabel>Table Dimensions</FormLabel>
-                    <GridPicker
-                      rows={rows}
-                      columns={columns}
-                      onSelect={handleGridSelect}
-                    />
-                    <FormMessage />
-                  </FormItem>
+                if (fieldConfig.name === "columns") {
+                  return null;
+                }
 
-                  {rows > 0 && columns > 0 && (
-                    <div className="rounded-lg bg-muted p-3 space-y-1">
-                      <div className="text-sm font-medium">
-                        Selected: {rows} × {columns}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Total seats:{" "}
-                        <span className="font-semibold text-foreground">
-                          {calculatedSeats}
-                        </span>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        ({columns} seats on each long side + {rows} seats on
-                        each short side)
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
+                return (
+                  <AutoFormField
+                    key={fieldConfig.name}
+                    control={form.control}
+                    fieldConfig={fieldConfig}
+                  />
+                );
+              })}
 
               <DialogFooter>
                 <Button
@@ -329,10 +262,10 @@ export function AddTableDialog({
                   onClick={() => onOpenChange(false)}
                   disabled={loading}
                 >
-                  Cancel
+                  {baseT("cancel")}
                 </Button>
                 <Button type="submit" disabled={loading}>
-                  {loading ? "Adding..." : "Add Table"}
+                  {loading ? t("adding") : t("add")}
                 </Button>
               </DialogFooter>
             </form>

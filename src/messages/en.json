@@ -97,7 +97,11 @@
       "maxPlanItemsReached": "Max number of plan items reached ({max}).",
       "maxContactsReached": "Max number of contacts reached ({max}).",
       "maxMenuReached": "Max number of menus reached ({max})."
-    }
+    },
+    "invalidTableShape": "Please select a valid table shape",
+    "rectangularTableNeedsDimensions": "Rows and columns are required for rectangular tables",
+    "rectangularTableCapacityMismatch": "Capacity must match table dimensions (2 x rows + 2 x columns)",
+    "capacityOutOfRange": "Number must be between {min} and {max}"
   },
   "emails": {
     "verification": {
@@ -272,9 +276,16 @@
         "tables": "Tables",
         "tablePlanner": "Table Planner",
         "add": "Add Table",
-        "name": "Table Name",
+        "addDescription": "Create a new table for your seating arrangement",
+        "tableName": "Table Name",
         "shape": "Shape",
         "capacity": "Number of Seats",
+        "tableDimensions": "Table Dimensions",
+        "clickToSelect": "Click to select table dimensions (rows × columns)",
+        "selected": "Selected: {rows} × {columns}",
+        "totalSeats": "Total seats:",
+        "seatsInfo": "({columns} seats on each long side + {rows} seats on each short side)",
+        "adding": "Adding...",
         "rows": "Rows",
         "columns": "Columns",
         "round": "Round",
@@ -306,7 +317,7 @@
           "zoomOut": "Zoom out",
           "hint": "Hold <ctrl>Ctrl</ctrl> + drag to pan • <ctrl>Ctrl</ctrl> + scroll to zoom"
         },
-        "shapeTypes": {
+        "shapes": {
           "ROUND": "Round",
           "RECTANGULAR": "Rectangular"
         }

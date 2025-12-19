@@ -106,6 +106,42 @@ export const assertOwnerOfGuest = async (
   assertOwnership(count);
 };
 
+export const assertOwnerOfTable = async (
+  userId: ID,
+  tableId: ID,
+  db: PrismaClient
+) => {
+  const count = await db.table.count({
+    where: {
+      id: tableId,
+      event: {
+        userId: userId,
+      },
+    },
+  });
+
+  assertOwnership(count);
+};
+
+export const assertOwnerOfSeat = async (
+  userId: ID,
+  seatId: ID,
+  db: PrismaClient
+) => {
+  const count = await db.seat.count({
+    where: {
+      id: seatId,
+      table: {
+        event: {
+          userId: userId,
+        },
+      },
+    },
+  });
+
+  assertOwnership(count);
+};
+
 const assertOwnership = (count: number) => {
   if (count == 0) throw new TRPCError({ code: "UNAUTHORIZED" });
 };

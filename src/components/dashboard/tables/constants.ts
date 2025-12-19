@@ -41,6 +41,9 @@ export const DEFAULT_COLUMNS = 4;
 
 // Controls constants
 export const PAN_SPEED = 20;
+export const MAX_ZOOM = 2;
+export const MIN_ZOOM = 0.1;
+export const DEFAULT_ZOOM = 1;
 
 export function calculateRectangularSeats(
   rows: number,

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { PAN_SPEED } from "../constants";
+import { DEFAULT_ZOOM, MAX_ZOOM, MIN_ZOOM, PAN_SPEED } from "../constants";
 
 export function useCanvasControls() {
   const [zoom, setZoom] = useState(1);
@@ -14,7 +14,7 @@ export function useCanvasControls() {
   const handleWheel = (e: React.WheelEvent) => {
     if (e.ctrlKey || e.shiftKey) {
       const delta = -e.deltaY * 0.001;
-      const newZoom = Math.min(Math.max(0.5, zoom + delta), 2);
+      const newZoom = Math.min(Math.max(MIN_ZOOM, zoom + delta), MAX_ZOOM);
       setZoom(newZoom);
     }
   };
@@ -33,15 +33,15 @@ export function useCanvasControls() {
   };
 
   const handleZoomIn = () => {
-    setZoom((prev) => Math.min(prev + 0.1, 2));
+    setZoom((prev) => Math.min(prev + 0.1, MAX_ZOOM));
   };
 
   const handleZoomOut = () => {
-    setZoom((prev) => Math.max(prev - 0.1, 0.5));
+    setZoom((prev) => Math.max(prev - 0.1, MIN_ZOOM));
   };
 
   const handleResetView = () => {
-    setZoom(1);
+    setZoom(DEFAULT_ZOOM);
     setPan({ x: 0, y: 0 });
   };
 

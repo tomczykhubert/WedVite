@@ -8,7 +8,7 @@ import { TableWithRelations } from "@/types/table";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useTableDrag } from "./hooks/useTableDrag";
+import { useTableDrag } from "./hooks/use-table-drag";
 import { useTablePlanner } from "./table-planner-context";
 import { TableVisual } from "./table-visual";
 
@@ -32,14 +32,15 @@ export function DraggableTable({
   const [isHovered, setIsHovered] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const { position, isDragging, handleMouseDown } = useTableDrag({
-    initialX: table.positionX,
-    initialY: table.positionY,
-    zoom,
-    onDragEnd: (x, y) => onPositionChange(table.id, x, y),
-    onDragUpdate: (x, y) => onDragUpdate(table.id, x, y),
-    disabled: isDeleted,
-  });
+  const { position, isDragging, handleMouseDown, handleTouchStart } =
+    useTableDrag({
+      initialX: table.positionX,
+      initialY: table.positionY,
+      zoom,
+      onDragEnd: (x, y) => onPositionChange(table.id, x, y),
+      onDragUpdate: (x, y) => onDragUpdate(table.id, x, y),
+      disabled: isDeleted,
+    });
 
   const handleDelete = () => {
     onDelete(table.id);
@@ -52,12 +53,13 @@ export function DraggableTable({
 
   return (
     <div
-      className={cn("absolute cursor-move")}
+      className={cn("absolute cursor-move touch-none")}
       style={{
         left: position.x,
         top: position.y,
       }}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

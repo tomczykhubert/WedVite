@@ -1,8 +1,16 @@
+import { useIsMobile } from "@/hooks/use-mobile";
+
 interface CanvasHintProps {
   hint: React.ReactNode;
 }
 
 export function CanvasHint({ hint }: CanvasHintProps) {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <div className="absolute bottom-4 left-4 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded pointer-events-none">
       {hint}

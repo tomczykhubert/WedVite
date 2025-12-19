@@ -35,8 +35,8 @@ import {
   DEFAULT_ROWS,
 } from "./constants";
 import { GridPicker } from "./grid-picker";
-import { useTableMutations } from "./hooks/useTableMutations";
-import { useTablePosition } from "./hooks/useTablePosition";
+import { useTableMutations } from "./hooks/use-table-mutations";
+import { useTablePosition } from "./hooks/use-table-position";
 import { useTablePlanner } from "./table-planner-context";
 
 interface AddTableDialogProps {
@@ -126,7 +126,10 @@ export function AddTableDialog({
     <>
       <Loader isLoading={loading} />
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent
+          className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <DialogHeader>
             <DialogTitle>{t("add")}</DialogTitle>
             <DialogDescription>{t("addDescription")}</DialogDescription>

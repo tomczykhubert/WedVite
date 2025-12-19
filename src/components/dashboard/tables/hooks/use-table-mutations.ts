@@ -16,18 +16,15 @@ export function useTableMutations(eventId: string) {
   const updatePosition = useMutation(
     trpc.table.updateTablePosition.mutationOptions({
       onMutate: async (variables) => {
-        // Cancel any outgoing refetches to avoid overwriting our optimistic update
         await queryClient.cancelQueries({
           queryKey: [["table", "getTables"], { input: { eventId } }],
         });
 
-        // Snapshot the previous value
         const previousTables = queryClient.getQueryData<TableWithRelations[]>([
           ["table", "getTables"],
           { input: { eventId } },
         ]);
 
-        // Optimistically update the cache
         if (previousTables) {
           queryClient.setQueryData<TableWithRelations[]>(
             [["table", "getTables"], { input: { eventId } }],
@@ -55,7 +52,6 @@ export function useTableMutations(eventId: string) {
         }
       },
       onSettled: () => {
-        // Refetch to ensure we're in sync with the server
         invalidateTables();
       },
     })

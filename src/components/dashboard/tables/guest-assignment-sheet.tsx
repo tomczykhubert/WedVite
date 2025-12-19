@@ -91,7 +91,10 @@ export function GuestAssignmentSheet({
     <>
       <Loader isLoading={loading} />
       <Sheet open onOpenChange={onClose}>
-        <SheetContent className="w-full sm:max-w-lg p-3">
+        <SheetContent
+          className="w-full sm:max-w-lg p-3"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <SheetHeader>
             <SheetTitle>{t("assignGuest")}</SheetTitle>
             <SheetDescription>{t("assignGuestDescription")}</SheetDescription>

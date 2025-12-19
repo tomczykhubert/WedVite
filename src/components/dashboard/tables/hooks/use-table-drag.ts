@@ -37,6 +37,20 @@ export function useTableDrag({
     };
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (disabled || e.touches.length !== 1) {
+      return;
+    }
+
+    e.stopPropagation(); // Prevent canvas pan
+    setIsDragging(true);
+    const touch = e.touches[0];
+    dragStartPos.current = {
+      x: touch.clientX / zoom - position.x,
+      y: touch.clientY / zoom - position.y,
+    };
+  };
+
   useEffect(() => {
     if (!isDragging) return;
 
@@ -47,17 +61,36 @@ export function useTableDrag({
       setPosition({ x: newX, y: newY });
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const newX = touch.clientX / zoom - dragStartPos.current.x;
+      const newY = touch.clientY / zoom - dragStartPos.current.y;
+      onDragUpdate?.(newX, newY);
+      setPosition({ x: newX, y: newY });
+    };
+
     const handleMouseUp = () => {
+      setIsDragging(false);
+      onDragEnd(position.x, position.y);
+    };
+
+    const handleTouchEnd = () => {
       setIsDragging(false);
       onDragEnd(position.x, position.y);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, [isDragging, position, zoom, onDragEnd, onDragUpdate]);
 
@@ -65,5 +98,6 @@ export function useTableDrag({
     position,
     isDragging,
     handleMouseDown,
+    handleTouchStart,
   };
 }

@@ -2,7 +2,6 @@
 
 import ActionButton from "@/components/base/button-link";
 import { Loader } from "@/components/base/loader";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useTRPC } from "@/trpc/client";
 import { Event } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
@@ -15,9 +14,8 @@ import { CanvasHint } from "./canvas-hint";
 import { CANVAS_GRID_SIZE } from "./constants";
 import { DraggableTable } from "./draggable-table";
 import { GuestAssignmentSheet } from "./guest-assignment-sheet";
-import { useTableMutations } from "./hooks/useTableMutations";
+import { useTableMutations } from "./hooks/use-table-mutations";
 import { InvitationConnections } from "./invitation-connections";
-import { MobileWarning } from "./mobile-warning";
 import { OffscreenIndicators } from "./offscreen-indicators";
 import { TablePlannerProvider, useTablePlanner } from "./table-planner-context";
 import {
@@ -39,7 +37,6 @@ export function TablePlanner({ event }: TablePlannerProps) {
 
 function TablePlannerContent({ event }: TablePlannerProps) {
   const t = useTranslations("dashboard.event.tables");
-  const isMobile = useIsMobile();
   const trpc = useTRPC();
   const [selectedSeatId, setSelectedSeatId] = useState<string | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -109,15 +106,6 @@ function TablePlannerContent({ event }: TablePlannerProps) {
       )
     : [];
 
-  if (isMobile) {
-    return (
-      <>
-        <MobileWarning />
-        <Loader isLoading={isLoading} />
-      </>
-    );
-  }
-
   return (
     <>
       <div className="flex flex-col h-full space-y-4">
@@ -131,13 +119,13 @@ function TablePlannerContent({ event }: TablePlannerProps) {
 
         <div
           ref={canvasRef}
-          className="relative flex-1 w-full border rounded-lg bg-muted/30 overflow-hidden min-h-0"
+          className="relative flex-1 w-full border rounded-lg bg-muted/30 overflow-hidden min-h-0 touch-none"
           onWheel={handleWheel}
           onMouseDown={handleMouseDown}
           onContextMenu={(e) => e.preventDefault()}
         >
           <div
-            className="canvas-grid absolute inset-0 pointer-events-none"
+            className="canvas-grid absolute inset-0 pointer-events-none select-none"
             style={{
               backgroundImage: `
                 linear-gradient(to right, var(--color-border) 1px, transparent 1px),

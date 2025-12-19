@@ -36,6 +36,8 @@ export type FormFieldConfig = {
   validation: ZodType;
   values?: FormSelectOption[];
   needValues?: boolean;
+  autoComplete?: string;
+  autoFocus?: boolean;
 };
 
 export type FormConfig = readonly FormFieldConfig[];

@@ -179,7 +179,7 @@ export function TableVisual({
                 onClick={() => onSeatClick?.(seat.id)}
                 onMouseDown={(e) => e.stopPropagation()}
                 className={cn(
-                  "cursor-pointer absolute rounded-full border-primary bg-muted hover:bg-primary/50 border-2 transition-all flex items-center justify-center overflow-hidden pointer-events-auto"
+                  "cursor-pointer absolute rounded-full border-primary bg-muted hover:bg-primary/50 border-2 transition-all flex items-center justify-center overflow-hidden pointer-events-auto select-none"
                 )}
                 style={{
                   left: pos.x,

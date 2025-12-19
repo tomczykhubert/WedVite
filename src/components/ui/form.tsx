@@ -233,7 +233,6 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
   const ownFormControl = ["select"].includes(fieldConfig.type);
 
   if (fieldConfig.type == "custom") return;
-
   const renderedValues =
     valuesOverride ??
     fieldConfig.values?.map((item) => {
@@ -289,12 +288,27 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
             type={fieldConfig.type}
             placeholder={translatedLabel}
             {...field}
+            autoComplete={fieldConfig.autoComplete}
+            autoFocus={fieldConfig.autoFocus}
           />
         );
       case "tel":
-        return <PhoneInput {...field} />;
+        return (
+          <PhoneInput
+            {...field}
+            autoComplete={fieldConfig.autoComplete}
+            autoFocus={fieldConfig.autoFocus}
+          />
+        );
       case "textarea":
-        return <Textarea placeholder={translatedLabel} {...field} />;
+        return (
+          <Textarea
+            placeholder={translatedLabel}
+            {...field}
+            autoComplete={fieldConfig.autoComplete}
+            autoFocus={fieldConfig.autoFocus}
+          />
+        );
       case "datetime":
         return <DateTimePicker {...field} />;
       case "date":

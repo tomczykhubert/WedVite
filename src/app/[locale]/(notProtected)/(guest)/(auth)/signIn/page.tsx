@@ -33,12 +33,14 @@ const formConfig: FormConfig = [
     validation: zMaxString()
       .email({ message: stc("email") })
       .required(),
+    autoComplete: "email",
   },
   {
     name: "password",
     type: "password",
     label: stc("user.password"),
     required: true,
+    autoComplete: "current-password",
     validation: z.string().required(),
   },
 ];

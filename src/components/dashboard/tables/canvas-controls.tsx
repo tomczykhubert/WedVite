@@ -7,6 +7,7 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
+import { MAX_ZOOM, MIN_ZOOM } from "./constants";
 import { useTablePlanner } from "./table-planner-context";
 
 interface CanvasControlsProps {
@@ -24,7 +25,7 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
   } = useTablePlanner();
 
   return (
-    <div className="absolute bottom-4 right-4 flex flex-col gap-2 pointer-events-auto">
+    <div className="absolute bottom-4 right-4 flex flex-col gap-2 pointer-events-auto select-none">
       <ActionButton
         variant="outline"
         size="sm"
@@ -43,6 +44,8 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
             onMouseDown={() => startPanning("up")}
             onMouseUp={stopPanning}
             onMouseLeave={stopPanning}
+            onTouchStart={() => startPanning("up")}
+            onTouchEnd={stopPanning}
           >
             <ArrowUp />
           </ActionButton>
@@ -54,6 +57,8 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
             onMouseDown={() => startPanning("left")}
             onMouseUp={stopPanning}
             onMouseLeave={stopPanning}
+            onTouchStart={() => startPanning("left")}
+            onTouchEnd={stopPanning}
           >
             <ArrowLeft />
           </ActionButton>
@@ -63,6 +68,8 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
             onMouseDown={() => startPanning("down")}
             onMouseUp={stopPanning}
             onMouseLeave={stopPanning}
+            onTouchStart={() => startPanning("down")}
+            onTouchEnd={stopPanning}
           >
             <ArrowDown />
           </ActionButton>
@@ -72,6 +79,8 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
             onMouseDown={() => startPanning("right")}
             onMouseUp={stopPanning}
             onMouseLeave={stopPanning}
+            onTouchStart={() => startPanning("right")}
+            onTouchEnd={stopPanning}
           >
             <ArrowRight />
           </ActionButton>
@@ -83,7 +92,7 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
           variant="ghost"
           size="icon"
           onClick={handleZoomOut}
-          disabled={zoom <= 0.5}
+          disabled={zoom <= MIN_ZOOM}
           tooltip={controlsT("zoomOut")}
         >
           <Minus />
@@ -95,7 +104,7 @@ export function CanvasControls({ controlsT }: CanvasControlsProps) {
           variant="ghost"
           size="icon"
           onClick={handleZoomIn}
-          disabled={zoom >= 2}
+          disabled={zoom >= MAX_ZOOM}
           tooltip={controlsT("zoomIn")}
         >
           <Plus />

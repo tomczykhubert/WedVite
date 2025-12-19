@@ -19,7 +19,7 @@ export async function POST() {
       to: "tomczyk.hubert22@gmail.com",
       subject: t("verification.subject"),
       react: EmailVerification(
-        process.env.BETTER_AUTH_URL as string,
+        process.env.NEXT_PUBLIC_BASE_URL as string,
         "tomczyk.hubert22@gmail.com",
         locale as Locale
       ),

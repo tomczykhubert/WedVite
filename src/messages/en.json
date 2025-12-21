@@ -112,6 +112,23 @@
       "buttonDoesntWork": "If the button doesn't work, you can copy and paste this link into your browser:",
       "urlWillExpire": "This verification link will expire in 24 hours for security reasons.",
       "ignoreEmail": "If you didn't create an account, you can safely ignore this email."
+    },
+    "imageUpload": {
+      "subject": "New photos uploaded to {eventName}",
+      "title": "New photos uploaded",
+      "greeting": "Hello!",
+      "message": "{uploaderName} has uploaded {count, plural, =1 {a new photo} other {# new photos}} to your event \"{eventName}\".",
+      "buttonText": "View Gallery",
+      "footer": "You received this email because you have notifications enabled for image uploads."
+    },
+    "rsvp": {
+      "subject": "New RSVP response for {eventName}",
+      "title": "New RSVP response",
+      "greeting": "Hello!",
+      "message": "{invitationName} has responded to your event \"{eventName}\".",
+      "guestDetails": "Guest Details:",
+      "buttonText": "View Guest List",
+      "footer": "You received this email because you have notifications enabled for attendance responses."
     }
   },
   "dashboard": {
@@ -351,8 +368,8 @@
     "orClickToBrowse": "or click to browse (max {maxSize}MB per file)",
     "chooseFiles": "Choose images",
     "uploadError": "Error uploading {fileName}",
-    "uploadSuccess": "Image {fileName} uploaded successfully!",
-    "maxFilesError": "You can only upload {maxFiles} files at a time",
+    "uploadSuccess": "{count, plural, one {Image} other {# images}} uploaded successfully!",
+    "maxFilesError": "You can only upload {maxFiles, plural, one {# file} other {# files}} at a time",
     "fileSizeError": "{fileName} exceeds {maxSize}MB limit"
   }
 }

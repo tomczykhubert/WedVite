@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { routes } from "@/lib/routes/routes";
+import { getFullUrl } from "@/lib/routes/utils";
 import ID from "@/types/id";
 import { Copy, Link as LinkIcon, QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -35,7 +36,8 @@ export default function AccessDialog({
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>("");
   const [qrCodeError, setQrCodeError] = useState<boolean>(false);
 
-  const uploadImagesUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${routes.uploadImages.byId(eventId)}`;
+  const uploadImagesUrl = getFullUrl(routes.uploadImages.byId(eventId));
+
   useEffect(() => {
     if (open) {
       QRCode.toDataURL(uploadImagesUrl, {

@@ -1,13 +1,11 @@
-import EmailVerification from "@/components/emails/email-verification";
 import { Locale, routing } from "@/i18n/routing";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { hasLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import prisma from "../prisma/prisma";
-import resend from "../resend/resend";
+import { sendEmailVerification } from "../resend/actions/emailVerification";
 
 export const auth = betterAuth({
   appName: "WedVite",
@@ -36,15 +34,12 @@ export const auth = betterAuth({
       if (!hasLocale(routing.locales, locale)) {
         locale = routing.defaultLocale;
       }
-      const t = await getTranslations({
-        locale: locale,
-        namespace: "emails",
-      });
-      await resend.emails.send({
-        from: process.env.RESEND_FROM as string,
-        to: user.email,
-        subject: t("verification.subject"),
-        react: EmailVerification(url, user.email, locale as Locale),
+
+      await sendEmailVerification({
+        verificationUrl: url,
+        userEmail: user.email,
+        locale: locale as Locale,
+        recipientEmail: user.email,
       });
     },
   },

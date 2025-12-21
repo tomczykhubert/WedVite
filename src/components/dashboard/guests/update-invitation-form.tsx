@@ -84,8 +84,7 @@ export default function UpdateInvitationForm({
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  form.formState.isDirty;
+  const _init = form.formState.isDirty;
 
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen && form.formState.isDirty) {

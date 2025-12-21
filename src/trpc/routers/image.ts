@@ -1,8 +1,10 @@
+import { Locale } from "@/i18n/routing";
 import {
   assertEventIsAcceptingResponsesByEventId,
   assertOwnerOfEvent,
   assertOwnerOfImage,
 } from "@/lib/prisma/eventUtils";
+import { sendImageUploadNotification } from "@/lib/resend/actions/imageUploadNotification";
 import {
   deleteFile,
   getImageKey,
@@ -68,9 +70,17 @@ export const imageRouter = createTRPCRouter({
     }),
 
   confirmUpload: baseProcedure
-    .input(confirmUploadSchema)
+    .input(
+      confirmUploadSchema.extend({
+        skipNotification: z.boolean(),
+        totalCount: z.number(),
+      })
+    )
     .mutation(async ({ ctx: { db }, input }) => {
-      await assertEventIsAcceptingResponsesByEventId(input.eventId, db);
+      const event = await assertEventIsAcceptingResponsesByEventId(
+        input.eventId,
+        db
+      );
 
       const image = await db.eventImage.create({
         data: {
@@ -82,6 +92,21 @@ export const imageRouter = createTRPCRouter({
           eventId: input.eventId,
         },
       });
+
+      if (
+        !input.skipNotification &&
+        event.notificationSettings?.onImageUpload
+      ) {
+        await sendImageUploadNotification({
+          eventId: event.id,
+          eventName: event.name,
+          uploaderName: input.uploaderName,
+          imageCount: input.totalCount,
+          //TODO: add preferred locale to user
+          locale: "en" as Locale,
+          recipientEmail: event.user.email,
+        });
+      }
 
       return { success: true, image };
     }),

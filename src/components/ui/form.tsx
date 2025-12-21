@@ -356,7 +356,6 @@ function AutoFormField<TFieldValues extends FieldValues = FieldValues>({
       case "hidden":
         return <input type="hidden" {...field} />;
       default:
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _exhaustiveCheck: never = fieldConfig.type;
         throw Error(
           `Field type ${fieldConfig.type} is not supported in AutoFormField`

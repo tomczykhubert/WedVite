@@ -16,7 +16,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { Event } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { FileDropzone } from "./file-dropzone";
 import { NameInputStep } from "./name-input-step";
@@ -31,6 +31,7 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
   const [anonymousName, setAnonymousName] = useState<string>("");
   const [showNameInput, setShowNameInput] = useState(true);
+  const completedUploadsRef = useRef(0);
 
   const t = useTranslations("imagesUpload");
   const trpc = useTRPC();
@@ -50,7 +51,7 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
   };
 
   const uploadFile = useCallback(
-    async (file: File) => {
+    async (file: File, totalCount: number) => {
       const uploadId = createId();
 
       try {
@@ -74,43 +75,16 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
         );
 
         // Step 2: Upload to storage (10% -> 90%)
-        await new Promise<void>((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
+        await uploadToStorage(uploadUrl, file, uploadId);
 
-          xhr.upload.addEventListener("progress", (event) => {
-            if (event.lengthComputable) {
-              const percentComplete = Math.round(
-                10 + (event.loaded / event.total) * 80
-              );
-              setUploadingFiles((prev) =>
-                prev.map((f) =>
-                  f.id === uploadId ? { ...f, progress: percentComplete } : f
-                )
-              );
-            }
-          });
+        setUploadingFiles((prev) =>
+          prev.map((f) => (f.id === uploadId ? { ...f, progress: 90 } : f))
+        );
 
-          xhr.addEventListener("load", () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-              resolve();
-            } else {
-              reject(new Error(`Upload failed: ${xhr.status}`));
-            }
-          });
+        // Step 3: Confirm upload and check if it's the last one
+        completedUploadsRef.current += 1;
+        const isLastUpload = completedUploadsRef.current === totalCount;
 
-          xhr.addEventListener("error", () =>
-            reject(new Error("Upload failed"))
-          );
-          xhr.addEventListener("abort", () =>
-            reject(new Error("Upload aborted"))
-          );
-
-          xhr.open("PUT", uploadUrl);
-          xhr.setRequestHeader("Content-Type", file.type);
-          xhr.send(file);
-        });
-
-        // Step 3: Confirm upload - create DB record (90% -> 100%)
         await confirmUploadMutation.mutateAsync({
           imageId,
           eventId: metadata.eventId,
@@ -118,6 +92,8 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
           extension: metadata.extension,
           size: metadata.size,
           uploaderName: metadata.uploaderName,
+          skipNotification: !isLastUpload,
+          totalCount: totalCount,
         });
 
         setUploadingFiles((prev) =>
@@ -128,8 +104,10 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
           setUploadingFiles((prev) => prev.filter((f) => f.id !== uploadId));
         }, 1000);
 
-        toast.success(t("uploadSuccess", { fileName: file.name }));
-        onUploadComplete?.();
+        if (isLastUpload) {
+          toast.success(t("uploadSuccess", { count: totalCount }));
+          onUploadComplete?.();
+        }
       } catch (error) {
         console.error("Upload error:", error);
         setUploadingFiles((prev) =>
@@ -146,12 +124,50 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
       event.id,
       getUploadUrlMutation,
       confirmUploadMutation,
-      onUploadComplete,
       t,
       session,
       anonymousName,
+      onUploadComplete,
     ]
   );
+
+  const uploadToStorage = (
+    uploadUrl: string,
+    file: File,
+    uploadId: string
+  ): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round(
+            10 + (event.loaded / event.total) * 80
+          );
+          setUploadingFiles((prev) =>
+            prev.map((f) =>
+              f.id === uploadId ? { ...f, progress: percentComplete } : f
+            )
+          );
+        }
+      });
+
+      xhr.addEventListener("load", () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`Upload failed: ${xhr.status}`));
+        }
+      });
+
+      xhr.addEventListener("error", () => reject(new Error("Upload failed")));
+      xhr.addEventListener("abort", () => reject(new Error("Upload aborted")));
+
+      xhr.open("PUT", uploadUrl);
+      xhr.setRequestHeader("Content-Type", file.type);
+      xhr.send(file);
+    });
+  };
 
   const handleFilesSelected = useCallback(
     (acceptedFiles: File[]) => {
@@ -177,8 +193,10 @@ export function ImageUpload({ event, onUploadComplete }: ImageUploadProps) {
         return true;
       });
 
-      // Upload all valid files
-      validFiles.forEach(uploadFile);
+      if (validFiles.length === 0) return;
+
+      completedUploadsRef.current = 0;
+      validFiles.forEach((file) => uploadFile(file, validFiles.length));
     },
     [uploadFile, t]
   );

@@ -170,26 +170,35 @@ export const assertEventIsAcceptingResponsesByInvitationId = async (
   invitationId: ID,
   db: PrismaClient
 ) => {
-  const { event } =
-    (await db.invitation.findFirst({
-      where: {
-        id: invitationId,
-      },
-      include: {
-        event: {
-          select: {
-            respondStart: true,
-            respondEnd: true,
-          },
+  const invitation = await db.invitation.findFirst({
+    where: {
+      id: invitationId,
+    },
+    select: {
+      id: true,
+      name: true,
+      event: {
+        select: {
+          id: true,
+          name: true,
+          respondStart: true,
+          respondEnd: true,
+          user: true,
+          notificationSettings: true,
         },
       },
-    })) ?? {};
+    },
+  });
 
-  if (!event) {
+  if (!invitation) {
     throw new TRPCError({ code: "NOT_FOUND" });
   }
 
-  assertEventIsAcceptingResponses(event.respondStart, event.respondEnd);
+  assertEventIsAcceptingResponses(
+    invitation.event.respondStart,
+    invitation.event.respondEnd
+  );
+  return invitation;
 };
 
 export const assertEventIsAcceptingResponsesByEventId = async (
@@ -203,6 +212,10 @@ export const assertEventIsAcceptingResponsesByEventId = async (
     select: {
       respondStart: true,
       respondEnd: true,
+      notificationSettings: true,
+      name: true,
+      user: true,
+      id: true,
     },
   });
 
@@ -211,6 +224,8 @@ export const assertEventIsAcceptingResponsesByEventId = async (
   }
 
   assertEventIsAcceptingResponses(event.respondStart, event.respondEnd);
+
+  return event;
 };
 
 export const assertImageIsValid = (contentType: string, size: number) => {

@@ -1,5 +1,7 @@
+import { Locale } from "@/i18n/routing";
 import { translateSchemaConfig } from "@/lib/forms/schemaTranslator";
 import { assertEventIsAcceptingResponsesByInvitationId } from "@/lib/prisma/eventUtils";
+import { sendRSVPNotification } from "@/lib/resend/actions/rsvpNotification";
 import { respondRSVPConfig } from "@/schemas/invitationFormConfig";
 import { InvitationStatus } from "@prisma/client";
 import { z } from "zod";
@@ -38,19 +40,20 @@ export const rsvpRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx: { db }, input }) => {
-      await assertEventIsAcceptingResponsesByInvitationId(
+      const invitation = await assertEventIsAcceptingResponsesByInvitationId(
         input.invitationId,
         db
       );
+
       await db.invitation.update({
-        where: { id: input.invitationId },
+        where: { id: invitation.id },
         data: {
           status: InvitationStatus.ANSWERED,
           responseDate: new Date(),
         },
       });
 
-      return await Promise.all(
+      const updatedGuests = await Promise.all(
         input.guests.map(async (guest) =>
           db.guest.update({
             where: { id: guest.id },
@@ -64,5 +67,19 @@ export const rsvpRouter = createTRPCRouter({
           })
         )
       );
+
+      if (invitation.event.notificationSettings?.onAttendanceRespond) {
+        await sendRSVPNotification({
+          eventId: invitation.event.id,
+          eventName: invitation.event.name,
+          invitationName: invitation.name,
+          guests: updatedGuests,
+          //TODO: add preferred locale to user
+          locale: "en" as Locale,
+          recipientEmail: invitation.event.user.email,
+        });
+      }
+
+      return updatedGuests;
     }),
 });

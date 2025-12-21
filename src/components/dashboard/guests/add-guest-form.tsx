@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/base/loader";
 import UnsavedChangesModal from "@/components/base/unsaved-changes-modal";
 import { Button } from "@/components/ui/button";
 import { AutoFormField, Form } from "@/components/ui/form";
@@ -22,11 +23,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Gender, GuestType } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useEventMenuOptions } from "../event/menu/use-event-menu-options";
-import { useParams } from "next/navigation";
-import Loader from "@/components/base/loader";
 
 export default function AddGuestForm({
   invitationId,
@@ -76,8 +76,10 @@ export default function AddGuestForm({
     })
   );
 
-  const { options: menuOptions, isPending } = useEventMenuOptions(eventId as string);
-    if (isPending) return <Loader isLoading={isPending}></Loader>;
+  const { options: menuOptions, isPending } = useEventMenuOptions(
+    eventId as string
+  );
+  if (isPending) return <Loader isLoading={isPending}></Loader>;
 
   const onSubmit = (data: AddGuestData) => {
     addGuest.mutate({
@@ -86,8 +88,7 @@ export default function AddGuestForm({
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  form.formState.isDirty;
+  const _init = form.formState.isDirty;
 
   const onOpenChange = (isOpen: boolean) => {
     if (!isOpen && form.formState.isDirty) {

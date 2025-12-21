@@ -57,8 +57,7 @@ export default function AddInvitationForm({ event }: { event: Event }) {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  form.formState.isDirty;
+  const _init = form.formState.isDirty;
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,

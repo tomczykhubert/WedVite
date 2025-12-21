@@ -44,8 +44,6 @@ export function TableVisual({
   onGuestMove,
   isDragging,
 }: TableVisualProps) {
-  const t = useTranslations("dashboard.event");
-
   const {
     width,
     height,
@@ -249,7 +247,7 @@ function SeatButton({
   }, []);
 
   const handleTouchStartWrapper = (e: React.TouchEvent) => {
-    dragHandlers.onTouchStart?.(e as any);
+    dragHandlers.onTouchStart?.(e);
     const touch = e.touches[0];
     touchStartPos.current = touch
       ? { x: touch.clientX, y: touch.clientY }
@@ -276,7 +274,7 @@ function SeatButton({
   };
 
   const handleTouchMoveWrapper = (e: React.TouchEvent) => {
-    dragHandlers.onTouchMove?.(e as any);
+    dragHandlers.onTouchMove?.(e);
     const touch = e.touches[0];
     if (!touch || !touchStartPos.current) return;
     const dx = touch.clientX - touchStartPos.current.x;
@@ -299,7 +297,7 @@ function SeatButton({
       : 0;
     const isTap = duration < 300 && !movedDuringTouch.current;
 
-    dragHandlers.onTouchEnd?.(e as any);
+    dragHandlers.onTouchEnd?.(e);
 
     if (isTap) {
       setTooltipOpen((v) => !v);

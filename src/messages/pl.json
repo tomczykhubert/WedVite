@@ -112,6 +112,23 @@
       "buttonDoesntWork": "Jeśli przycisk nie działa, możesz skopiować i wkleić ten link do swojej przeglądarki:",
       "urlWillExpire": "Ten link weryfikacyjny wygaśnie po 24 godzinach ze względów bezpieczeństwa.",
       "ignoreEmail": "Jeśli nie zakładałeś konta, możesz zignorować tę wiadomość."
+    },
+    "imageUpload": {
+      "subject": "Nowe zdjęcia dodane do {eventName}",
+      "title": "Nowe zdjęcia dodane",
+      "greeting": "Cześć!",
+      "message": "{uploaderName} dodał(a) {count, plural, =1 {nowe zdjęcie} few {# nowe zdjęcia} other {# nowych zdjęć}} do Twojego wydarzenia \"{eventName}\".",
+      "buttonText": "Zobacz galerię",
+      "footer": "Otrzymałeś tę wiadomość, ponieważ masz włączone powiadomienia o dodawaniu zdjęć."
+    },
+    "rsvp": {
+      "subject": "Nowa odpowiedź RSVP dla {eventName}",
+      "title": "Nowa odpowiedź RSVP",
+      "greeting": "Cześć!",
+      "message": "{invitationName} odpowiedział(a) na Twoje wydarzenie \"{eventName}\".",
+      "guestDetails": "Szczegóły gości:",
+      "buttonText": "Zobacz listę gości",
+      "footer": "Otrzymałeś tę wiadomość, ponieważ masz włączone powiadomienia o potwierdzeniach obecności."
     }
   },
   "dashboard": {
@@ -372,8 +389,8 @@
     "orClickToBrowse": "lub kliknij, aby przeglądać (maksymalnie {maxSize}MB na plik)",
     "chooseFiles": "Wybierz zdjęcia",
     "uploadError": "Błąd podczas przesyłania {fileName}",
-    "uploadSuccess": "Zdjęcie {fileName} przesłane pomyślnie!",
-    "maxFilesError": "Możesz przesłać maksymalnie {maxFiles} plików na raz",
+    "uploadSuccess": "{count, plural, one {Zdjęcie} few {# zdjęcia} other {# zdjęć}} przesłano pomyślnie!",
+    "maxFilesError": "Możesz przesłać maksymalnie {maxFiles, plural, one {# plik} few {# pliki} other {# plików}} na raz",
     "fileSizeError": "{fileName} przekracza limit {maxSize}MB"
   }
 }

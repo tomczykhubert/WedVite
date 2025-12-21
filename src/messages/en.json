@@ -64,7 +64,17 @@
     "notYetSignedUp": "Not yet signed up?",
     "account": "Account",
     "billing": "Billing",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password",
+    "backToSignIn": "Back to sign in",
+    "resetPasswordInstructions": "Enter your email address and we'll send you a link to reset your password.",
+    "enterNewPassword": "Enter your new password below.",
+    "sendResetLink": "Send reset link",
+    "resetLinkSent": "Reset link sent! Check your email.",
+    "passwordResetSuccess": "Password reset successfully! You can now sign in."
   },
   "formValidation": {
     "required": "This field is required.",
@@ -87,7 +97,8 @@
       "default": "An error occurred. Please try again.",
       "emailAlreadyTaken": "Given email is already taken.",
       "invalidEmailOrPassword": "Given email or password is invalid.",
-      "emailNotVerified": "Email address of this account has not been verified yet."
+      "emailNotVerified": "Email address of this account has not been verified yet.",
+      "invalidResetToken": "Invalid or expired reset token. Please request a new password reset."
     },
     "forms": {
       "error": "An error occurred. Please try again.",
@@ -111,7 +122,18 @@
       "buttonText": "Verify Email Address",
       "buttonDoesntWork": "If the button doesn't work, you can copy and paste this link into your browser:",
       "urlWillExpire": "This verification link will expire in 24 hours for security reasons.",
-      "ignoreEmail": "If you didn't create an account, you can safely ignore this email."
+      "ignoreEmail": "If you didn't create an account, you can safely ignore this email.",
+      "resendSuccess": "Verification email sent! Check your inbox.",
+      "resendButton": "Resend verification email"
+    },
+    "changePassword": {
+      "subject": "Reset your password",
+      "title": "Reset your password",
+      "message": "We received a request to reset your password. Click the button below to choose a new password.",
+      "buttonText": "Reset Password",
+      "buttonDoesntWork": "If the button doesn't work, you can copy and paste this link into your browser:",
+      "urlWillExpire": "This password reset link will expire in 24 hours for security reasons.",
+      "ignoreEmail": "If you didn't request a password reset, you can safely ignore this email."
     },
     "imageUpload": {
       "subject": "New photos uploaded to {eventName}",

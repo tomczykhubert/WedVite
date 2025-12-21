@@ -17,7 +17,7 @@ export type BaseEmailProps = {
 };
 
 export type BaseActionProps = BaseEmailProps & {
-  locale: Locale;
+  locale?: Locale;
 };
 
 type EmailSubject = {

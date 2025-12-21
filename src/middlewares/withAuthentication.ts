@@ -64,10 +64,11 @@ function checkPaths(paths: PathEntry[], pathname: string): boolean {
       path = path.endsWith("/") ? path.slice(0, -1) : path;
       return pathname === path;
     } else if (typeof path === "function") {
-      const pattern = new URLPattern({
-        pathname: path(":param1", ":param2", ":param3", ":param4"),
-      });
-      return pattern.test({ pathname });
+      const samplePath = path(":param1", ":param2", ":param3", ":param4");
+      const pathWithoutQuery = samplePath.split("?")[0];
+      const pattern = new URLPattern({ pathname: pathWithoutQuery });
+      const testPath = pathname.split("?")[0];
+      return pattern.test({ pathname: testPath });
     }
     return false;
   });

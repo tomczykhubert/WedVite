@@ -7,9 +7,9 @@ import Loader from "@/components/base/loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AutoFormField, Form } from "@/components/ui/form";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { stc } from "@/i18n/utils";
-import { signIn } from "@/lib/auth/authClient";
+import { authClient, signIn } from "@/lib/auth/authClient";
 import { getErrorTypeConfig } from "@/lib/auth/errors";
 import {
   FormConfig,
@@ -18,10 +18,11 @@ import {
 import { routes } from "@/lib/routes/routes";
 import { zMaxString } from "@/lib/zod/extension";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LogIn, UserPlus } from "lucide-react";
+import { LogIn, Mail, UserPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formConfig: FormConfig = [
@@ -52,6 +53,11 @@ type SignInFormData = z.infer<typeof formSchema>;
 export default function SignInForm() {
   const [isPending, setPending] = useState(false);
   const [formErrorMessage, setFormErrorMessage] = useState("");
+  const [showResendVerification, setShowResendVerification] = useState(false);
+  const [resendingVerification, setResendingVerification] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const tEmails = useTranslations("emails.verification");
+  const tValidation = useTranslations("formValidation");
   const t = useTranslations("user");
   const form = useForm<SignInFormData>({
     resolver: zodResolver(formSchema),
@@ -61,8 +67,26 @@ export default function SignInForm() {
     },
   });
   const router = useRouter();
+
+  const handleResendVerification = async () => {
+    setResendingVerification(true);
+    try {
+      await authClient.sendVerificationEmail({
+        email: userEmail,
+        callbackURL: "/dashboard",
+      });
+      toast.success(tEmails("resendSuccess"));
+    } catch {
+      toast.error(tValidation("auth.default"));
+    } finally {
+      setResendingVerification(false);
+    }
+  };
+
   const onSubmit = async (data: SignInFormData) => {
     setFormErrorMessage("");
+    setShowResendVerification(false);
+    setUserEmail(data.email);
     await signIn.email(
       {
         email: data.email,
@@ -87,6 +111,9 @@ export default function SignInForm() {
             });
           } else {
             setFormErrorMessage(errorType.message);
+            if (error.error.code === "EMAIL_NOT_VERIFIED") {
+              setShowResendVerification(true);
+            }
           }
         },
       }
@@ -104,6 +131,19 @@ export default function SignInForm() {
           </CardHeader>
           <CardContent>
             <FormErrorMessage message={formErrorMessage} />
+            {showResendVerification && (
+              <div className="mb-4 p-4 bg-muted rounded-lg">
+                <Button
+                  onClick={handleResendVerification}
+                  disabled={resendingVerification}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Mail className="mr-1" />
+                  {tEmails("resendButton")}
+                </Button>
+              </div>
+            )}
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -116,6 +156,14 @@ export default function SignInForm() {
                     fieldConfig={fieldConfig}
                   />
                 ))}
+                <div className="flex justify-end">
+                  <Link
+                    href={routes.auth.forgotPassword}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    {t("forgotPassword")}
+                  </Link>
+                </div>
                 <Button type="submit" className="w-full">
                   <LogIn className="mr-1" />
                   {t("signIn")}

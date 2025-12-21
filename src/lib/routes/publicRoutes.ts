@@ -7,7 +7,7 @@ const PUBLIC_PAGES_ROUTES = [
   routes.uploadImages.byId,
 ];
 
-const PUBLIC_API_ROUTES = [apiRoutes.auth.getSession, apiRoutes.emails.test];
+const PUBLIC_API_ROUTES = [apiRoutes.auth.getSession];
 
 const PUBLIC_ROUTES = [...PUBLIC_PAGES_ROUTES, ...PUBLIC_API_ROUTES];
 

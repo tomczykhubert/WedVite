@@ -1,10 +1,9 @@
-import { Locale, routing } from "@/i18n/routing";
+import { routing } from "@/i18n/routing";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { hasLocale } from "next-intl";
-import { cookies } from "next/headers";
 import prisma from "../prisma/prisma";
+import { sendChangePasswordEmail } from "../resend/actions/changePassword";
 import { sendEmailVerification } from "../resend/actions/emailVerification";
 
 export const auth = betterAuth({
@@ -18,27 +17,21 @@ export const auth = betterAuth({
     minPasswordLength: 6,
     maxPasswordLength: 30,
     requireEmailVerification: true,
+    sendResetPassword: async ({ user, token }) => {
+      void sendChangePasswordEmail({
+        token: token,
+        recipientEmail: user.email,
+      });
+    },
   },
   emailVerification: {
     sendOnSignUp: true,
     sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      // skip sending email during seeding
-      if (process.env.npm_lifecycle_event === "seed") {
-        return;
-      }
-      const cookieStore = await cookies();
-      let locale =
-        cookieStore.get("NEXT_LOCALE")?.value || routing.defaultLocale;
-      if (!hasLocale(routing.locales, locale)) {
-        locale = routing.defaultLocale;
-      }
-
       await sendEmailVerification({
         verificationUrl: url,
         userEmail: user.email,
-        locale: locale as Locale,
         recipientEmail: user.email,
       });
     },

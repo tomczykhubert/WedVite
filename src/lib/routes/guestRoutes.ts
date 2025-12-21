@@ -4,6 +4,8 @@ import { routes } from "./routes";
 const GUEST_PAGES_ROUTES = [
   routes.auth.signIn,
   routes.auth.signUp,
+  routes.auth.forgotPassword,
+  routes.auth.resetPassword,
 ];
 
 const GUEST_API_ROUTES = [
@@ -12,7 +14,9 @@ const GUEST_API_ROUTES = [
   apiRoutes.auth.signUp.email,
   apiRoutes.auth.signUp.social,
   apiRoutes.auth.callback.google,
-  apiRoutes.auth.verifyEmail
+  apiRoutes.auth.verifyEmail,
+  apiRoutes.auth.requestPasswordReset,
+  apiRoutes.auth.resetPassword,
 ];
 
 const GUEST_ROUTES = [...GUEST_PAGES_ROUTES, ...GUEST_API_ROUTES];

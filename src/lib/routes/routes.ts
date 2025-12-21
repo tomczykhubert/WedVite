@@ -5,6 +5,8 @@ export const routes = {
   auth: {
     signIn: "/signIn",
     signUp: "/signUp",
+    forgotPassword: "/forgot-password",
+    resetPassword: (token: string) => `/reset-password?token=${token}`,
   },
   dashboard: {
     index: "/dashboard",

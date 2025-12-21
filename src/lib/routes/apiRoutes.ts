@@ -11,6 +11,8 @@ export const apiRoutes = {
       social: "/api/auth/sign-up/social",
     },
     verifyEmail: "/api/auth/verify-email",
+    requestPasswordReset: "/api/auth/request-password-reset",
+    resetPassword: "/api/auth/reset-password",
     callback: {
       google: "/api/auth/callback/google",
     },
@@ -19,7 +21,4 @@ export const apiRoutes = {
       update: (userId: ID) => `/api/auth/update-user/${userId}`,
     },
   },
-  emails: {
-    test: "/api/emails/test"
-  }
 };

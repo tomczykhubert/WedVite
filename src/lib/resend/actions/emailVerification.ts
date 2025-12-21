@@ -1,5 +1,6 @@
 import EmailVerification from "@/components/emails/email-verification";
 import { Locale } from "@/i18n/routing";
+import { getLocale } from "next-intl/server";
 import { BaseActionProps, sendEmail } from "../sendEmail";
 
 type EmailVerificationData = {
@@ -10,9 +11,9 @@ type EmailVerificationData = {
 export async function sendEmailVerification({
   verificationUrl,
   userEmail,
-  locale,
   ...baseEmailProps
 }: EmailVerificationData) {
+  const locale = await getLocale();
   await sendEmail({
     ...baseEmailProps,
     subject: {

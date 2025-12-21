@@ -64,7 +64,17 @@
     "notYetSignedUp": "Nie masz jeszcze konta?",
     "account": "Konto",
     "billing": "Rozliczenia",
-    "notifications": "Powiadomienia"
+    "notifications": "Powiadomienia",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "resetPassword": "Zresetuj hasło",
+    "newPassword": "Nowe hasło",
+    "confirmNewPassword": "Potwierdź nowe hasło",
+    "backToSignIn": "Powrót do logowania",
+    "resetPasswordInstructions": "Wpisz swój adres e-mail, a wyślemy Ci link do resetowania hasła.",
+    "enterNewPassword": "Wprowadź poniżej swoje nowe hasło.",
+    "sendResetLink": "Wyślij link resetujący",
+    "resetLinkSent": "Link resetujący wysłany! Sprawdź swoją pocztę.",
+    "passwordResetSuccess": "Hasło zostało zresetowane! Możesz się teraz zalogować."
   },
   "formValidation": {
     "required": "To pole jest wymagane.",
@@ -87,7 +97,8 @@
       "default": "Wystąpił błąd. Spróbuj ponownie.",
       "emailAlreadyTaken": "Podany email jest już zajęty.",
       "invalidEmailOrPassword": "Podany email lub hasło jest nieprawidłowe.",
-      "emailNotVerified": "Adres email tego konta nie został jeszcze zweryfkiowany."
+      "emailNotVerified": "Adres email tego konta nie został jeszcze zweryfkiowany.",
+      "invalidResetToken": "Nieprawidłowy lub wygasły token resetowania. Prosimy o nowe żądanie resetowania hasła."
     },
     "forms": {
       "error": "Wystąpił błąd. Spróbuj ponownie.",
@@ -111,7 +122,18 @@
       "buttonText": "Zweryfikuj adres e-mail",
       "buttonDoesntWork": "Jeśli przycisk nie działa, możesz skopiować i wkleić ten link do swojej przeglądarki:",
       "urlWillExpire": "Ten link weryfikacyjny wygaśnie po 24 godzinach ze względów bezpieczeństwa.",
-      "ignoreEmail": "Jeśli nie zakładałeś konta, możesz zignorować tę wiadomość."
+      "ignoreEmail": "Jeśli nie zakładałeś konta, możesz zignorować tę wiadomość.",
+      "resendSuccess": "E-mail weryfikacyjny wysłany! Sprawdź swoją skrzynkę odbiorczą.",
+      "resendButton": "Wyślij ponownie e-mail weryfikacyjny"
+    },
+    "changePassword": {
+      "subject": "Zresetuj swoje hasło",
+      "title": "Zresetuj swoje hasło",
+      "message": "Otrzymaliśmy prośbę o zresetowanie Twojego hasła. Kliknij poniższy przycisk, aby wybrać nowe hasło.",
+      "buttonText": "Zresetuj hasło",
+      "buttonDoesntWork": "Jeśli przycisk nie działa, możesz skopiować i wkleić ten link do swojej przeglądarki:",
+      "urlWillExpire": "Ten link do resetowania hasła wygaśnie po 24 godzinach ze względów bezpieczeństwa.",
+      "ignoreEmail": "Jeśli nie prosiłeś o zresetowanie hasła, możesz zignorować tę wiadomość."
     },
     "imageUpload": {
       "subject": "Nowe zdjęcia dodane do {eventName}",

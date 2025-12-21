@@ -30,6 +30,7 @@ const formConfig: FormConfig = [
     required: true,
     label: stc("user.name"),
     validation: zMinMaxString(6, 30).required(),
+    autoComplete: "name",
   },
   {
     name: "email",
@@ -39,6 +40,7 @@ const formConfig: FormConfig = [
     validation: zMaxString()
       .email({ message: stc("email") })
       .required(),
+    autoComplete: "email",
   },
   {
     name: "password",
@@ -46,6 +48,7 @@ const formConfig: FormConfig = [
     label: stc("user.password"),
     required: true,
     validation: zMinMaxString(6, 30).required(),
+    autoComplete: "new-password",
   },
   {
     name: "confirmPassword",
@@ -53,6 +56,7 @@ const formConfig: FormConfig = [
     label: stc("user.confirmPassword"),
     required: true,
     validation: z.string().required(),
+    autoComplete: "new-password",
   },
 ];
 
